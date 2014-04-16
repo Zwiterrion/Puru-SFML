@@ -23,7 +23,6 @@ public:
     GameView(int h, int w, int bpp);
     ~GameView();
     void setModel(GameModel *model);
-    void affiche() const;
     static void rejouer();
     static void affichageScore();
     static void retourMenu();
@@ -46,6 +45,7 @@ public: // SFML
     void s_viePlayer();
     void s_rejouer();
     void s_perteVie();
+    void s_changeLvl();
     
 private: // SFML
     sf::RenderWindow *m_window;

@@ -16,7 +16,6 @@ int main()
     view->setModel(model);
     view->s_Presentation();
     while(view->treatEvents()){
-       // view->draw();
     }
     delete view;
     delete model;

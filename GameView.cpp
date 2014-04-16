@@ -130,34 +130,6 @@ void GameView::s_viePlayer()
  * Rôle: Fonction qui affiche la matrice à l'écran et       *
  *     l'affichage des scores                               *
  ************************************************************/
-void GameView::affiche() const
-{
-   Case*** matrice = m_model->getMatrice();
-    
-    /* Affichage */
-    for(int i=0; i<18; i++){
-        cout << ("\t\t\t\t|---");
-        for(int k=0; k<17; k++)
-            cout << "|---";
-        cout <<"|" << endl << "\t\t\t\t";
-        for(int j=0; j<18; j++){
-            if(dynamic_cast<Bomb*>(matrice[i][j]))
-                cout << "|" << "@@@";
-            else if(m_model->getPlayer().get_x() == j && m_model->getPlayer().get_y() == i)
-                cout << "|$$$";
-            else if(dynamic_cast<BonusCase*>(matrice[i][j]))
-                cout << "|" << matrice[i][j]->getObj();
-            else
-                cout << "| " << matrice[i][j]->getObj() << " ";
-        }
-        cout << "|" <<endl ;
-    }
-    cout << "\t\t\t\t|---";
-    for(int k=0; k<17; k++)
-        cout << "|---";
-    cout << "|" <<endl ;
-}
-
 void GameView::draw()
 {
    
@@ -361,6 +333,14 @@ void GameView::changementLevel()
     cout << "\nVous avez changé de niveau " << endl;
     cout << "Continuer :0 \t\t\t Quitter: 1" << endl;
 }
+void GameView::s_changeLvl()
+{
+    sf::String text = String("Vous avez change de niveau ! ");
+    text.SetSize(50.0f);
+    text.SetPosition(WIDTH/2 -350, HEIGHT/2 -50);
+    m_window->Draw(text);
+    m_window->Display();
+}
 void GameView::plusDeVie()
 {
     cout << "\n Vous n'avez plus de vies. Fin de Jeu." << endl;
@@ -387,56 +367,66 @@ bool GameView::treatEvents()
                     if((e.MouseButton.X < (_exit_sprite.GetPosition().x +_exit_sprite.GetSize().x ) && e.MouseButton.X > _exit_sprite.GetPosition().x )&& (e.MouseButton.Y > _exit_sprite.GetPosition().y && e.MouseButton.Y < _exit_sprite.GetPosition().y + _exit_sprite.GetSize().y )){
                         m_window->Close();
                     }
-                    if(m_model->getEndGame()){
-                        
+
                         if((e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x ) && e.MouseButton.X > _digger_sprite.GetPosition().x ) && (e.MouseButton.Y < _digger_sprite.GetPosition().y && e.MouseButton.Y > _digger_sprite.GetPosition().y - 40)){
                             m_model->direction("N");
                             m_window->Clear(sf::Color(40,40,38));
                             draw();
+
                         }
-                        if((e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x ) && e.MouseButton.X > _digger_sprite.GetPosition().x ) &&
-                           (e.MouseButton.Y > (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y) && e.MouseButton.Y < _digger_sprite.GetPosition().y) + _digger_sprite.GetSize().y + 40){
+                        if((e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x ) && e.MouseButton.X > _digger_sprite.GetPosition().x ) && (e.MouseButton.Y > (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y) && e.MouseButton.Y < (_digger_sprite.GetPosition().y) + _digger_sprite.GetSize().y + 40)){
                             m_model->direction("S");
                             m_window->Clear(sf::Color(40,40,38));
                             draw();
+
                         }
-                        if((e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x + 40) && e.MouseButton.X > _digger_sprite.GetPosition().x +_digger_sprite.GetSize().x) && (e.MouseButton.Y > _digger_sprite.GetPosition().y && e.MouseButton.Y < _digger_sprite.GetPosition().y + _digger_sprite.GetSize().y)){
+                        if((e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x + 40) && e.MouseButton.X > (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x)) && (e.MouseButton.Y > _digger_sprite.GetPosition().y && e.MouseButton.Y < (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y))){
                             m_model->direction("E");
                             m_window->Clear(sf::Color(40,40,38));
                             draw();
+
                         }
-                        if((e.MouseButton.X > (_digger_sprite.GetPosition().x + -40) && e.MouseButton.X < _digger_sprite.GetPosition().x ) && (e.MouseButton.Y > _digger_sprite.GetPosition().y && e.MouseButton.Y < _digger_sprite.GetPosition().y + _digger_sprite.GetSize().y)){
+                    
+                        if((e.MouseButton.X > (_digger_sprite.GetPosition().x + -40) && e.MouseButton.X < _digger_sprite.GetPosition().x  && e.MouseButton.Y > _digger_sprite.GetPosition().y && e.MouseButton.Y < (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y))){
                             m_model->direction("O");
                             m_window->Clear(sf::Color(40,40,38));
                             draw();
+                            
                         }
-                        if((e.MouseButton.X > (_digger_sprite.GetPosition().x + -40) && e.MouseButton.X < _digger_sprite.GetPosition().x ) && (e.MouseButton.Y < _digger_sprite.GetPosition().y && e.MouseButton.Y > _digger_sprite.GetPosition().y - 40)){
+                    
+                        if(e.MouseButton.X > (_digger_sprite.GetPosition().x + -40) && e.MouseButton.X < _digger_sprite.GetPosition().x  && e.MouseButton.Y < _digger_sprite.GetPosition().y && e.MouseButton.Y > (_digger_sprite.GetPosition().y - 40)){
                             m_model->direction("NO");
                             m_window->Clear(sf::Color(40,40,38));
                             draw();
+                            
                         }
-                        if((e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x + 40) && e.MouseButton.X > _digger_sprite.GetPosition().x +_digger_sprite.GetSize().x)  && (e.MouseButton.Y < _digger_sprite.GetPosition().y && e.MouseButton.Y > _digger_sprite.GetPosition().y - 40)){
+                    
+                        if(e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x + 40) && e.MouseButton.X > (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x)  && e.MouseButton.Y < _digger_sprite.GetPosition().y && e.MouseButton.Y > (_digger_sprite.GetPosition().y - 40)){
                             m_model->direction("NE");
                             m_window->Clear(sf::Color(40,40,38));
                             draw();
+
                         }
-                        if((e.MouseButton.X > (_digger_sprite.GetPosition().x + -40) && e.MouseButton.X < _digger_sprite.GetPosition().x ) && (e.MouseButton.Y > (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y) && e.MouseButton.Y < _digger_sprite.GetPosition().y) + _digger_sprite.GetSize().y + 40){
+                    
+                        if(e.MouseButton.X > (_digger_sprite.GetPosition().x + -40) && e.MouseButton.X < _digger_sprite.GetPosition().x  && e.MouseButton.Y > (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y) && e.MouseButton.Y < (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y + 40)){
                             m_model->direction("SO");
                             m_window->Clear(sf::Color(40,40,38));
                             draw();
+
                         }
-                        if((e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x + 40) && e.MouseButton.X > _digger_sprite.GetPosition().x +_digger_sprite.GetSize().x && (e.MouseButton.Y > (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y) && e.MouseButton.Y < _digger_sprite.GetPosition().y) + _digger_sprite.GetSize().y + 40)){
+                        if(e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x + 40) && e.MouseButton.X > (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x) && e.MouseButton.Y > (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y) && e.MouseButton.Y < (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y + 40)){
                             m_model->direction("SE");
                             m_window->Clear(sf::Color(40,40,38));
                             draw();
+                            
                         }
-                    }
-                    else
+                    
+                    /*else if (m_model->getEndGame() == false && m_model->getPlayer().getVie() != 0)
                     {
-                        m_model->rejouerPartie();
-                    }
-
-                   
+                        cout << " JE suis la " << endl;
+                        m_window->Clear(sf::Color (20,20,20));
+                        s_changeLvl();
+                    }*/
                 }
             }
         }

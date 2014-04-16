@@ -291,6 +291,7 @@ void GameModel::perteVie()
             set_answer_move("1");
             setEndGame(false);
         }
+        
     }
     else
         endGame();
@@ -316,7 +317,7 @@ void GameModel::move(int pos_x, int pos_y)
      nb_cases = deplacement();
 
 	  string obj = matrice[m_p->get_y()][m_p->get_x()]->getObj();  // Test si la case suivante, la premiere, est une bombe
-        if(obj == "@@@"){
+        if(obj == "@@@" || obj == " "){
             nb_cases = 0;
         }
 
@@ -378,7 +379,6 @@ void GameModel::objectifAtteint()
  ************************************************************/
 void GameModel::changeLevel()
 {
-    int reponse;
     m_n->setLevel(m_n->getLevel() + 1); // Incrémentation du level grâce à la surcharge
     m_s->setCible(m_s->getCible() + 5);
     m_n->initBonus();
@@ -390,15 +390,10 @@ void GameModel::changeLevel()
     m_s->setDeplacement(0); // On remet le score déplacement à O
     
     GameView::changementLevel();
-    cin >> reponse;
-    if(reponse == 0){
-        genereMatrice(); // Sinon on joue
-    }
-    else
-    {
-        set_answer_move("1");
-        setEndGame(false); // Sinon on sort du jeu
-    }
+    
+    setEndGame(false); // Sinon on sort du jeu
+    genereMatrice();
+    setEndGame(true);
 }
 /************************************************************
  * Nom: deplacement                                         *
