@@ -388,6 +388,7 @@ bool GameView::treatEvents()
                         m_window->Close();
                     }
                     if(m_model->getEndGame()){
+                        
                         if((e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x ) && e.MouseButton.X > _digger_sprite.GetPosition().x ) && (e.MouseButton.Y < _digger_sprite.GetPosition().y && e.MouseButton.Y > _digger_sprite.GetPosition().y - 40)){
                             m_model->direction("N");
                             m_window->Clear(sf::Color(40,40,38));
@@ -401,6 +402,31 @@ bool GameView::treatEvents()
                         }
                         if((e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x + 40) && e.MouseButton.X > _digger_sprite.GetPosition().x +_digger_sprite.GetSize().x) && (e.MouseButton.Y > _digger_sprite.GetPosition().y && e.MouseButton.Y < _digger_sprite.GetPosition().y + _digger_sprite.GetSize().y)){
                             m_model->direction("E");
+                            m_window->Clear(sf::Color(40,40,38));
+                            draw();
+                        }
+                        if((e.MouseButton.X > (_digger_sprite.GetPosition().x + -40) && e.MouseButton.X < _digger_sprite.GetPosition().x ) && (e.MouseButton.Y > _digger_sprite.GetPosition().y && e.MouseButton.Y < _digger_sprite.GetPosition().y + _digger_sprite.GetSize().y)){
+                            m_model->direction("O");
+                            m_window->Clear(sf::Color(40,40,38));
+                            draw();
+                        }
+                        if((e.MouseButton.X > (_digger_sprite.GetPosition().x + -40) && e.MouseButton.X < _digger_sprite.GetPosition().x ) && (e.MouseButton.Y < _digger_sprite.GetPosition().y && e.MouseButton.Y > _digger_sprite.GetPosition().y - 40)){
+                            m_model->direction("NO");
+                            m_window->Clear(sf::Color(40,40,38));
+                            draw();
+                        }
+                        if((e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x + 40) && e.MouseButton.X > _digger_sprite.GetPosition().x +_digger_sprite.GetSize().x)  && (e.MouseButton.Y < _digger_sprite.GetPosition().y && e.MouseButton.Y > _digger_sprite.GetPosition().y - 40)){
+                            m_model->direction("NE");
+                            m_window->Clear(sf::Color(40,40,38));
+                            draw();
+                        }
+                        if((e.MouseButton.X > (_digger_sprite.GetPosition().x + -40) && e.MouseButton.X < _digger_sprite.GetPosition().x ) && (e.MouseButton.Y > (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y) && e.MouseButton.Y < _digger_sprite.GetPosition().y) + _digger_sprite.GetSize().y + 40){
+                            m_model->direction("SO");
+                            m_window->Clear(sf::Color(40,40,38));
+                            draw();
+                        }
+                        if((e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x + 40) && e.MouseButton.X > _digger_sprite.GetPosition().x +_digger_sprite.GetSize().x && (e.MouseButton.Y > (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y) && e.MouseButton.Y < _digger_sprite.GetPosition().y) + _digger_sprite.GetSize().y + 40)){
+                            m_model->direction("SE");
                             m_window->Clear(sf::Color(40,40,38));
                             draw();
                         }
