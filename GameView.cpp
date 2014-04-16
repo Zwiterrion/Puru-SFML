@@ -193,7 +193,7 @@ void GameView::draw()
                 m_window->Draw(_bombe_sprite);
             }
             else if(m_model->getPlayer().get_x() == j && m_model->getPlayer().get_y() == i){
-                _digger_sprite.SetPosition(j*40, j*40);
+                _digger_sprite.SetPosition(j*40, i*40);
                 m_window->Draw(_digger_sprite);
             }
             else if(dynamic_cast<BonusCase*>(matrice[i][j])){
