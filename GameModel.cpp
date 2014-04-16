@@ -142,47 +142,7 @@ void GameModel::set_answer_move(std::string a){
 std::string GameModel::get_answer_move(){
     return m_answer_move;
 }
-/************************************************************
- * Nom: check_answer                                        *
- ************************************************************
- * Type: bool                                               *
- ************************************************************
- * @param string                                            *
- ************************************************************
- * Rôle:  Retourne vrai ou faux en fonction de la saisie de *
- *     l'utilisateur au clavier lors de la demande de       *
- *     la direction voulue.                                 *
- ************************************************************/
-bool GameModel::check_answer(std::string a){
-    if(a == "N" || a == "NE" || a == "E" || a == "SE" || a == "S" || a == "SO" ||
-       a == "O" || a == "NO"){
-        if ((a == "N" || a == "NE" || a == "NO") && m_p->get_y() == 0){
-            return false;
-        }
-        else if ((a == "S" || a == "SO" || a == "SE") && m_p->get_y() == HEIGHT_GAME-1){
-            return false;
-        }
-        else if ((a == "O" || a == "NO" || a == "SO") && m_p->get_x() == 0){
-            return false;
-        }
-        else if ((a == "E" || a == "NE" || a == "SE") && m_p->get_x() == WIDTH_GAME-1){
-            return false;
-        }
-        else
-            return true;
-    }
-    /********************************************************
-     * Si le joueur décide de quitter en cours de partie on *
-     *revient au menu.                                      *
-     ********************************************************/
-    else if(a == "1")
-    {
-        fin = false;
-        return true;
-    }
-    else
-        return false;
-}
+
 
 void GameModel::tabScore()
 {
@@ -273,25 +233,18 @@ void GameModel::initLevel()
  ************************************************************/
 void GameModel::perteVie()
 {
-    int reponse;
     m_p->setVie(m_p->getVie() - 1); // On décremente la vie
     m_s->setDeplacement(0); // On remet le score déplacement à O
 
-
     if(m_p->getVie() > 0){
         GameView::perteVie();
-        cin >> reponse;
-
-        if(reponse == 0){
-            genereMatrice();
-            endGame();
-        }
-        else
-        {
-            set_answer_move("1");
-            setEndGame(false);
-        }
+        genereMatrice();
+        endGame();
         
+        set_answer_move("3");
+        setEndGame(false); // Sinon on sort du jeu
+        genereMatrice();
+        setEndGame(true); 
     }
     else
         endGame();

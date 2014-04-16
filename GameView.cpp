@@ -364,6 +364,7 @@ bool GameView::treatEvents()
                         m_window->Clear(sf::Color(40,40,38));
                         draw();
                     }
+                    if(m_model->getEndGame()){
                     if((e.MouseButton.X < (_exit_sprite.GetPosition().x +_exit_sprite.GetSize().x ) && e.MouseButton.X > _exit_sprite.GetPosition().x )&& (e.MouseButton.Y > _exit_sprite.GetPosition().y && e.MouseButton.Y < _exit_sprite.GetPosition().y + _exit_sprite.GetSize().y )){
                         m_window->Close();
                     }
@@ -420,13 +421,7 @@ bool GameView::treatEvents()
                             draw();
                             
                         }
-                    
-                    /*else if (m_model->getEndGame() == false && m_model->getPlayer().getVie() != 0)
-                    {
-                        cout << " JE suis la " << endl;
-                        m_window->Clear(sf::Color (20,20,20));
-                        s_changeLvl();
-                    }*/
+                    }
                 }
             }
         }

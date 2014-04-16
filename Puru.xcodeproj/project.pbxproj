@@ -89,7 +89,6 @@
 		8F15B2E918D5D85900F0836B /* Croix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Croix.cpp; sourceTree = "<group>"; };
 		8F15B2EA18D5D85900F0836B /* GameModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameModel.cpp; sourceTree = "<group>"; };
 		8F15B2EB18D5D85900F0836B /* Lvl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Lvl.cpp; sourceTree = "<group>"; };
-		8F15B2ED18D5D85900F0836B /* MODELE.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MODELE.cpp; sourceTree = "<group>"; };
 		8F15B2EE18D5D85900F0836B /* Player.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Player.cpp; sourceTree = "<group>"; };
 		8F15B2EF18D5D85900F0836B /* Position.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Position.cpp; sourceTree = "<group>"; };
 		8F15B2F018D5D85900F0836B /* Score.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Score.cpp; sourceTree = "<group>"; };
@@ -100,7 +99,6 @@
 		8F15B30018D5D87500F0836B /* Croix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Croix.h; sourceTree = "<group>"; };
 		8F15B30118D5D87500F0836B /* GameModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameModel.h; sourceTree = "<group>"; };
 		8F15B30218D5D87500F0836B /* Lvl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Lvl.h; sourceTree = "<group>"; };
-		8F15B30318D5D87500F0836B /* MODELE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MODELE.h; sourceTree = "<group>"; };
 		8F15B30418D5D87500F0836B /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
 		8F15B30518D5D87500F0836B /* Position.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Position.h; sourceTree = "<group>"; };
 		8F15B30618D5D87500F0836B /* Score.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Score.h; sourceTree = "<group>"; };
@@ -259,7 +257,6 @@
 				8F15B30018D5D87500F0836B /* Croix.h */,
 				8F15B30118D5D87500F0836B /* GameModel.h */,
 				8F15B30218D5D87500F0836B /* Lvl.h */,
-				8F15B30318D5D87500F0836B /* MODELE.h */,
 				8F15B30418D5D87500F0836B /* Player.h */,
 				8F15B30518D5D87500F0836B /* Position.h */,
 				8F15B30618D5D87500F0836B /* Score.h */,
@@ -278,7 +275,6 @@
 				8F15B2E918D5D85900F0836B /* Croix.cpp */,
 				8F15B2EA18D5D85900F0836B /* GameModel.cpp */,
 				8F15B2EB18D5D85900F0836B /* Lvl.cpp */,
-				8F15B2ED18D5D85900F0836B /* MODELE.cpp */,
 				8F15B2EE18D5D85900F0836B /* Player.cpp */,
 				8F15B2EF18D5D85900F0836B /* Position.cpp */,
 				8F15B2F018D5D85900F0836B /* Score.cpp */,

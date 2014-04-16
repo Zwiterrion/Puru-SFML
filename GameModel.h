@@ -46,7 +46,6 @@ public:
 
     void setMatrice(Case*** matriceBis);
     void direction(std::string answer);
-    bool check_answer(std::string a);
     int deplacement();
     void move(int x, int y);
 
