@@ -162,30 +162,53 @@ void GameView::draw()
 {
    
     Case ***matrice = m_model->getMatrice();
+    /* Affichage */
+    for(int i=0; i<18; i++){
+        cout << ("\t\t\t\t|---");
+        for(int k=0; k<17; k++)
+            cout << "|---";
+        cout <<"|" << endl << "\t\t\t\t";
+        for(int j=0; j<18; j++){
+            if(dynamic_cast<Bomb*>(matrice[i][j]))
+                cout << "|" << "@@@";
+            else if(m_model->getPlayer().get_x() == j && m_model->getPlayer().get_y() == i)
+                cout << "|$$$";
+            else if(dynamic_cast<BonusCase*>(matrice[i][j]))
+                cout << "|" << matrice[i][j]->getObj();
+            else
+                cout << "| " << matrice[i][j]->getObj() << " ";
+        }
+        cout << "|" <<endl ;
+    }
+    cout << "\t\t\t\t|---";
+    for(int k=0; k<17; k++)
+        cout << "|---";
+    cout << "|" <<endl ;
+    
     for(int i=0; i<18; i++){
         for(int j=0; j<18; j++){
             if(dynamic_cast<Bomb*>(matrice[i][j])){
-                _bombe_sprite.SetPosition(i*40,j*40);
+                _bombe_sprite.SetPosition(j*40,i*40);
                 _bombe_sprite.SetColor(sf::Color(255,255,255,128));
                 m_window->Draw(_bombe_sprite);
             }
             else if(m_model->getPlayer().get_x() == j && m_model->getPlayer().get_y() == i){
-                _digger_sprite.SetPosition(i*40, j*40);
+                _digger_sprite.SetPosition(j*40, j*40);
                 m_window->Draw(_digger_sprite);
             }
             else if(dynamic_cast<BonusCase*>(matrice[i][j])){
                 ostringstream out;
                 out << matrice[i][j]->getObj();
                 String s = String(out.str());
-                s.SetPosition(i*40, j*40);
-                _bonus_sprite.SetPosition(i*40,j*40);
+                s.SetPosition(j*40, i*40);
+                _bonus_sprite.SetPosition(j*40,i*40);
                 _bonus_sprite.SetColor(sf::Color(77,77,77,128));
                 m_window->Draw(_bonus_sprite);
                 m_window->Draw(s);
             }
             else if(dynamic_cast<Croix*>(matrice[i][j]))
             {
-                _vide_sprite.SetPosition(i*40, j*40);
+                _vide_sprite.SetPosition(j*40, i*40);
                 _vide_sprite.SetColor(sf::Color(246,246,246,128));
                 m_window->Draw(_vide_sprite);
             }
@@ -193,8 +216,8 @@ void GameView::draw()
                 ostringstream out;
                 out << matrice[i][j]->getObj();
                 String s = String(out.str());
-                s.SetPosition(i*40 + 10, j*40);
-                _tuile_sprite.SetPosition(i*40,j*40);
+                s.SetPosition(j*40 + 10, i*40);
+                _tuile_sprite.SetPosition(j*40,i*40);
                 _tuile_sprite.SetColor(sf::Color(192,192,192,128));
                 m_window->Draw(_tuile_sprite);
                 m_window->Draw(s);
@@ -365,9 +388,19 @@ bool GameView::treatEvents()
                         m_window->Close();
                     }
                     if(m_model->getEndGame()){
-                        cout << "IICI";
                         if((e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x ) && e.MouseButton.X > _digger_sprite.GetPosition().x ) && (e.MouseButton.Y < _digger_sprite.GetPosition().y && e.MouseButton.Y > _digger_sprite.GetPosition().y - 40)){
-                            m_model->direction("O");
+                            m_model->direction("N");
+                            m_window->Clear(sf::Color(40,40,38));
+                            draw();
+                        }
+                        if((e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x ) && e.MouseButton.X > _digger_sprite.GetPosition().x ) &&
+                           (e.MouseButton.Y > (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y) && e.MouseButton.Y < _digger_sprite.GetPosition().y) + _digger_sprite.GetSize().y + 40){
+                            m_model->direction("S");
+                            m_window->Clear(sf::Color(40,40,38));
+                            draw();
+                        }
+                        if((e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x + 40) && e.MouseButton.X > _digger_sprite.GetPosition().x +_digger_sprite.GetSize().x) && (e.MouseButton.Y > _digger_sprite.GetPosition().y && e.MouseButton.Y < _digger_sprite.GetPosition().y + _digger_sprite.GetSize().y)){
+                            m_model->direction("E");
                             m_window->Clear(sf::Color(40,40,38));
                             draw();
                         }
