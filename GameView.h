@@ -12,6 +12,7 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include <map>
 
 class GameModel;
 class Case;
@@ -35,7 +36,7 @@ public:
 
 private:
     GameModel *m_model;
-    
+    std::vector<sf::Sprite*> images;
 public: // SFML
     void draw();
     bool treatEvents();
@@ -46,6 +47,7 @@ public: // SFML
     void s_rejouer();
     void s_perteVie();
     void s_changeLvl();
+    void s_plusDeVie();
     
 private: // SFML
     sf::RenderWindow *m_window;
@@ -74,7 +76,7 @@ private: // SFML
     sf::String affiche_Score;
     sf::String _vie_player;
     sf::String _abandon;
-   // sf::String jouer;
-   // sf::String quitter;
+    sf::String jouer;
+    sf::String quitter;
 };
 #endif /* defined(__THE_PURU__GameView__) */

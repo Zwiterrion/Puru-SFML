@@ -33,6 +33,8 @@ private:
     int nb_cases;
     int i;
     bool fin;
+    
+    int goToView;
 
 public:
     GameModel();
@@ -63,10 +65,11 @@ public:
     void genereMatrice();
     
     void rejouerPartie();
-    char saisieChoix();
-    char saisieMenu();
     void tabScore();
 
+
+    void setGoToView(int t);
+    int getGoToView();
 };
 
 

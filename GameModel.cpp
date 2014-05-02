@@ -23,7 +23,6 @@ using namespace std;
  ************************************************************/
 GameModel::GameModel()
 {
-    m_p = new Player();                     // Appel du constructeur du player
     m_n = new Lvl();                        // Appel du constructeur de Level
     m_s = new Score();                      // Appel du constructeur de Score
     fin = true;
@@ -61,6 +60,9 @@ GameModel::GameModel()
         matrice[x][y] = new BonusCase();             // Appel du construteur de Bonus pour remplir la case
     }
 
+    m_p = new Player();                     // Appel du constructeur du player
+   // delete matrice[m_p->get_x()][m_p->get_y()];
+    goToView = 1;
 }
 /**************************************************************
  * Nom: ~GameModel                                            *
@@ -148,7 +150,8 @@ void GameModel::tabScore()
 {
     string reponse;
     GameView::plusDeVie();
-    cin >> reponse ;
+    setGoToView(4);
+   // cin >> reponse ;
     cout << endl;
     fstream f;
     f.open( "scores.txt", ios::out | ios::app ); // ouverture du fichier en ecriture ficNb
@@ -237,14 +240,7 @@ void GameModel::perteVie()
     m_s->setDeplacement(0); // On remet le score déplacement à O
 
     if(m_p->getVie() > 0){
-        GameView::perteVie();
-        genereMatrice();
-        endGame();
-        
-        set_answer_move("3");
-        setEndGame(false); // Sinon on sort du jeu
-        genereMatrice();
-        setEndGame(true); 
+        setGoToView(2);
     }
     else
         endGame();
@@ -341,12 +337,8 @@ void GameModel::changeLevel()
         m_n->setBonus(m_n->getBonus() +1);
     }
     m_s->setDeplacement(0); // On remet le score déplacement à O
-    
-    GameView::changementLevel();
-    
-    setEndGame(false); // Sinon on sort du jeu
-    genereMatrice();
-    setEndGame(true);
+    setGoToView(3);
+
 }
 /************************************************************
  * Nom: deplacement                                         *
@@ -410,8 +402,10 @@ void GameModel::randomBonus()
     switch(x)
     {
         case 0:
-            m_n->set_bonusVie(m_n->get_b_vie() +1);
-            m_p->setVie(m_p->getVie() +1);
+            if(m_p->getVie() < 4){
+                m_n->set_bonusVie(m_n->get_b_vie() +1);
+                m_p->setVie(m_p->getVie() +1);
+            }
             break;
         case 1:
             m_n->set_bonusTemps(m_n->get_b_temps() +5);
@@ -518,30 +512,16 @@ void GameModel::genereMatrice(){
         delete matrice[x][y];                   // Désallocation de la case pour mettre le bonus
         matrice[x][y] = new BonusCase();             // Appel du construteur de Bonus pour remplir la case
     }
-        m_p->set_position(rand()%WIDTH_GAME,rand()%HEIGHT_GAME);
+    //    m_p->set_position(rand()%WIDTH_GAME,rand()%HEIGHT_GAME);
 
-        setMatrice(matrice);
-}
-char GameModel::saisieChoix()
-{
-    char choix = ' ';
-    do {
-        cin >> choix;
-    } while(!( choix >='0' && choix <= '2'));
+    setMatrice(matrice);
     
-    int c = atoi(&choix);
-    return c;
+    m_p->set_position(rand()%WIDTH_GAME,rand()%HEIGHT_GAME);
+   // delete matrice[m_p->get_x()][m_p->get_y()];
+    cout << "Player x: " << m_p->get_x();
+    cout << "Player y: " << m_p->get_y();
 }
-char GameModel::saisieMenu()
-{
-    char choix = ' ';
-    do {
-        cin >> choix;
-    } while(!( choix >='0' && choix <= '1'));
-    
-    int c = atoi(&choix);
-    return c;
-}
+
 void GameModel::rejouerPartie()
 {
     /*if(get_answer_move() != "1"){ // On affiche les scores seulement si on a pas abandonné
@@ -554,6 +534,12 @@ void GameModel::rejouerPartie()
 
 }
 
+void GameModel::setGoToView(int t){
+    goToView = t;
+}
+int GameModel::getGoToView(){
+    return goToView;
+}
 
 
 
