@@ -48,6 +48,7 @@ public: // SFML
     void s_perteVie();
     void s_changeLvl();
     void s_plusDeVie();
+    void s_option();
     
 private: // SFML
     sf::RenderWindow *m_window;
@@ -60,6 +61,8 @@ private: // SFML
     sf::Image _exit_image;
     sf::Image _start_image;
     sf::Image _vide_image;
+    sf::Image _option_image;
+    sf::Image _menu_image;
     
     sf::Sprite _background_sprite;
     sf::Sprite _digger_sprite;
@@ -69,6 +72,8 @@ private: // SFML
     sf::Sprite _exit_sprite;
     sf::Sprite _start_sprite;
     sf::Sprite _vide_sprite;
+    sf::Sprite _option_sprite;
+    sf::Sprite _menu_sprite;
     
     sf::Font _font;
     sf::String titre;
@@ -78,5 +83,6 @@ private: // SFML
     sf::String _abandon;
     sf::String jouer;
     sf::String quitter;
+
 };
 #endif /* defined(__THE_PURU__GameView__) */
