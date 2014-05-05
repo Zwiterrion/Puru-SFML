@@ -26,8 +26,6 @@ GameView::GameView(int h, int w, int bpp){
     }
     else {
         _background_sprite = Sprite (_background_image);
-        _background_sprite.Resize(1024, 768);
-        _background_sprite.SetPosition(0,0);
         
         _digger_sprite = Sprite(_digger_image);
         _bombe_sprite = Sprite(_bombe_image);
@@ -111,38 +109,20 @@ void GameView::s_viePlayer()
 void GameView::draw()
 {
    
-    Case ***matrice = m_model->getMatrice();
-    /* Affichage */
-    for(int i=0; i<18; i++){
-        cout << ("\t\t\t\t|---");
-        for(int k=0; k<17; k++)
-            cout << "|---";
-        cout <<"|" << endl << "\t\t\t\t";
-        for(int j=0; j<18; j++){
-            if(dynamic_cast<Bomb*>(matrice[i][j]))
-                cout << "|" << "@@@";
-            else if(m_model->getPlayer().get_x() == j && m_model->getPlayer().get_y() == i)
-                cout << "|$$$";
-            else if(dynamic_cast<BonusCase*>(matrice[i][j]))
-                cout << "|" << matrice[i][j]->getObj();
-            else
-                cout << "| " << matrice[i][j]->getObj() << " ";
-        }
-        cout << "|" <<endl ;
-    }
-    cout << "\t\t\t\t|---";
-    for(int k=0; k<17; k++)
-        cout << "|---";
-    cout << "|" <<endl ;
+    // Image background
+    _background_sprite.Resize(1024, 768);
+    _background_sprite.SetPosition(0,0);
+    _background_sprite.SetColor(sf::Color(126,126,126,128));
+    m_window->Draw(_background_sprite);
     
-  /*  if(images.size() != 0)
-    {
-        for(vector<Sprite*>::iterator it=images.begin(); it != images.end(); ++it)
-        {
-            images.erase(it);
+    Case ***matrice = m_model->getMatrice();
+    
+    for(std::vector<sf::Sprite*>::iterator it = images.begin(); it != images.end(); ++it) {
+            *it = NULL;
         }
-     //   images.resize(0);
-    }*/
+    images.clear();
+    images.resize(0);
+    
     for(int i=0; i<18; i++){
         for(int j=0; j<18; j++){
             if(dynamic_cast<Bomb*>(matrice[i][j])){
@@ -153,12 +133,6 @@ void GameView::draw()
                 images.push_back(bomb);
                 m_window->Draw(*bomb);
             }
-          /*  else if(m_model->getPlayer().get_x() == j && m_model->getPlayer().get_y() == i){
-                _digger_sprite.SetPosition(j*40, i*40);
-               Sprite *dig = &_digger_sprite;
-                images.push_back(dig);
-                m_window->Draw(*dig);
-            }*/
             else if(dynamic_cast<BonusCase*>(matrice[i][j])){
                 ostringstream out;
                 out << matrice[i][j]->getObj();
@@ -203,11 +177,6 @@ void GameView::draw()
         sprite.SetPosition(m_model->getPlayer().get_x()*40, m_model->getPlayer().get_y()*40);
         m_window->Draw(sprite);
         _digger_sprite.SetPosition(m_model->getPlayer().get_x()*40, m_model->getPlayer().get_y()*40);
-    }
-    
-    else
-    {
-        
     }
     
     Sprite *dig = &_digger_sprite;
@@ -377,7 +346,7 @@ void GameView::s_plusDeVie()
     ostringstream out;
     out << "Vous n'avez plus de vies. Fin de Jeu. \n Votre nom :";
     String text = String(out.str());
-    text.SetPosition(WIDTH/2-200, HEIGHT/2);
+    text.SetPosition(WIDTH/2-400, HEIGHT/2);
     text.SetSize(40);
     
     m_window->Draw(text);
@@ -394,10 +363,11 @@ bool GameView::treatEvents()
             if (e.Type == sf::Event::Closed)
                 m_window->Close();
             
+                
             switch (m_model->getGoToView())
-            {
-                case 1:
-                    if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left){
+                {
+                    case 1:
+                        if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left){
                         if((e.MouseButton.X < (_start_sprite.GetPosition().x +_start_sprite.GetSize().x ) && e.MouseButton.X > _start_sprite.GetPosition().x )&& (e.MouseButton.Y > _start_sprite.GetPosition().y && e.MouseButton.Y < _start_sprite.GetPosition().y + _start_sprite.GetSize().y)){
                             m_window->Clear(sf::Color(40,40,38));
                             draw();
@@ -451,15 +421,15 @@ bool GameView::treatEvents()
                             m_window->Clear(sf::Color(40,40,38));
                             draw();
                         }
-                    }
-                    break;
-                case 2:
-                    if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left){
+                        }
+                        break;
+                    case 2:
                         cout << "Je suis la " << endl;
                         m_window->Clear();
                         s_perteVie();
                         m_window->Display();
                         
+                        if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left){
                         if((e.MouseButton.X < (jouer.GetPosition().x + jouer.GetRect().GetWidth() ) && e.MouseButton.X > jouer.GetPosition().x )&& (e.MouseButton.Y > jouer.GetPosition().y && e.MouseButton.Y < jouer.GetPosition().y + jouer.GetRect().GetHeight())){
                             m_window->Clear(sf::Color(40,40,38));
                             m_model->genereMatrice();
@@ -471,15 +441,16 @@ bool GameView::treatEvents()
                             m_window->Close();
                         }
                         
-                    }
-                    break;
-                case 3:
-                    if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left){
+                        }
+                        break;
+                    case 3:
+                        
                         cout << " Rien " << endl;
                         m_window->Clear();
                         s_changeLvl();
                         m_window->Display();
                         
+                        if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left){
                         if((e.MouseButton.X < (jouer.GetPosition().x + 150 ) && e.MouseButton.X > jouer.GetPosition().x )&& (e.MouseButton.Y > jouer.GetPosition().y && e.MouseButton.Y < jouer.GetPosition().y + 50)){
                             m_window->Clear(sf::Color(40,40,38));
                             m_window->Clear();
@@ -492,21 +463,23 @@ bool GameView::treatEvents()
                             m_window->Close();
                         }
                         
-                    }
-                    break;
-                case 4:
-                    m_window->Clear();
-                    s_plusDeVie();
-                    if (e.Type == sf::Event::KeyPressed)
-                    {
-                        if (e.Type == sf::Event::TextEntered)
-                            cout << "Char= " << (char)e.Text.Unicode <<endl;
-                    }
-                    m_window->Display();
-                    
-                default:
-                    break;
-                    
+                        }
+                        break;
+                    case 4:
+                        m_window->Clear();
+                        s_plusDeVie();
+                        if (e.Type == sf::Event::KeyPressed)
+                        {
+                            if (e.Type == sf::Event::TextEntered){
+                                cout << "Char= " << (char)e.Text.Unicode <<endl;
+                            }
+                        }
+                        m_window->Display();
+                        
+                    default:
+                        break;
+                        
+                
             }
         }
     }
