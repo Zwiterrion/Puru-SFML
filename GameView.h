@@ -37,6 +37,7 @@ public:
 private:
     GameModel *m_model;
     std::vector<sf::Sprite*> images;
+    std::string s_nom;
     
 public: // SFML
     void draw();
@@ -84,7 +85,7 @@ private: // SFML
     sf::String _abandon;
     sf::String jouer;
     sf::String quitter;
-    
+    sf::String nom;
     
 
 };
