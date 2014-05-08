@@ -51,6 +51,8 @@
 		8F92D45F18B55A0E002E9C98 /* GameView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8F92D45E18B55A0E002E9C98 /* GameView.cpp */; };
 		8FCF9ED118FD2CE0003001DF /* exitButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 8FCF9ECF18FD2CE0003001DF /* exitButton.png */; };
 		8FCF9ED218FD2CE0003001DF /* startButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 8FCF9ED018FD2CE0003001DF /* startButton.png */; };
+		8FEFBF62191BC3FC007CA039 /* optionButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 8FEFBF61191BC3FC007CA039 /* optionButton.png */; };
+		8FEFBF64191BC424007CA039 /* menu.png in Resources */ = {isa = PBXBuildFile; fileRef = 8FEFBF63191BC424007CA039 /* menu.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -138,6 +140,8 @@
 		8F92D45E18B55A0E002E9C98 /* GameView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameView.cpp; sourceTree = "<group>"; };
 		8FCF9ECF18FD2CE0003001DF /* exitButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = exitButton.png; sourceTree = "<group>"; };
 		8FCF9ED018FD2CE0003001DF /* startButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = startButton.png; sourceTree = "<group>"; };
+		8FEFBF61191BC3FC007CA039 /* optionButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = optionButton.png; sourceTree = "<group>"; };
+		8FEFBF63191BC424007CA039 /* menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -286,6 +290,8 @@
 		8F92D44C18B554D6002E9C98 /* Pictures */ = {
 			isa = PBXGroup;
 			children = (
+				8FEFBF63191BC424007CA039 /* menu.png */,
+				8FEFBF61191BC3FC007CA039 /* optionButton.png */,
 				8F215E5318FD9E1C0011B7DB /* vide.png */,
 				8FCF9ECF18FD2CE0003001DF /* exitButton.png */,
 				8FCF9ED018FD2CE0003001DF /* startButton.png */,
@@ -385,6 +391,7 @@
 			files = (
 				8F15B31718D5DA9000F0836B /* digger_face.png in Resources */,
 				8F15B32218D5FBF400F0836B /* arial.ttf in Resources */,
+				8FEFBF62191BC3FC007CA039 /* optionButton.png in Resources */,
 				8F15B31E18D5DA9000F0836B /* tuiles_all.png in Resources */,
 				8F15B31818D5DA9000F0836B /* explosion.png in Resources */,
 				8F15B31C18D5DA9000F0836B /* tuile_piece.png in Resources */,
@@ -398,6 +405,7 @@
 				8F15B31D18D5DA9000F0836B /* tuile.png in Resources */,
 				8F15B31A18D5DA9000F0836B /* tuile_bonus.png in Resources */,
 				8F92D40118B55240002E9C98 /* InfoPlist.strings in Resources */,
+				8FEFBF64191BC424007CA039 /* menu.png in Resources */,
 				8F15B31318D5DA9000F0836B /* background.png in Resources */,
 				8F92D40F18B55240002E9C98 /* Images.xcassets in Resources */,
 				8F15B31618D5DA9000F0836B /* digger_face_2.png in Resources */,

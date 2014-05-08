@@ -82,7 +82,7 @@ void GameView::s_afficheBonus()
 void GameView::s_afficheScore()
 {
     ostringstream out;
-    out<< "Le score deplacement: " << m_model->getScore().getDeplacement() << "\nLe score cible: " << m_model->getScore().getCible() << "\t\t\nLe score total: " << m_model->getScore().getScoreTotal() << endl;
+    out<< "Le score deplacement: " << m_model->getScore().getDeplacement() << "\nLe score cible: " << m_model->getScore().getCible() << "\t\t\nLe score total: " << m_model->getScore().getScoreTotal() << "\nTemps restant : " << m_model->getLvl().getTemps() << endl;
     affiche_Score = String(out.str());
     affiche_Score.SetPosition(WIDTH - 300, 200);
     
@@ -92,7 +92,7 @@ void GameView::s_afficheScore()
 void GameView::s_viePlayer()
 {
     ostringstream out;
-    out<< "Vie du joueur: " << m_model->getPlayer().getVie();
+    out<< "\nVie du joueur: " << m_model->getPlayer().getVie();
     _vie_player = String(out.str());
     _vie_player.SetPosition(WIDTH - 300, 275);
     
@@ -385,26 +385,32 @@ bool GameView::treatEvents()
             if (e.Type == sf::Event::Closed)
                 m_window->Close();
             
-                
+            m_model->getLvl().calculDuTemps();
+            
             switch (m_model->getGoToView())
                 {
-                    case 1:
-                        if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left){
+                    case 0:
+                        if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() == false){
                             
                             if((e.MouseButton.X < (_start_sprite.GetPosition().x +_start_sprite.GetSize().x ) && e.MouseButton.X > _start_sprite.GetPosition().x )&& (e.MouseButton.Y > _start_sprite.GetPosition().y && e.MouseButton.Y < _start_sprite.GetPosition().y + _start_sprite.GetSize().y)){
                                 m_window->Clear(sf::Color(40,40,38));
                                 draw();
+                                m_model->setGoToView(1);
+                                m_model->setEcranJeu(true);
                             }
                             
-                            if((e.MouseButton.X < (_exit_sprite.GetPosition().x +_exit_sprite.GetSize().x ) && e.MouseButton.X > _exit_sprite.GetPosition().x )&& (e.MouseButton.Y > _exit_sprite.GetPosition().y && e.MouseButton.Y < _exit_sprite.GetPosition().y + _exit_sprite.GetSize().y )){
+                            if((e.MouseButton.X < (_exit_sprite.GetPosition().x +_exit_sprite.GetSize().x ) && e.MouseButton.X > _exit_sprite.GetPosition().x )&& (e.MouseButton.Y > _exit_sprite.GetPosition().y && e.MouseButton.Y < _exit_sprite.GetPosition().y + _exit_sprite.GetSize().y )  && m_model->getEcranJeu() == false){
                                 m_window->Close();
                             }
-                            
-                            if((e.MouseButton.X < (_option_sprite.GetPosition().x + _option_sprite.GetSize().x ) && e.MouseButton.X >  _option_sprite.GetPosition().x )&& (e.MouseButton.Y >  _option_sprite.GetPosition().y && e.MouseButton.Y <  _option_sprite.GetPosition().y + _option_sprite.GetSize().y )){
+                            if((e.MouseButton.X < (_option_sprite.GetPosition().x + _option_sprite.GetSize().x ) && e.MouseButton.X >  _option_sprite.GetPosition().x )&& (e.MouseButton.Y >  _option_sprite.GetPosition().y && e.MouseButton.Y <  _option_sprite.GetPosition().y + _option_sprite.GetSize().y )  && m_model->getEcranJeu() == false){
                                 m_window->Clear();
                                 s_option();
                                 m_model->setGoToView(5);
                             }
+                        }
+                    case 1:
+
+                        if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() ){
                             
                             if((e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x ) && e.MouseButton.X > _digger_sprite.GetPosition().x ) && (e.MouseButton.Y < _digger_sprite.GetPosition().y && e.MouseButton.Y > _digger_sprite.GetPosition().y - 40)){
                                 m_model->direction("N");
@@ -453,42 +459,40 @@ bool GameView::treatEvents()
                         }
                         break;
                     case 2:
-                        cout << "Je suis la " << endl;
                         m_window->Clear();
                         s_perteVie();
                         m_window->Display();
-                        
-                        if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left){
+                        if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() == false){
                             if((e.MouseButton.X < (jouer.GetPosition().x + jouer.GetRect().GetWidth() ) && e.MouseButton.X > jouer.GetPosition().x )&& (e.MouseButton.Y > jouer.GetPosition().y && e.MouseButton.Y < jouer.GetPosition().y + jouer.GetRect().GetHeight())){
                                 m_window->Clear(sf::Color(40,40,38));
                                 m_model->genereMatrice();
                                 draw();
-                                m_model->setGoToView(1);
+                                m_model->setGoToView(0);
+                                m_model->setEcranJeu(true);
                             }
                             
-                            if((e.MouseButton.X < (quitter.GetPosition().x + 150) && e.MouseButton.X > quitter.GetPosition().x )&& (e.MouseButton.Y > quitter.GetPosition().y && e.MouseButton.Y < 50 + quitter.GetPosition().y)){
+                            if((e.MouseButton.X < (quitter.GetPosition().x + 150) && e.MouseButton.X > quitter.GetPosition().x )&& (e.MouseButton.Y > quitter.GetPosition().y && e.MouseButton.Y < 50 + quitter.GetPosition().y)  && m_model->getEcranJeu() == false){
                                 m_window->Close();
                             }
                             
                         }
                         break;
                     case 3:
-                        
-                        cout << " Rien " << endl;
                         m_window->Clear();
                         s_changeLvl();
                         m_window->Display();
                         
-                        if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left){
+                        if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() == false){
                             if((e.MouseButton.X < (jouer.GetPosition().x + 150 ) && e.MouseButton.X > jouer.GetPosition().x )&& (e.MouseButton.Y > jouer.GetPosition().y && e.MouseButton.Y < jouer.GetPosition().y + 50)){
                                 m_window->Clear(sf::Color(40,40,38));
                                 m_window->Clear();
                                 m_model->genereMatrice();
                                 draw();
-                                m_model->setGoToView(1);
+                                m_model->setGoToView(0);
+                                m_model->setEcranJeu(true);
                             }
                             
-                            if((e.MouseButton.X < (quitter.GetPosition().x + 150) && e.MouseButton.X > quitter.GetPosition().x )&& (e.MouseButton.Y > quitter.GetPosition().y && e.MouseButton.Y < quitter.GetPosition().y + 50)){
+                            if((e.MouseButton.X < (quitter.GetPosition().x + 150) && e.MouseButton.X > quitter.GetPosition().x )&& (e.MouseButton.Y > quitter.GetPosition().y && e.MouseButton.Y < quitter.GetPosition().y + 50)  && m_model->getEcranJeu() == false){
                                 m_window->Close();
                             }
                             
@@ -497,34 +501,25 @@ bool GameView::treatEvents()
                     case 4:
                         m_window->Clear();
                         s_plusDeVie();
-                        if (e.Type == sf::Event::KeyPressed)
-                        {
-                            if (e.Type == sf::Event::TextEntered){
-                                cout << "Char= " << (char)e.Text.Unicode <<endl;
-                            }
-                        }
                         m_window->Display();
+                        m_window->Clear();
+                        s_Presentation();
+                        m_model->setGoToView(0);
                         break;
-                        
+                   
                     case 5:
-                        
+                        // Menu dans l'écran Option
                         if((e.MouseButton.X < (_menu_sprite.GetPosition().x +_menu_sprite.GetSize().x ) && e.MouseButton.X > _menu_sprite.GetPosition().x )&& (e.MouseButton.Y > _menu_sprite.GetPosition().y && e.MouseButton.Y < _menu_sprite.GetPosition().y + _menu_sprite.GetSize().y )){
                             m_window->Clear();
                             s_Presentation();
-                            m_model->setGoToView(1);
+                            m_model->setGoToView(0);
                         }
                         break;
                     default:
                         break;
-                        
                 
             }
         }
     }
     return true;
 }
-
-
-
-
-

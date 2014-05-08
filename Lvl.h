@@ -10,6 +10,7 @@
 #define __THE_PURU__Lvl__
 
 #include <iostream>
+#include <ctime>
 
 class Lvl {
 private:
@@ -19,8 +20,18 @@ private:
     int m_bonus_temps;
     int m_bonus_vie;
     int m_score_bonus;
+    int m_temps;
+    time_t secondes;
+    struct tm instant;
+    int m_minutes;
+    int m_fin;
+    int m_compteur;
+    int m_difference;
+    int m_firstTime;
+
 public:
     Lvl();
+    virtual ~Lvl();
     int getNb() const;
     int get_score_bonus() const;
     int get_b_temps() const;
@@ -34,7 +45,10 @@ public:
     void set_bonusVie(int nb);
     void set_bonusTemps(int nb);
     void set_score_bonus(int nb);
-
+    int getTemps() const;
+    void setTemps(int temps);
+    void initTemps();
+    void calculDuTemps();
 };
 
 #endif /* defined(__THE_PURU__Lvl__) */

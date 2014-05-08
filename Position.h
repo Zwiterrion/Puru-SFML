@@ -17,7 +17,8 @@ protected:
     int m_y;
 
 public:
-    Position (); // génère aléatoirement une position
+    Position ();
+    virtual ~Position();
     Position (int x, int y);
     virtual void set_x(int x);
     virtual void set_y(int y);

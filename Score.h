@@ -14,6 +14,7 @@ class Score
 {
 public:
     Score();
+    virtual ~Score();
     void setDeplacement(int deplacement);
     void setScoreTotal(int score);
     void setCible(int c);

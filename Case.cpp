@@ -19,4 +19,4 @@ string Case::getObj() const
 {
     return m_obj;
 }
-
+Case::~Case(){}

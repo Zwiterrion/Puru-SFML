@@ -25,6 +25,7 @@ void Player::set_position(int x, int y){
     }
     set_pos(x, y);
 }
+Player::~Player(){};
 
 int Player::getVie() const
 {

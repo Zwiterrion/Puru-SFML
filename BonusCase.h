@@ -10,6 +10,7 @@ class BonusCase : public Case{
 
 public:
     BonusCase();
+    virtual ~BonusCase();
 
 };
 

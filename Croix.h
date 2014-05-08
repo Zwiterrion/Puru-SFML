@@ -9,7 +9,7 @@
 class Croix : public Case{
 public:
     Croix();
-
+    virtual ~Croix();
 };
 
 #endif

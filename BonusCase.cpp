@@ -12,3 +12,4 @@ BonusCase::BonusCase():Case() // Appel du constructeur de la class Mère
     m_obj= "-" + entier + "-";
     set_pos(rand()%WIDTH_GAME, rand()%HEIGHT_GAME);
 }
+BonusCase::~BonusCase(){}

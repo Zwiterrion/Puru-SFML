@@ -11,7 +11,11 @@ Lvl::Lvl(){
     m_bonus_temps = 0;
     m_bonus_vie = 0;
     m_score_bonus = 0;
+    m_temps = 45;
+    initTemps();
 }
+
+Lvl::~Lvl(){}
 int Lvl::getNb() const
 {
     return m_nb_bomb;
@@ -66,6 +70,56 @@ void Lvl::initBonus()
     set_bonusVie(0);
     set_bonusTemps(0);
     set_score_bonus(0);
+    if(m_lvl%2 == 0) {
+        setTemps(45-2);
+    }
+    else {
+        setTemps(45-1);
+    }
+    if(m_lvl == 10){
+        setTemps(35);
+    }
+}
+int Lvl::getTemps() const {
+    return m_temps;
+}
+void Lvl::setTemps(int temps) {
+    m_temps = temps;
+}
+void Lvl::initTemps() {
+    time(&secondes);
+    instant=*localtime(&secondes);
+    m_minutes = instant.tm_min;
+    m_compteur =0;
+    m_difference = 0;
+    m_firstTime = 0;
+    m_fin = 0;
+}
+void Lvl::calculDuTemps()
+{
+    if(m_firstTime == 0){
+        cout << "Temps restant : " << m_temps << endl;
+        m_firstTime = 1;
+        time(&secondes);
+        instant=*localtime(&secondes);
+        m_fin = instant.tm_sec;
+        m_minutes = instant.tm_min;
+        m_compteur = m_minutes * 60+ m_fin;
+    }
+    else
+    {
+        time(&secondes);
+        instant=*localtime(&secondes);
+        m_fin = instant.tm_sec;
+        m_minutes = instant.tm_min;
+        m_difference = ((m_minutes * 60) + m_fin) - m_compteur;
+        m_temps -= m_difference;
+        m_compteur = (m_minutes * 60 )+ m_fin;
+    
+        if(m_temps <= 0)
+            m_temps = 0;
+    }
+    
 }
 
 

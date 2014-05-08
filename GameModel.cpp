@@ -62,7 +62,9 @@ GameModel::GameModel()
 
     m_p = new Player();                     // Appel du constructeur du player
    // delete matrice[m_p->get_x()][m_p->get_y()];
-    goToView = 1;
+    
+    // Pour le début du jeu.
+    goToView = 0;
 }
 /**************************************************************
  * Nom: ~GameModel                                            *
@@ -240,6 +242,8 @@ void GameModel::perteVie()
     m_s->setDeplacement(0); // On remet le score déplacement à O
 
     if(m_p->getVie() > 0){
+       setEcranJeu(false);
+        m_n->initBonus();
         setGoToView(2);
     }
     else
@@ -260,48 +264,55 @@ void GameModel::move(int pos_x, int pos_y)
 {
     int x = m_p->get_x();
     int y = m_p->get_y();
-     delete matrice[m_p->get_y()][m_p->get_x()];
-     matrice[m_p->get_y()][m_p->get_x()] = new Croix();
-     m_p->deplacement(pos_x,pos_y);
-     nb_cases = deplacement();
-
-	  string obj = matrice[m_p->get_y()][m_p->get_x()]->getObj();  // Test si la case suivante, la premiere, est une bombe
+    if(x != -1 && y != -1) {
+        delete matrice[m_p->get_y()][m_p->get_x()];
+        matrice[m_p->get_y()][m_p->get_x()] = new Croix();
+        m_p->deplacement(pos_x,pos_y);
+    }
+    nb_cases = deplacement();
+    
+    if(x != -1 && y != -1) {
+        string obj = matrice[m_p->get_y()][m_p->get_x()]->getObj();  // Test si la case suivante, la premiere, est une bombe
         if(obj == "@@@" || obj == " "){
             nb_cases = 0;
         }
-
-		 if(nb_cases == 0)                                          // Si c'est une bombe on recule
+    }
+    if(nb_cases == 0)                                          // Si c'est une bombe on recule
+    {
+        m_p->set_pos(x, y);
+    }
+    else if(nb_cases != -1 ){
+        
+        m_s->setDeplacement(m_s->getDeplacement()+nb_cases);    // Incrémentation du nombre de déplacement
+        m_s->setScoreTotal(m_s->getScoreTotal()+nb_cases*10);   // Incrémentation du score total
+        
+        i = 1;                                                  // Initialisation de i à 1
+        
+        while(i < nb_cases && deplacement() != -1)
         {
-            m_p->set_pos(x, y);
+            delete matrice[m_p->get_y()][m_p->get_x()];         // On libére la case du joueur
+            matrice[m_p->get_y()][m_p->get_x()] = new Croix();  // Appel du constructeur de la croix pour la mettre dans la case précédente du joueur
+            m_p->deplacement(pos_x, pos_y);                                      // Puis on fait monter le joueur à nouveau
+            i++;                                                // On incrémente i
         }
-        else if(nb_cases != -1 ){
-
-            m_s->setDeplacement(m_s->getDeplacement()+nb_cases);    // Incrémentation du nombre de déplacement
-            m_s->setScoreTotal(m_s->getScoreTotal()+nb_cases*10);   // Incrémentation du score total
-
-            i = 1;                                                  // Initialisation de i à 1
-
-            while(i < nb_cases && deplacement() != -1)
-            {
-                delete matrice[m_p->get_y()][m_p->get_x()];         // On libére la case du joueur
-                matrice[m_p->get_y()][m_p->get_x()] = new Croix();  // Appel du constructeur de la croix pour la mettre dans la case précédente du joueur
-                m_p->deplacement(pos_x, pos_y);                                      // Puis on fait monter le joueur à nouveau
-                i++;                                                // On incrémente i
-            }
-            if(deplacement() != -1){                                // Si le joueur a atteint le nb_case alors on supprime et on met une croix
-                delete matrice[m_p->get_y()][m_p->get_x()];
-                matrice[m_p->get_y()][m_p->get_x()] = new Croix();
+        if(deplacement() != -1){                                // Si le joueur a atteint le nb_case alors on supprime et on met une croix
+            delete matrice[m_p->get_y()][m_p->get_x()];
+            matrice[m_p->get_y()][m_p->get_x()] = new Croix();
+            if(!plusDeTemps())
                 objectifAtteint();
-            }
-            else{
-                m_s->setScoreTotal(m_s->getScoreTotal()-nb_cases*10);
-                perteVie();
-            }
         }
-
-        else
+        else{
+            m_s->setScoreTotal(m_s->getScoreTotal()-nb_cases*10);
             perteVie();
-
+            plusDeTemps();
+        }
+    }
+    
+    else    {
+        perteVie();
+        plusDeTemps();
+    }
+    
 }
 /**************************************************************
  * Nom: objectifAtteint                                       *
@@ -328,16 +339,19 @@ void GameModel::objectifAtteint()
  ************************************************************/
 void GameModel::changeLevel()
 {
-    m_n->setLevel(m_n->getLevel() + 1); // Incrémentation du level grâce à la surcharge
-    m_s->setCible(m_s->getCible() + 5);
-    m_n->initBonus();
-
-    if(m_n->getLevel()%2 == 0){
-        m_n->setBomb(m_n->getNb() +1);
-        m_n->setBonus(m_n->getBonus() +1);
+    if(!plusDeTemps()){
+        m_n->setLevel(m_n->getLevel() + 1); // Incrémentation du level grâce à la surcharge
+        m_s->setCible(m_s->getCible() + 5);
+        m_n->initBonus();
+        
+        if(m_n->getLevel()%2 == 0){
+            m_n->setBomb(m_n->getNb() +1);
+            m_n->setBonus(m_n->getBonus() +1);
+        }
+        m_s->setDeplacement(0); // On remet le score déplacement à O
+        setEcranJeu(false);
+        setGoToView(3);
     }
-    m_s->setDeplacement(0); // On remet le score déplacement à O
-    setGoToView(3);
 
 }
 /************************************************************
@@ -409,6 +423,9 @@ void GameModel::randomBonus()
             break;
         case 1:
             m_n->set_bonusTemps(m_n->get_b_temps() +5);
+            m_n->setTemps(m_n->getTemps() + m_n->get_b_temps());
+            if(m_n->getTemps() > 60)
+                m_n->setTemps(60);
             break;
         case 2:
             m_n->set_score_bonus(m_n->get_score_bonus() +20);
@@ -445,7 +462,7 @@ const Score& GameModel::getScore() const
  ************************************************************
  * Rôle:  Fonction qui retourne un pointeur sur le level    *
  ************************************************************/
-const Lvl& GameModel::getLvl() const
+Lvl& GameModel::getLvl() const
 {
     return *m_n;
 }
@@ -512,14 +529,10 @@ void GameModel::genereMatrice(){
         delete matrice[x][y];                   // Désallocation de la case pour mettre le bonus
         matrice[x][y] = new BonusCase();             // Appel du construteur de Bonus pour remplir la case
     }
-    //    m_p->set_position(rand()%WIDTH_GAME,rand()%HEIGHT_GAME);
 
     setMatrice(matrice);
     
     m_p->set_position(rand()%WIDTH_GAME,rand()%HEIGHT_GAME);
-   // delete matrice[m_p->get_x()][m_p->get_y()];
-    cout << "Player x: " << m_p->get_x();
-    cout << "Player y: " << m_p->get_y();
 }
 
 void GameModel::rejouerPartie()
@@ -540,7 +553,21 @@ void GameModel::setGoToView(int t){
 int GameModel::getGoToView(){
     return goToView;
 }
-
+void GameModel::setEcranJeu(bool e) {
+    ecranJeu = e;
+}
+bool GameModel::getEcranJeu() const {
+    return ecranJeu;
+}
+bool GameModel::plusDeTemps() {
+    
+    if(m_n->getTemps() <= 0){
+        perteVie();
+        return true;
+    }
+    
+    return false;
+}
 
 
 

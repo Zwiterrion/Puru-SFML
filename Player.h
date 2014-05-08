@@ -17,6 +17,7 @@
 class Player : public Case{
 public:
     Player();
+    virtual ~Player();
     Position get_position();
     void setVie(int nb);
     void deplacement(int x, int y);

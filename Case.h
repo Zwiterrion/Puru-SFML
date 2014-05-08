@@ -20,6 +20,7 @@ protected:
 
 public:
     Case();
+    ~Case();
     void add_o(std::string o);
     virtual std::string getObj() const;  // retourne l'objet
 

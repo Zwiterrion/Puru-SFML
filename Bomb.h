@@ -18,7 +18,8 @@
 class Bomb : public Case{
 
 public:
-    Bomb();                               // Constructeur
+    Bomb();
+    virtual ~Bomb();
 };
 
 #endif /* defined(__THE_PURU__Bomb__) */

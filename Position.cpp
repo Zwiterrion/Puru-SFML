@@ -8,6 +8,7 @@ Position::Position(){
     m_x=rand()%(WIDTH_GAME);
     m_y=rand()%(WIDTH_GAME);
 }
+Position::~Position(){}
 
 Position::Position(int x, int y){
     m_x=x;

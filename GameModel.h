@@ -35,16 +35,17 @@ private:
     bool fin;
     
     int goToView;
+    bool ecranJeu;
 
 public:
     GameModel();
-    ~GameModel();
+    virtual ~GameModel();
     void set_answer_move(std::string a);
     std::string get_answer_move();
 
     const Player& getPlayer() const;
     const Score& getScore() const;
-    const Lvl& getLvl() const;
+    Lvl& getLvl() const;
 
     void setMatrice(Case*** matriceBis);
     void direction(std::string answer);
@@ -70,7 +71,13 @@ public:
 
     void setGoToView(int t);
     int getGoToView();
+
+    void setEcranJeu(bool e);
+    bool getEcranJeu() const;
+
+    bool plusDeTemps();
 };
+
 
 
 #endif /* defined(__THE_PURU__GameModel__) */

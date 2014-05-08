@@ -11,3 +11,4 @@ Croix::Croix():Case() // Appel du constructeur de la class Mère
     m_obj=" ";
     set_pos(rand()%WIDTH_GAME, rand()%HEIGHT_GAME);
 }
+Croix::~Croix(){}

@@ -22,7 +22,7 @@ class GameView{
 
 public:
     GameView(int h, int w, int bpp);
-    ~GameView();
+    virtual ~GameView();
     void setModel(GameModel *model);
     static void rejouer();
     static void affichageScore();
@@ -37,6 +37,7 @@ public:
 private:
     GameModel *m_model;
     std::vector<sf::Sprite*> images;
+    
 public: // SFML
     void draw();
     bool treatEvents();
@@ -83,6 +84,8 @@ private: // SFML
     sf::String _abandon;
     sf::String jouer;
     sf::String quitter;
+    
+    
 
 };
 #endif /* defined(__THE_PURU__GameView__) */

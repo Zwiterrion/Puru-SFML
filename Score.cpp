@@ -13,6 +13,7 @@ Score::Score()
     nb_score_total = 0;
     m_cible = 10;
 }
+Score::~Score(){};
 void Score::setDeplacement(int deplacement)
 {
     nb_deplacement = deplacement;
