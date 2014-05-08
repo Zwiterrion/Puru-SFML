@@ -111,7 +111,7 @@ void GameView::draw()
 {
    
     // Image background
-    _background_sprite.Resize(1024, 768);
+    _background_sprite.Resize(WIDTH, HEIGHT);
     _background_sprite.SetPosition(0,0);
     _background_sprite.SetColor(sf::Color(126,126,126,128));
     m_window->Draw(_background_sprite);
@@ -129,7 +129,7 @@ void GameView::draw()
     for(int i=0; i<18; i++){
         for(int j=0; j<18; j++){
             if(dynamic_cast<Bomb*>(matrice[i][j])){
-                _bombe_sprite.SetPosition(j*40,i*40);
+                _bombe_sprite.SetPosition(j*WIDTH_PIECE,i*WIDTH_PIECE);
                 _bombe_sprite.SetColor(sf::Color(255,255,255,128));
                 
                 Sprite *bomb = &_bombe_sprite;
@@ -140,8 +140,8 @@ void GameView::draw()
                 ostringstream out;
                 out << matrice[i][j]->getObj();
                 String s = String(out.str());
-                s.SetPosition(j*40, i*40);
-                _bonus_sprite.SetPosition(j*40,i*40);
+                s.SetPosition(j*WIDTH_PIECE, i*WIDTH_PIECE);
+                _bonus_sprite.SetPosition(j*WIDTH_PIECE,i*WIDTH_PIECE);
                 _bonus_sprite.SetColor(sf::Color(77,77,77,128));
                 Sprite *bonus = &_bonus_sprite;
                 images.push_back(bonus);
@@ -150,7 +150,7 @@ void GameView::draw()
             }
             else if(dynamic_cast<Croix*>(matrice[i][j]))
             {
-                _vide_sprite.SetPosition(j*40, i*40);
+                _vide_sprite.SetPosition(j*WIDTH_PIECE, i*WIDTH_PIECE);
                 _vide_sprite.SetColor(sf::Color(246,246,246,128));
                 Sprite *vide = &_vide_sprite;
                 images.push_back(vide);
@@ -161,8 +161,8 @@ void GameView::draw()
                 ostringstream out;
                 out << matrice[i][j]->getObj();
                 String s = String(out.str());
-                s.SetPosition(j*40 + 10, i*40);
-                _tuile_sprite.SetPosition(j*40,i*40);
+                s.SetPosition(j*WIDTH_PIECE + 10, i*WIDTH_PIECE);
+                _tuile_sprite.SetPosition(j*WIDTH_PIECE,i*WIDTH_PIECE);
                 _tuile_sprite.SetColor(sf::Color(192,192,192,128));
                 Sprite *tuile = new Sprite();
                 tuile = &_tuile_sprite;
@@ -173,14 +173,14 @@ void GameView::draw()
         }
    
     }
-    if(m_model->getPlayer().get_y()*40 < 18*40 && m_model->getPlayer().get_x()*40 < 18*40){
+    if(m_model->getPlayer().get_y()*WIDTH_PIECE < 18*WIDTH_PIECE && m_model->getPlayer().get_x()*WIDTH_PIECE < 18*WIDTH_PIECE){
         sf::Image image;
         image.LoadFromFile("tuile_bonus.png");
         sf::Sprite sprite = Sprite(image);
         sprite.Resize(38, 38);
-        sprite.SetPosition(m_model->getPlayer().get_x()*40, m_model->getPlayer().get_y()*40);
+        sprite.SetPosition(m_model->getPlayer().get_x()*WIDTH_PIECE, m_model->getPlayer().get_y()*WIDTH_PIECE);
         m_window->Draw(sprite);
-        _digger_sprite.SetPosition(m_model->getPlayer().get_x()*40, m_model->getPlayer().get_y()*40);
+        _digger_sprite.SetPosition(m_model->getPlayer().get_x()*WIDTH_PIECE, m_model->getPlayer().get_y()*WIDTH_PIECE);
     }
     
     Sprite *dig = &_digger_sprite;
@@ -191,7 +191,7 @@ void GameView::draw()
     s_afficheScore();
     s_viePlayer();
     
-    m_window->Display();
+   // m_window->Display();
 
 }
 /************************************************************
@@ -208,20 +208,17 @@ void GameView::s_Presentation()
     titre.SetColor(sf::Color(200,200,200));
     titre.SetFont(_font);
     titre.SetSize(80.0f);
-    titre.SetPosition(1024/2 - 325 ,768/2 - 200);
-    m_window->Draw(titre);
+    titre.SetPosition(WIDTH/2 - 325 ,HEIGHT/2 - 200);
     
-    _option_sprite.SetPosition(1024/2 -100, 768/2+100);
+    _option_sprite.SetPosition(WIDTH/2 -100, HEIGHT/2+100);
+    
+    _start_sprite.SetPosition(WIDTH/2 -300, HEIGHT/2);
+    
+    _exit_sprite.SetPosition(WIDTH/2 +100, HEIGHT/2);
     m_window->Draw(_option_sprite);
-    
-    _start_sprite.SetPosition(1024/2 -300, 768/2);
     m_window->Draw(_start_sprite);
-    
-    _exit_sprite.SetPosition(1024/2 +100, 768/2);
     m_window->Draw(_exit_sprite);
-    
-    
-    m_window->Display();
+    m_window->Draw(titre);
 }
 /************************************************************
  * Nom: rejouer                                             *
@@ -240,16 +237,16 @@ void GameView::s_rejouer()
 {
     ostringstream out;
     out << "Vous avez perdu ou décider d'abandonner !" << "\nVoulez rejouer ? ";
-    _start_sprite.SetPosition(1024/2 -300, 768/2);
+    _start_sprite.SetPosition(WIDTH/2 -300, HEIGHT/2);
     m_window->Draw(_start_sprite);
     
-    _exit_sprite.SetPosition(1024/2 +100, 768/2);
+    _exit_sprite.SetPosition(WIDTH/2 +100, HEIGHT/2);
     m_window->Draw(_exit_sprite);
     
     string s = out.str();
     _abandon = String(s);
     
-    _abandon.SetPosition(1024/2, 768/2 - 200);
+    _abandon.SetPosition(WIDTH/2, HEIGHT/2 - 200);
     _abandon.SetSize(80.0f);
     
     m_window->Draw(_abandon);    
@@ -304,19 +301,19 @@ void GameView::s_perteVie()
     
     jouer = String("Jouer");
     jouer.SetSize(40);
-    jouer.SetPosition((1024/2)-300, 768/2+50);
+    jouer.SetPosition((WIDTH/2)-300, HEIGHT/2+50);
     jouer.SetColor(sf::Color(125, 205, 128));
     
     quitter = String("Quitter");
     quitter.SetSize(40);
-    quitter.SetPosition((1024/2)+100, 768/2+50);
+    quitter.SetPosition((WIDTH/2)+100, HEIGHT/2+50);
     quitter.SetColor(sf::Color(125, 205, 128));
     
     m_window->Clear(sf::Color(20,20,20));
     sf::String perte = String(" \nVous venez de perdre une vie !");
     sf::String suite = String("Voulez-vous continuer ?");
-    suite.SetPosition(1024/2 - 250, HEIGHT/2-30);
-    perte.SetPosition(1024/2 - 300, 768/2-150);
+    suite.SetPosition(WIDTH/2 - 250, HEIGHT/2-30);
+    perte.SetPosition(WIDTH/2 - 300, HEIGHT/2-150);
     perte.SetSize(40);
     suite.SetSize(40);
 
@@ -329,12 +326,12 @@ void GameView::s_changeLvl()
 {
     jouer = String("Jouer");
     jouer.SetSize(40);
-    jouer.SetPosition((1024/2)-300, 768/2+50);
+    jouer.SetPosition((WIDTH/2)-300, HEIGHT/2+50);
     
     
     quitter = String("Quitter");
     quitter.SetSize(40);
-    quitter.SetPosition((1024/2)+100, 768/2+50);
+    quitter.SetPosition((WIDTH/2)+100, HEIGHT/2+50);
     
     sf::String text = String("Vous avez change de niveau ! ");
     text.SetSize(50.0f);
@@ -364,14 +361,13 @@ void GameView::s_option()
     e.SetColor(sf::Color(200,200,200));
     e.SetFont(_font);
     e.SetSize(80.0f);
-    e.SetPosition(1024/2-150,768/2 - 200);
+    e.SetPosition(WIDTH/2-150,HEIGHT/2 - 200);
     
-    _menu_sprite.SetPosition(1024/2-100, 768/2 + 250);
+    _menu_sprite.SetPosition(WIDTH/2-100, HEIGHT/2 + 250);
     cout << "ICI"<< endl;
     m_window->Draw(_menu_sprite);
     
     m_window->Draw(e);
-    m_window->Display();
 }
 bool GameView::treatEvents()
 {
@@ -393,8 +389,6 @@ bool GameView::treatEvents()
                         if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() == false){
                             
                             if((e.MouseButton.X < (_start_sprite.GetPosition().x +_start_sprite.GetSize().x ) && e.MouseButton.X > _start_sprite.GetPosition().x )&& (e.MouseButton.Y > _start_sprite.GetPosition().y && e.MouseButton.Y < _start_sprite.GetPosition().y + _start_sprite.GetSize().y)){
-                                m_window->Clear(sf::Color(40,40,38));
-                                draw();
                                 m_model->setGoToView(1);
                                 m_model->setEcranJeu(true);
                             }
@@ -403,7 +397,6 @@ bool GameView::treatEvents()
                                 m_window->Close();
                             }
                             if((e.MouseButton.X < (_option_sprite.GetPosition().x + _option_sprite.GetSize().x ) && e.MouseButton.X >  _option_sprite.GetPosition().x )&& (e.MouseButton.Y >  _option_sprite.GetPosition().y && e.MouseButton.Y <  _option_sprite.GetPosition().y + _option_sprite.GetSize().y )  && m_model->getEcranJeu() == false){
-                                m_window->Clear();
                                 s_option();
                                 m_model->setGoToView(5);
                             }
@@ -414,60 +407,39 @@ bool GameView::treatEvents()
                             
                             if((e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x ) && e.MouseButton.X > _digger_sprite.GetPosition().x ) && (e.MouseButton.Y < _digger_sprite.GetPosition().y && e.MouseButton.Y > _digger_sprite.GetPosition().y - 40)){
                                 m_model->direction("N");
-                                m_window->Clear(sf::Color(40,40,38));
-                                draw();
                             }
                             if((e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x ) && e.MouseButton.X > _digger_sprite.GetPosition().x ) && (e.MouseButton.Y > (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y) && e.MouseButton.Y < (_digger_sprite.GetPosition().y) + _digger_sprite.GetSize().y + 40)){
                                 m_model->direction("S");
-                                m_window->Clear(sf::Color(40,40,38));
-                                draw();
                             }
                             if((e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x + 40) && e.MouseButton.X > (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x)) && (e.MouseButton.Y > _digger_sprite.GetPosition().y && e.MouseButton.Y < (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y))){
                                 m_model->direction("E");
-                                m_window->Clear(sf::Color(40,40,38));
-                                draw();
                             }
                             
                             if((e.MouseButton.X > (_digger_sprite.GetPosition().x + -40) && e.MouseButton.X < _digger_sprite.GetPosition().x  && e.MouseButton.Y > _digger_sprite.GetPosition().y && e.MouseButton.Y < (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y))){
                                 m_model->direction("O");
-                                m_window->Clear(sf::Color(40,40,38));
-                                draw();
                             }
                             
                             if(e.MouseButton.X > (_digger_sprite.GetPosition().x + -40) && e.MouseButton.X < _digger_sprite.GetPosition().x  && e.MouseButton.Y < _digger_sprite.GetPosition().y && e.MouseButton.Y > (_digger_sprite.GetPosition().y - 40)){
                                 m_model->direction("NO");
-                                m_window->Clear(sf::Color(40,40,38));
-                                draw();
                             }
                             
                             if(e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x + 40) && e.MouseButton.X > (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x)  && e.MouseButton.Y < _digger_sprite.GetPosition().y && e.MouseButton.Y > (_digger_sprite.GetPosition().y - 40)){
                                 m_model->direction("NE");
-                                m_window->Clear(sf::Color(40,40,38));
-                                draw();
                             }
                             
                             if(e.MouseButton.X > (_digger_sprite.GetPosition().x + -40) && e.MouseButton.X < _digger_sprite.GetPosition().x  && e.MouseButton.Y > (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y) && e.MouseButton.Y < (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y + 40)){
                                 m_model->direction("SO");
-                                m_window->Clear(sf::Color(40,40,38));
-                                draw();
                             }
                             if(e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x + 40) && e.MouseButton.X > (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x) && e.MouseButton.Y > (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y) && e.MouseButton.Y < (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y + 40)){
                                 m_model->direction("SE");
-                                m_window->Clear(sf::Color(40,40,38));
-                                draw();
                             }
                         }
                         break;
                     case 2:
-                        m_window->Clear();
-                        s_perteVie();
-                        m_window->Display();
                         if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() == false){
                             if((e.MouseButton.X < (jouer.GetPosition().x + jouer.GetRect().GetWidth() ) && e.MouseButton.X > jouer.GetPosition().x )&& (e.MouseButton.Y > jouer.GetPosition().y && e.MouseButton.Y < jouer.GetPosition().y + jouer.GetRect().GetHeight())){
-                                m_window->Clear(sf::Color(40,40,38));
                                 m_model->genereMatrice();
-                                draw();
-                                m_model->setGoToView(0);
+                                m_model->setGoToView(1);
                                 m_model->setEcranJeu(true);
                             }
                             
@@ -478,17 +450,11 @@ bool GameView::treatEvents()
                         }
                         break;
                     case 3:
-                        m_window->Clear();
-                        s_changeLvl();
-                        m_window->Display();
-                        
+                    
                         if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() == false){
                             if((e.MouseButton.X < (jouer.GetPosition().x + 150 ) && e.MouseButton.X > jouer.GetPosition().x )&& (e.MouseButton.Y > jouer.GetPosition().y && e.MouseButton.Y < jouer.GetPosition().y + 50)){
-                                m_window->Clear(sf::Color(40,40,38));
-                                m_window->Clear();
                                 m_model->genereMatrice();
-                                draw();
-                                m_model->setGoToView(0);
+                                m_model->setGoToView(1);
                                 m_model->setEcranJeu(true);
                             }
                             
@@ -499,19 +465,12 @@ bool GameView::treatEvents()
                         }
                         break;
                     case 4:
-                        m_window->Clear();
-                        s_plusDeVie();
-                        m_window->Display();
-                        m_window->Clear();
-                        s_Presentation();
                         m_model->setGoToView(0);
                         break;
                    
                     case 5:
                         // Menu dans l'écran Option
                         if((e.MouseButton.X < (_menu_sprite.GetPosition().x +_menu_sprite.GetSize().x ) && e.MouseButton.X > _menu_sprite.GetPosition().x )&& (e.MouseButton.Y > _menu_sprite.GetPosition().y && e.MouseButton.Y < _menu_sprite.GetPosition().y + _menu_sprite.GetSize().y )){
-                            m_window->Clear();
-                            s_Presentation();
                             m_model->setGoToView(0);
                         }
                         break;
@@ -520,6 +479,35 @@ bool GameView::treatEvents()
                 
             }
         }
+        
+        m_window->Clear();
+        if(m_model->getGoToView() == 0){
+            s_Presentation();
+        }
+        else if(m_model->getGoToView() == 1) {
+            draw();
+        }
+        else if(m_model->getGoToView() == 2) {
+            s_perteVie();
+        }
+        else if(m_model->getGoToView() == 3) {
+             s_changeLvl();
+        }
+        else if(m_model->getGoToView() == 4) {
+             s_plusDeVie();
+        }
+        else if(m_model->getGoToView() == 5) {
+            s_option();
+        }
+        m_window->Display();
     }
     return true;
 }
+
+
+
+
+
+
+
+

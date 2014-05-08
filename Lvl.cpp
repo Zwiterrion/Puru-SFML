@@ -71,7 +71,7 @@ void Lvl::initBonus()
     set_bonusTemps(0);
     set_score_bonus(0);
     if(m_lvl%2 == 0) {
-        setTemps(45-2);
+        setTemps(47-2);
     }
     else {
         setTemps(45-1);
