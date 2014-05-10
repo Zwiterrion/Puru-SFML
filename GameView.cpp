@@ -58,6 +58,7 @@ GameView::GameView(int h, int w, int bpp){
     
     // Aide pour démarrer le chrono au bon moment
     isEnable = false;
+    afficherScore = true;
 }
 /************************************************************
  * Nom: ~GameView                                           *
@@ -367,6 +368,40 @@ void GameView::s_option()
     
     m_window->Draw(e);
 }
+void GameView::s_chargementScore()
+{
+    fstream f;
+    f.open("/Users/Etienne/Desktop/Puru-SFML/meilleursScores.txt", ios::in);
+    
+    if( f.fail() )
+    {
+        cerr << "ouverture en lecture impossible" << endl;
+        afficherScore = false;
+        f.close();
+    }
+    else
+    {
+        int valeur = 0;
+        string phrase; // Nom du joueur
+        string sauv;
+        
+        f >> phrase;
+        
+        while(!f.eof()){
+            if(valeur%2 == 0){
+                sauv = phrase;
+            }
+            else {
+               // cout << "ICI";
+                m_e[atoi(phrase.c_str())] = sauv;
+            }
+            valeur++;
+            f >> phrase;
+        }
+        
+        f.close(); // fermeture du fichier
+    }
+}
 /**************************************************************
   * Nom: affichageScore                                        *
   **************************************************************
@@ -376,64 +411,29 @@ void GameView::s_option()
   **************************************************************/
 void GameView::affichageScore()
 {
-    /*fstream f;
-    int i = 0;
-    f.open("bestScore.txt", ios::in); // ouverture du fichier en ecriture ficNb
-    if( f.fail() )
-    {// Si probleme afficher une erreur
-        cerr << "ouverture en lecture impossible" << endl;
-        f.close();
-    }
-    string phrase;
-    f >> phrase;
-    int compteur = 0;
-    while(!f.eof()){
-        i++;
-        compteur += 30;
-        sf::String text = String(phrase);
-        text.SetSize(35);
-        if(i%2 == 1)
-            text.SetPosition(WIDTH/2 + 190, ((HEIGHT/2)-50) + compteur);
-        else
-            text.SetPosition(WIDTH/2 + 360, ((HEIGHT/2)-50) + (compteur-30));
-        
-        text.SetCenter(100, 20);
-        m_window->Draw(text);
-        f >> phrase;
-    }
-    cout << endl;
+    if(afficherScore)
+        s_chargementScore();
     
-    f.close(); // fermeture du fichier */
-    
-    fstream f;
-    string phrase;
-    int compteur = 0;
-    int distance = 30;
-    f.open("bestScore.txt", ios::in); // ouverture du fichier en ecriture ficNb
-    if( f.fail() ){
-        cerr << "ouverture en lecture impossible" << endl;
-        f.close();
-    }
-    getline(f, phrase);
-    while(!f.eof()){
-        m_s.push_back(phrase);
-        getline(f, phrase);
-    }
-    for(vector<string>::iterator it = m_s.begin(); it != m_s.end() ; ++it) {
-        compteur++;
-        if(compteur < 6){
-            string e = *it;
-            sf::String text = String(e);
-            text.SetSize(35);
-            text.SetPosition(WIDTH/2 + 80, ((HEIGHT/2)-70) + distance);
-            m_window->Draw(text);
+    int numero = 0;
+    int distance = 0;
+    for(map<int, std::string>::reverse_iterator it=m_e.rbegin(); it != m_e.rend(); ++it)
+    {
+        if(numero < 5){
+            string e = it->second;
+            e += " ";
+            stringstream ss;
+            ss << it->first;
+            e += ss.str();
+            score = String(e);
+            score.SetSize(35);
+            score.SetPosition(WIDTH/2 +70, (HEIGHT/2)-60 +distance);
             distance+=50;
+            m_window->Draw(score);
         }
-    
+        numero++;
     }
-    cout << endl;
-    
-    f.close(); // fermeture du fichier
+    afficherScore = false;
+
 }
 /**************************************************************
  * Nom: s_sauvegarde_Score                                    *
@@ -444,19 +444,14 @@ void GameView::affichageScore()
  **************************************************************/
 void GameView::s_sauvegarde_score() {
     fstream f;
-    f.open( "bestScore.txt", ios::out | ios::app ); // ouverture du fichier en ecriture ficNb
+    f.open( "/Users/Etienne/Desktop/Puru-SFML/meilleursScores.txt", ios::out | ios::app ); // ouverture du fichier en ecriture ficNb
     if( f.fail() )
     {
         cerr << "ouverture en lecture impossible" << endl;
         f.close();
     }
-    string e;
-    e =s_nom;
-    e += " " ;
-    e += m_model->getScore().getScoreTotal();
-    m_s.push_back(e);
-    //f << s_nom << " " << m_model->getScore().getScoreTotal() << endl;
-    
+    f << s_nom << endl;
+    f << m_model->getScore().getScoreTotal() << endl;
     f.close();
 }
 bool GameView::treatEvents()
@@ -567,7 +562,7 @@ bool GameView::treatEvents()
                         break;
                     case 4:
                         if(e.Type == sf::Event::TextEntered){
-                            if(s_nom.length() <= 10)
+                            if(s_nom.length() <= 9)
                             {
                                 s_nom += static_cast<char>(e.Text.Unicode);
                                 nom.SetText(s_nom);
@@ -582,6 +577,8 @@ bool GameView::treatEvents()
                             }
                         }
                         if(e.Type == sf::Event::KeyPressed  && (e.Key.Code == sf::Key::Return)) {
+                            s_nom.clear();
+                            afficherScore = true;
                             s_sauvegarde_score();
                             m_model->setEcranJeu(false);
                             m_model->rejouerPartie();

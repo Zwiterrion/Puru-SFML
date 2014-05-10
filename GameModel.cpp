@@ -151,18 +151,6 @@ std::string GameModel::get_answer_move(){
 void GameModel::tabScore()
 {
     setGoToView(4);
-
-    /*fstream f;
-    f.open( "scores.txt", ios::out | ios::app ); // ouverture du fichier en ecriture ficNb
-    if( f.fail() )
-    {// Si probleme afficher une erreur
-        cerr << "ouverture en lecture impossible" << endl;
-        f.close();
-    }
-    
-    f << reponse << ':' << getScore().getScoreTotal() << endl;
-    
-    f.close(); // fermeture du fichier */
 }
 /**************************************************************
  * Nom: initLevel                                             *

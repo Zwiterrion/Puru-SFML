@@ -34,7 +34,8 @@ private:
     std::vector<sf::Sprite*> images;
     std::string s_nom;
     bool isEnable;
-    std::vector<std::string>m_s;
+    std::map<int, std::string>m_e;
+    bool afficherScore;
     
 public: // SFML
     void draw();
@@ -50,6 +51,7 @@ public: // SFML
     void s_option();
     void s_perteParTemps();
     void s_sauvegarde_score();
+    void s_chargementScore();
     
 private: // SFML
     sf::RenderWindow *m_window;
@@ -87,6 +89,7 @@ private: // SFML
     sf::String jouer;
     sf::String quitter;
     sf::String nom;
+    sf::String score;
     
     sf::SoundBuffer Buffer;
     sf::Sound::Status status;
