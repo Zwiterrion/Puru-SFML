@@ -577,10 +577,10 @@ bool GameView::treatEvents()
                             }
                         }
                         if(e.Type == sf::Event::KeyPressed  && (e.Key.Code == sf::Key::Return)) {
-                            s_nom.clear();
                             afficherScore = true;
                             s_sauvegarde_score();
                             m_model->setEcranJeu(false);
+                            s_nom.clear();
                             m_model->rejouerPartie();
                             m_model->setGoToView(0);
                         }
