@@ -580,7 +580,7 @@ bool GameView::treatEvents()
                             afficherScore = true;
                             s_sauvegarde_score();
                             m_model->setEcranJeu(false);
-                            s_nom.clear();
+                           // s_nom.clear();
                             m_model->rejouerPartie();
                             m_model->setGoToView(0);
                         }
