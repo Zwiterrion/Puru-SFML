@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <cstdlib>
+#include <ctime>
 #include <vector>
 #include "GameModel.h"
 #include "GameView.h"
@@ -147,15 +148,11 @@ std::string GameModel::get_answer_move(){
     return m_answer_move;
 }
 
-
 void GameModel::tabScore()
 {
-    string reponse;
-    GameView::plusDeVie();
     setGoToView(4);
-   // cin >> reponse ;
-    cout << endl;
-    fstream f;
+
+    /*fstream f;
     f.open( "scores.txt", ios::out | ios::app ); // ouverture du fichier en ecriture ficNb
     if( f.fail() )
     {// Si probleme afficher une erreur
@@ -165,49 +162,7 @@ void GameModel::tabScore()
     
     f << reponse << ':' << getScore().getScoreTotal() << endl;
     
-    f.close(); // fermeture du fichier
-}
-/*************************************************************
- * Nom: endGame                                              *
- *************************************************************
- * Type: bool                                                *
- *************************************************************
- * Rôle:  Fonction qui vérifie que la vie du joueur n'est pas*
- * inférieur à 0. Retourne la valeur de fin et appelle       *
- *      la fonction tabScore si la parite est finie          *
- *************************************************************/
-bool GameModel::endGame()
-{
-    if(m_p->getVie() <= 0){
-        fin = false;
-        tabScore();
-        return fin;
-    }
-    return fin;
-}
-/************************************************************
- * Nom: setEndGame                                          *
- ************************************************************
- * Type: void (setter)                                      *
- ************************************************************
- * @param bool choix                                        *
- ************************************************************
- * Rôle:  Affecte la valeur de choix à la variable fin      *
- ************************************************************/
-void GameModel::setEndGame(bool choix)
-{
-    fin = choix;
-}
-/************************************************************
- * Nom: getEndGame                                          *
- ************************************************************
- * Type: bool   (getter)                                    *
- ************************************************************
- * Rôle:  Retourne la variable fin                          *
- ************************************************************/
-bool GameModel::getEndGame()
-{
-    return fin;
+    f.close(); // fermeture du fichier */
 }
 /**************************************************************
  * Nom: initLevel                                             *
@@ -241,13 +196,18 @@ void GameModel::perteVie()
     m_p->setVie(m_p->getVie() - 1); // On décremente la vie
     m_s->setDeplacement(0); // On remet le score déplacement à O
 
-    if(m_p->getVie() > 0){
+    if(m_p->getVie() > 0 && m_n->getTemps() <= 0) {
+        setEcranJeu(false);
+        m_n->initBonus();
+        setGoToView(6);
+    }
+    else if(m_p->getVie() > 0){
        setEcranJeu(false);
         m_n->initBonus();
         setGoToView(2);
     }
     else
-        endGame();
+        setGoToView(4); // Si plus de vie on passe à l'écran 4
 }
 /************************************************************
  * Nom: move                                                *
@@ -291,8 +251,8 @@ void GameModel::move(int pos_x, int pos_y)
         while(i < nb_cases && deplacement() != -1)
         {
             delete matrice[m_p->get_y()][m_p->get_x()];         // On libére la case du joueur
-            matrice[m_p->get_y()][m_p->get_x()] = new Croix();  // Appel du constructeur de la croix pour la mettre dans la case précédente du joueur
-            m_p->deplacement(pos_x, pos_y);                                      // Puis on fait monter le joueur à nouveau
+            matrice[m_p->get_y()][m_p->get_x()] = new Croix();
+            m_p->deplacement(pos_x, pos_y);
             i++;                                                // On incrémente i
         }
         if(deplacement() != -1){                                // Si le joueur a atteint le nb_case alors on supprime et on met une croix
@@ -304,13 +264,11 @@ void GameModel::move(int pos_x, int pos_y)
         else{
             m_s->setScoreTotal(m_s->getScoreTotal()-nb_cases*10);
             perteVie();
-            plusDeTemps();
         }
     }
     
     else    {
         perteVie();
-        plusDeTemps();
     }
     
 }
@@ -540,8 +498,6 @@ void GameModel::rejouerPartie()
     /*if(get_answer_move() != "1"){ // On affiche les scores seulement si on a pas abandonné
         GameView::affichageScore();
     }*/
-    GameView::rejouer();
-    setEndGame(true);
     initLevel();
     genereMatrice();
 
@@ -568,6 +524,36 @@ bool GameModel::plusDeTemps() {
     
     return false;
 }
+void GameModel::calculDuTemps()
+{
+     time_t sec;
+    if(m_n->getFirstTime() == 0){
+        m_n->setFirstTime(1);
+        time(&sec);
+        m_n->setInstant(*localtime(&sec));
+        m_n->setFin(m_n->getInstant().tm_sec);
+        m_n->setMinutes(m_n->getInstant().tm_min);
+        m_n->setCompteur(m_n->getMinutes() * 60+ m_n->getFin());
+    }
+    else
+    {
+        sec = m_n->getSecondes();
+        time(&sec);
+        m_n->setInstant(*localtime(&sec));
+        m_n->setFin(m_n->getInstant().tm_sec); // Temps à l'instant en secondes
+        m_n->setMinutes(m_n->getInstant().tm_min); // Temps à l'instant en minutes
+        m_n->setDifference(((m_n->getMinutes() * 60) + m_n->getFin()) - m_n->getCompteur()); // Convertion du tout en secondes
+        m_n->setTemps(m_n->getTemps() - m_n->getDifference()); // Puis affectation du temps - la difference
+        m_n->setCompteur((m_n->getMinutes() * 60 )+  m_n->getFin()); // Récupération du temps précédent
+        
+        if(m_n->getTemps() <= 0){
+            m_n->setTemps(0);
+            plusDeTemps();
+        }
+    }
+    
+}
+
 
 
 

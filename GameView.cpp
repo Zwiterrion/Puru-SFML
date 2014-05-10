@@ -6,6 +6,7 @@
 #include <fstream>
 #include <string>
 
+
 using namespace std;
 using namespace sf;
 
@@ -20,12 +21,13 @@ GameView::GameView(int h, int w, int bpp){
 
     m_window->Clear(sf::Color(20,20,20));
     
-    if(!_background_image.LoadFromFile("background.png") || !_digger_image.LoadFromFile("digger_face.png") || !_bombe_image.LoadFromFile("tuile_bombe.png") || !_bonus_image.LoadFromFile("tuile_bonus.png") || !_tuile_image.LoadFromFile("tuile.png") || !_exit_image.LoadFromFile("exitButton.png") || !_start_image.LoadFromFile("startButton.png") || !_vide_image.LoadFromFile("vide.png") || !_option_image.LoadFromFile("optionButton.png") || !_menu_image.LoadFromFile("menu.png")) {
+    if(!_background_image.LoadFromFile("background.png") || !_digger_image.LoadFromFile("digger_face.png") || !_bombe_image.LoadFromFile("tuile_bombe.png") || !_bonus_image.LoadFromFile("tuile_bonus.png") || !_tuile_image.LoadFromFile("tuile.png") || !_exit_image.LoadFromFile("exitButton.png") || !_start_image.LoadFromFile("startButton.png") || !_vide_image.LoadFromFile("vide.png") || !_option_image.LoadFromFile("optionButton.png") || !_menu_image.LoadFromFile("menu.png") || !Buffer.LoadFromFile("music.wav") || !bonus.LoadFromFile("bonus.wav") || !_bestScore_image.LoadFromFile("bestScore.png")) {
         
         cerr << "ERROR";
     }
     else {
         _background_sprite = Sprite (_background_image);
+        _bestScore_sprite = Sprite(_bestScore_image);
         _option_sprite = Sprite(_option_image);
         _menu_sprite = Sprite(_menu_image);
         _digger_sprite = Sprite(_digger_image);
@@ -44,6 +46,18 @@ GameView::GameView(int h, int w, int bpp){
     _bonus_sprite.Resize(38, 38);
     _vide_sprite.Resize(38, 38);
     
+    
+    sound.SetBuffer(Buffer);
+    sound.SetPitch(1.5f);
+    sound.SetVolume(25.f);
+    sound.SetLoop(true);
+    
+    bonusSound.SetBuffer(bonus);
+    bonusSound.SetPitch(1.5f);
+    bonusSound.SetVolume(50.f);
+    
+    // Aide pour démarrer le chrono au bon moment
+    isEnable = false;
 }
 /************************************************************
  * Nom: ~GameView                                           *
@@ -145,7 +159,6 @@ void GameView::draw()
                 
                 _bonus_sprite.SetPosition(j*WIDTH_PIECE,i*WIDTH_PIECE);
                 _bonus_sprite.SetColor(sf::Color(77,77,77,128));
-                
                 Sprite *bonus = &_bonus_sprite;
                 images.push_back(bonus);
                 m_window->Draw(*bonus);
@@ -154,6 +167,9 @@ void GameView::draw()
             else if(dynamic_cast<Croix*>(matrice[i][j]))
             {
                 _vide_sprite.SetPosition(j*WIDTH_PIECE, i*WIDTH_PIECE);
+                if(m_window->GetInput().IsMouseButtonDown(sf::Mouse::Left)){
+                    _vide_sprite.Move(0, 3);
+                }
                 _vide_sprite.SetColor(sf::Color(246,246,246,128));
                 Sprite *vide = &_vide_sprite;
                 images.push_back(vide);
@@ -181,8 +197,8 @@ void GameView::draw()
         sf::Sprite sprite = Sprite(image);
         sprite.Resize(38, 38);
         sprite.SetPosition(m_model->getPlayer().get_x()*WIDTH_PIECE, m_model->getPlayer().get_y()*WIDTH_PIECE);
-        m_window->Draw(sprite);
-        _digger_sprite.SetPosition(m_model->getPlayer().get_x()*WIDTH_PIECE, m_model->getPlayer().get_y()*WIDTH_PIECE);
+         m_window->Draw(sprite);
+        _digger_sprite.SetPosition(((m_model->getPlayer().get_x()*WIDTH_PIECE)), (m_model->getPlayer().get_y()*WIDTH_PIECE));
     }
     
     Sprite *dig = &_digger_sprite;
@@ -210,17 +226,19 @@ void GameView::s_Presentation()
     titre.SetColor(sf::Color(200,200,200));
     titre.SetFont(_font);
     titre.SetSize(80.0f);
-    titre.SetPosition(WIDTH/2 - 325 ,HEIGHT/2 - 200);
     
-    _option_sprite.SetPosition(WIDTH/2 -100, HEIGHT/2+100);
     
-    _start_sprite.SetPosition(WIDTH/2 -300, HEIGHT/2);
+    titre.SetPosition(50 , 50);
+    _option_sprite.SetPosition(100, 400);
+    _start_sprite.SetPosition(100, 250);
+    _exit_sprite.SetPosition(100, 550);
+    _bestScore_sprite.SetPosition(WIDTH/2, 200);
     
-    _exit_sprite.SetPosition(WIDTH/2 +100, HEIGHT/2);
     m_window->Draw(_option_sprite);
     m_window->Draw(_start_sprite);
     m_window->Draw(_exit_sprite);
     m_window->Draw(titre);
+    m_window->Draw(_bestScore_sprite);
 }
 /************************************************************
  * Nom: rejouer                                             *
@@ -229,12 +247,6 @@ void GameView::s_Presentation()
  ************************************************************
  * Rôle: Affiche la question                                *
  ************************************************************/
- void GameView::rejouer()
-{
-    cout << "Vous avez perdu ou décider d'abandonner" << endl;
-    cout << " Voulez rejouer ? " << endl;
-    cout << " Quitter: 1 " << "\t" << "Rejouer: 0" << endl;
-}
 void GameView::s_rejouer()
 {
     ostringstream out;
@@ -253,32 +265,6 @@ void GameView::s_rejouer()
     
     m_window->Draw(_abandon);    
 }
-/**************************************************************
- * Nom: affichageScore                                        *
- **************************************************************
- * Type: void                                                 *
- **************************************************************
- * Rôle: Affiche les scores(ouverture et fermeture de fichier)*
- **************************************************************/
-void GameView::affichageScore()
-{
-    fstream f;
-    f.open("scores.txt", ios::in); // ouverture du fichier en ecriture ficNb
-    if( f.fail() )
-    {// Si probleme afficher une erreur
-        cerr << "ouverture en lecture impossible" << endl;
-        f.close();
-    }
-    string phrase;
-    f >> phrase;
-    while(!f.eof()){
-        cout << phrase << endl;
-        f >> phrase;
-    }
-    cout << endl;
-
-    f.close(); // fermeture du fichier
-}
 /************************************************************
  * Nom: retourMenu                                          *
  ************************************************************
@@ -286,18 +272,6 @@ void GameView::affichageScore()
  ************************************************************
  * Rôle: Affiche une question et un choix menu              *
  ************************************************************/
-void GameView::retourMenu()
-{
-    cout << "\n\nVoulez-vous quitter ou jouer ?" << endl;
-    cout  << "Jouer: 0" << "\tQuitter: 1 " << endl;
-}
-
-void GameView::perteVie()
-{
-    cout << " \nVous venez de perdre une vie !" << endl;
-    cout << " Voulez-vous continuer ?" << endl;
-    cout << " Continuer: 0 \t\t\t Quitter: 1" << endl;
-}
 void GameView::s_perteVie()
 {
     
@@ -342,11 +316,6 @@ void GameView::s_changeLvl()
     m_window->Draw(jouer);
     m_window->Draw(quitter);
 }
-void GameView::plusDeVie()
-{
-    cout << "\n Vous n'avez plus de vies. Fin de Jeu." << endl;
-    cout << "\nVeuillez rentrez votre nom" << endl;
-}
 void GameView::s_plusDeVie()
 {
     ostringstream out;
@@ -359,6 +328,32 @@ void GameView::s_plusDeVie()
     
     m_window->Draw(text);
 }
+void GameView::s_perteParTemps()
+{
+    
+    jouer = String("Jouer");
+    jouer.SetSize(40);
+    jouer.SetPosition((WIDTH/2)-300, HEIGHT/2+50);
+    jouer.SetColor(sf::Color(125, 205, 128));
+    
+    quitter = String("Quitter");
+    quitter.SetSize(40);
+    quitter.SetPosition((WIDTH/2)+100, HEIGHT/2+50);
+    quitter.SetColor(sf::Color(125, 205, 128));
+    
+    m_window->Clear(sf::Color(20,20,20));
+    sf::String perte = String(" \nPlus de Temps. Perte de Vie!");
+    sf::String suite = String("Voulez-vous continuer ?");
+    suite.SetPosition(WIDTH/2 - 250, HEIGHT/2-30);
+    perte.SetPosition(WIDTH/2 - 300, HEIGHT/2-150);
+    perte.SetSize(40);
+    suite.SetSize(40);
+    
+    m_window->Draw(suite);
+    m_window->Draw(perte);
+    m_window->Draw(jouer);
+    m_window->Draw(quitter);
+}
 void GameView::s_option()
 {
     String e = String("Option");
@@ -368,15 +363,108 @@ void GameView::s_option()
     e.SetPosition(WIDTH/2-150,HEIGHT/2 - 200);
     
     _menu_sprite.SetPosition(WIDTH/2-100, HEIGHT/2 + 250);
-    cout << "ICI"<< endl;
     m_window->Draw(_menu_sprite);
     
     m_window->Draw(e);
+}
+/**************************************************************
+  * Nom: affichageScore                                        *
+  **************************************************************
+  * Type: void                                                 *
+  **************************************************************
+  * Rôle: Affiche les scores(ouverture et fermeture de fichier)*
+  **************************************************************/
+void GameView::affichageScore()
+{
+    /*fstream f;
+    int i = 0;
+    f.open("bestScore.txt", ios::in); // ouverture du fichier en ecriture ficNb
+    if( f.fail() )
+    {// Si probleme afficher une erreur
+        cerr << "ouverture en lecture impossible" << endl;
+        f.close();
+    }
+    string phrase;
+    f >> phrase;
+    int compteur = 0;
+    while(!f.eof()){
+        i++;
+        compteur += 30;
+        sf::String text = String(phrase);
+        text.SetSize(35);
+        if(i%2 == 1)
+            text.SetPosition(WIDTH/2 + 190, ((HEIGHT/2)-50) + compteur);
+        else
+            text.SetPosition(WIDTH/2 + 360, ((HEIGHT/2)-50) + (compteur-30));
+        
+        text.SetCenter(100, 20);
+        m_window->Draw(text);
+        f >> phrase;
+    }
+    cout << endl;
+    
+    f.close(); // fermeture du fichier */
+    
+    fstream f;
+    string phrase;
+    int compteur = 0;
+    int distance = 30;
+    f.open("bestScore.txt", ios::in); // ouverture du fichier en ecriture ficNb
+    if( f.fail() ){
+        cerr << "ouverture en lecture impossible" << endl;
+        f.close();
+    }
+    getline(f, phrase);
+    while(!f.eof()){
+        m_s.push_back(phrase);
+        getline(f, phrase);
+    }
+    for(vector<string>::iterator it = m_s.begin(); it != m_s.end() ; ++it) {
+        compteur++;
+        if(compteur < 6){
+            string e = *it;
+            sf::String text = String(e);
+            text.SetSize(35);
+            text.SetPosition(WIDTH/2 + 80, ((HEIGHT/2)-70) + distance);
+            m_window->Draw(text);
+            distance+=50;
+        }
+    
+    }
+    cout << endl;
+    
+    f.close(); // fermeture du fichier
+}
+/**************************************************************
+ * Nom: s_sauvegarde_Score                                    *
+ **************************************************************
+ * Type: void                                                 *
+ **************************************************************
+ * Rôle: Sauvegarde des scores                                *
+ **************************************************************/
+void GameView::s_sauvegarde_score() {
+    fstream f;
+    f.open( "bestScore.txt", ios::out | ios::app ); // ouverture du fichier en ecriture ficNb
+    if( f.fail() )
+    {
+        cerr << "ouverture en lecture impossible" << endl;
+        f.close();
+    }
+    string e;
+    e =s_nom;
+    e += " " ;
+    e += m_model->getScore().getScoreTotal();
+    m_s.push_back(e);
+    //f << s_nom << " " << m_model->getScore().getScoreTotal() << endl;
+    
+    f.close();
 }
 bool GameView::treatEvents()
 {
     while (m_window->IsOpened())
     {
+        if(isEnable)
+            m_model->calculDuTemps();
         // Process events
         sf::Event e;
         while (m_window->GetEvent(e))
@@ -384,8 +472,6 @@ bool GameView::treatEvents()
             // Close window : exit
             if (e.Type == sf::Event::Closed)
                 m_window->Close();
-            
-            m_model->getLvl().calculDuTemps();
             
             switch (m_model->getGoToView())
                 {
@@ -395,7 +481,7 @@ bool GameView::treatEvents()
                             if((e.MouseButton.X < (_start_sprite.GetPosition().x +_start_sprite.GetSize().x ) && e.MouseButton.X > _start_sprite.GetPosition().x )&& (e.MouseButton.Y > _start_sprite.GetPosition().y && e.MouseButton.Y < _start_sprite.GetPosition().y + _start_sprite.GetSize().y)){
                                 m_model->setEcranJeu(true);
                                 m_model->setGoToView(1);
-                              
+                                isEnable = true;
                             }
                             
                             if((e.MouseButton.X < (_exit_sprite.GetPosition().x +_exit_sprite.GetSize().x ) && e.MouseButton.X > _exit_sprite.GetPosition().x )&& (e.MouseButton.Y > _exit_sprite.GetPosition().y && e.MouseButton.Y < _exit_sprite.GetPosition().y + _exit_sprite.GetSize().y )  && m_model->getEcranJeu() == false){
@@ -453,6 +539,7 @@ bool GameView::treatEvents()
                                 m_model->genereMatrice();
                                 m_model->setGoToView(1);
                                 m_model->setEcranJeu(true);
+                                isEnable = true;
                             }
                             
                             if((e.MouseButton.X < (quitter.GetPosition().x + 150) && e.MouseButton.X > quitter.GetPosition().x )&& (e.MouseButton.Y > quitter.GetPosition().y && e.MouseButton.Y < 50 + quitter.GetPosition().y)  && m_model->getEcranJeu() == false){
@@ -468,7 +555,9 @@ bool GameView::treatEvents()
                                 m_model->genereMatrice();
                                 m_model->setGoToView(1);
                                 m_model->setEcranJeu(true);
+                                isEnable = true;
                             }
+                            
                             
                             if((e.MouseButton.X < (quitter.GetPosition().x + 150) && e.MouseButton.X > quitter.GetPosition().x )&& (e.MouseButton.Y > quitter.GetPosition().y && e.MouseButton.Y < quitter.GetPosition().y + 50)  && m_model->getEcranJeu() == false){
                                 m_window->Close();
@@ -478,7 +567,7 @@ bool GameView::treatEvents()
                         break;
                     case 4:
                         if(e.Type == sf::Event::TextEntered){
-                            if(s_nom.length() <= 15)
+                            if(s_nom.length() <= 10)
                             {
                                 s_nom += static_cast<char>(e.Text.Unicode);
                                 nom.SetText(s_nom);
@@ -492,12 +581,35 @@ bool GameView::treatEvents()
                                     s_nom.resize(s_nom.length()-1);
                             }
                         }
+                        if(e.Type == sf::Event::KeyPressed  && (e.Key.Code == sf::Key::Return)) {
+                            s_sauvegarde_score();
+                            m_model->setEcranJeu(false);
+                            m_model->rejouerPartie();
+                            m_model->setGoToView(0);
+                        }
                         break;
                    
                     case 5:
                         // Menu dans l'écran Option
                         if((e.MouseButton.X < (_menu_sprite.GetPosition().x +_menu_sprite.GetSize().x ) && e.MouseButton.X > _menu_sprite.GetPosition().x )&& (e.MouseButton.Y > _menu_sprite.GetPosition().y && e.MouseButton.Y < _menu_sprite.GetPosition().y + _menu_sprite.GetSize().y )){
                             m_model->setGoToView(0);
+                        }
+                        if (e.Type == sf::Event::Closed)
+                            m_window->Close();
+                        break;
+                    case 6:
+                        if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() == false){
+                            if((e.MouseButton.X < (jouer.GetPosition().x + jouer.GetRect().GetWidth() ) && e.MouseButton.X > jouer.GetPosition().x )&& (e.MouseButton.Y > jouer.GetPosition().y && e.MouseButton.Y < jouer.GetPosition().y + jouer.GetRect().GetHeight())){
+                                m_model->genereMatrice();
+                                m_model->setGoToView(1);
+                                m_model->setEcranJeu(true);
+                                isEnable = true;
+                            }
+                            
+                            if((e.MouseButton.X < (quitter.GetPosition().x + 150) && e.MouseButton.X > quitter.GetPosition().x )&& (e.MouseButton.Y > quitter.GetPosition().y && e.MouseButton.Y < 50 + quitter.GetPosition().y)  && m_model->getEcranJeu() == false){
+                                m_window->Close();
+                            }
+                            
                         }
                         break;
                     default:
@@ -509,22 +621,34 @@ bool GameView::treatEvents()
         m_window->Clear();
         if(m_model->getGoToView() == 0){
             s_Presentation();
+            affichageScore();
         }
         else if(m_model->getGoToView() == 1) {
+            status = sound.GetStatus();
+            if(status != sf::Music::Playing)
+                sound.Play();
             draw();
         }
         else if(m_model->getGoToView() == 2) {
+            isEnable = false;
             s_perteVie();
         }
         else if(m_model->getGoToView() == 3) {
+            isEnable = false;
              s_changeLvl();
         }
         else if(m_model->getGoToView() == 4) {
+            isEnable = false;
              s_plusDeVie();
             m_window->Draw(nom);
         }
         else if(m_model->getGoToView() == 5) {
+            isEnable = false;
             s_option();
+        }
+        else if(m_model->getGoToView() == 6) {
+            isEnable = false;
+            s_perteParTemps();
         }
         m_window->Display();
     }

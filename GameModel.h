@@ -52,9 +52,6 @@ public:
     int deplacement();
     void move(int x, int y);
 
-    bool endGame();
-    bool getEndGame();
-    void setEndGame(bool choix);
     void initLevel();
     void perteVie();
     void changeLevel();
@@ -76,6 +73,8 @@ public:
     bool getEcranJeu() const;
 
     bool plusDeTemps();
+    
+    void calculDuTemps();
 };
 
 

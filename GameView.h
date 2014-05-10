@@ -24,20 +24,17 @@ public:
     GameView(int h, int w, int bpp);
     virtual ~GameView();
     void setModel(GameModel *model);
-    static void rejouer();
-    static void affichageScore();
-    static void retourMenu();
+      void affichageScore();
     std::string afficheBonus() const;
     std::string afficheScore() const;
     std::string viePlayer() const;
-    static void perteVie();
-    static void changementLevel();
-    static void plusDeVie();
 
 private:
     GameModel *m_model;
     std::vector<sf::Sprite*> images;
     std::string s_nom;
+    bool isEnable;
+    std::vector<std::string>m_s;
     
 public: // SFML
     void draw();
@@ -51,6 +48,8 @@ public: // SFML
     void s_changeLvl();
     void s_plusDeVie();
     void s_option();
+    void s_perteParTemps();
+    void s_sauvegarde_score();
     
 private: // SFML
     sf::RenderWindow *m_window;
@@ -65,6 +64,7 @@ private: // SFML
     sf::Image _vide_image;
     sf::Image _option_image;
     sf::Image _menu_image;
+    sf::Image _bestScore_image;
     
     sf::Sprite _background_sprite;
     sf::Sprite _digger_sprite;
@@ -76,6 +76,7 @@ private: // SFML
     sf::Sprite _vide_sprite;
     sf::Sprite _option_sprite;
     sf::Sprite _menu_sprite;
+    sf::Sprite _bestScore_sprite;
     
     sf::Font _font;
     sf::String titre;
@@ -87,6 +88,13 @@ private: // SFML
     sf::String quitter;
     sf::String nom;
     
+    sf::SoundBuffer Buffer;
+    sf::Sound::Status status;
+    sf::Sound sound;
+    
+    sf::SoundBuffer bonus;
+    sf::Sound::Status bonus_status;
+    sf::Sound bonusSound;
 
 };
 #endif /* defined(__THE_PURU__GameView__) */
