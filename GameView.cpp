@@ -41,7 +41,7 @@ GameView::GameView(int h, int w, int bpp){
         _anglais_sprite = Sprite(_anglais_image);
         _francais_sprite = Sprite(_francais_image);
         _jouer_sprite = Sprite(_jouer_image);
-        _quitter_sprite = Sprite(_quitter_sprite);
+        _quitter_sprite = Sprite(_quitter_image);
     }
 
     _background_sprite.Resize(38, 38);
@@ -50,6 +50,7 @@ GameView::GameView(int h, int w, int bpp){
     _tuile_sprite.Resize(38, 38);
     _bonus_sprite.Resize(38, 38);
     _vide_sprite.Resize(38, 38);
+    _bestScore_sprite.Resize(500,600);
     
     
     sound.SetBuffer(Buffer);
@@ -66,7 +67,7 @@ GameView::GameView(int h, int w, int bpp){
     afficherScore = true;
     
     //Chargement de la langue par défaut
-    m_langue = new Langage("anglais");
+    m_langue = new Langage();
     m_l = m_langue->getlangues();
 }
 /************************************************************
@@ -239,6 +240,11 @@ void GameView::s_Presentation()
     titre.SetFont(_font);
     titre.SetSize(80.0f);
     
+    meilleursScore = String(m_l[20]);
+    meilleursScore.SetFont(_font);
+    meilleursScore.SetSize(45.0f);
+    meilleursScore.SetPosition(WIDTH/2 + 80, 225);
+    
     titre.SetPosition(50 , 50);
     
     if(m_langue->getNom() == "anglais"){
@@ -248,7 +254,7 @@ void GameView::s_Presentation()
         m_window->Draw(_exit_sprite);
     }
     _option_sprite.SetPosition(100, 400);
-    _bestScore_sprite.SetPosition(WIDTH/2, 200);
+    _bestScore_sprite.SetPosition(WIDTH/2 -20, 150);
     
     if(m_langue->getNom() == "francais"){
         _jouer_sprite.SetPosition(100, 250);
@@ -257,9 +263,11 @@ void GameView::s_Presentation()
         m_window->Draw(_quitter_sprite);
     }
     
-    m_window->Draw(_option_sprite);
-    m_window->Draw(titre);
     m_window->Draw(_bestScore_sprite);
+    m_window->Draw(_option_sprite);
+    m_window->Draw(meilleursScore);
+    m_window->Draw(titre);
+    
 }
 /************************************************************
  * Nom: rejouer                                             *
@@ -451,7 +459,7 @@ void GameView::affichageScore()
             score = String(e);
             score.SetSize(35);
             score.SetPosition(WIDTH/2 +70, (HEIGHT/2)-60 +distance);
-            distance+=50;
+            distance+=70;
             m_window->Draw(score);
         }
         numero++;
@@ -597,7 +605,7 @@ bool GameView::treatEvents()
                         break;
                     case 4:
                         if(e.Type == sf::Event::TextEntered){
-                            if(s_nom.length() <= 8)
+                            if(s_nom.length() <= 10)
                             {
                                 s_nom += static_cast<char>(e.Text.Unicode);
                                 nom.SetText(s_nom);

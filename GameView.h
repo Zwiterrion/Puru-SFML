@@ -103,6 +103,7 @@ private: // SFML
     sf::String nom;
     sf::String score;
     sf::String langue;
+    sf::String meilleursScore;
     
     sf::SoundBuffer Buffer;
     sf::Sound::Status status;
