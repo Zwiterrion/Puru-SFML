@@ -73,7 +73,11 @@ private: // SFML
     sf::Image _bestScore_image;
     sf::Image _francais_image;
     sf::Image _anglais_image;
+    sf::Image _jouer_image;
+    sf::Image _quitter_image;
     
+    sf::Sprite _jouer_sprite;
+    sf::Sprite _quitter_sprite;
     sf::Sprite _anglais_sprite;
     sf::Sprite _francais_sprite;
     sf::Sprite _background_sprite;

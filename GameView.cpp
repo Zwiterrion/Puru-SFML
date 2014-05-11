@@ -22,7 +22,7 @@ GameView::GameView(int h, int w, int bpp){
 
     m_window->Clear(sf::Color(20,20,20));
     
-    if(!_background_image.LoadFromFile("background.png") || !_digger_image.LoadFromFile("digger_face.png") || !_bombe_image.LoadFromFile("tuile_bombe.png") || !_bonus_image.LoadFromFile("tuile_bonus.png") || !_tuile_image.LoadFromFile("tuile.png") || !_exit_image.LoadFromFile("exitButton.png") || !_start_image.LoadFromFile("startButton.png") || !_vide_image.LoadFromFile("vide.png") || !_option_image.LoadFromFile("optionButton.png") || !_menu_image.LoadFromFile("menu.png") || !Buffer.LoadFromFile("music.wav") || !bonus.LoadFromFile("bonus.wav") || !_bestScore_image.LoadFromFile("bestScore.png") || !_francais_image.LoadFromFile("francais.png") || !_anglais_image.LoadFromFile("anglais.png")) {
+    if(!_background_image.LoadFromFile("background.png") || !_digger_image.LoadFromFile("digger_face.png") || !_bombe_image.LoadFromFile("tuile_bombe.png") || !_bonus_image.LoadFromFile("tuile_bonus.png") || !_tuile_image.LoadFromFile("tuile.png") || !_exit_image.LoadFromFile("exitButton.png") || !_start_image.LoadFromFile("startButton.png") || !_vide_image.LoadFromFile("vide.png") || !_option_image.LoadFromFile("optionButton.png") || !_menu_image.LoadFromFile("menu.png") || !Buffer.LoadFromFile("music.wav") || !bonus.LoadFromFile("bonus.wav") || !_bestScore_image.LoadFromFile("bestScore.png") || !_francais_image.LoadFromFile("francais.png") || !_anglais_image.LoadFromFile("anglais.png") || !_jouer_image.LoadFromFile("jouer.png") || !_quitter_image.LoadFromFile("quitter.png")) {
         
         cerr << "ERROR";
     }
@@ -40,6 +40,8 @@ GameView::GameView(int h, int w, int bpp){
         _vide_sprite = Sprite(_vide_image);
         _anglais_sprite = Sprite(_anglais_image);
         _francais_sprite = Sprite(_francais_image);
+        _jouer_sprite = Sprite(_jouer_image);
+        _quitter_sprite = Sprite(_quitter_sprite);
     }
 
     _background_sprite.Resize(38, 38);
@@ -237,16 +239,25 @@ void GameView::s_Presentation()
     titre.SetFont(_font);
     titre.SetSize(80.0f);
     
-    
     titre.SetPosition(50 , 50);
+    
+    if(m_langue->getNom() == "anglais"){
+        _start_sprite.SetPosition(100, 250);
+        _exit_sprite.SetPosition(100, 550);
+        m_window->Draw(_start_sprite);
+        m_window->Draw(_exit_sprite);
+    }
     _option_sprite.SetPosition(100, 400);
-    _start_sprite.SetPosition(100, 250);
-    _exit_sprite.SetPosition(100, 550);
     _bestScore_sprite.SetPosition(WIDTH/2, 200);
     
+    if(m_langue->getNom() == "francais"){
+        _jouer_sprite.SetPosition(100, 250);
+        _quitter_sprite.SetPosition(100, 550);
+        m_window->Draw(_jouer_sprite);
+        m_window->Draw(_quitter_sprite);
+    }
+    
     m_window->Draw(_option_sprite);
-    m_window->Draw(_start_sprite);
-    m_window->Draw(_exit_sprite);
     m_window->Draw(titre);
     m_window->Draw(_bestScore_sprite);
 }
