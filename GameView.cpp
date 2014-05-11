@@ -516,14 +516,27 @@ bool GameView::treatEvents()
                     case 0:
                         if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() == false){
                             
-                            if((e.MouseButton.X < (_start_sprite.GetPosition().x +_start_sprite.GetSize().x ) && e.MouseButton.X > _start_sprite.GetPosition().x )&& (e.MouseButton.Y > _start_sprite.GetPosition().y && e.MouseButton.Y < _start_sprite.GetPosition().y + _start_sprite.GetSize().y)){
-                                m_model->setEcranJeu(true);
-                                m_model->setGoToView(1);
-                                isEnable = true;
+                            if(m_langue->getNom() == "anglais"){
+                                if((e.MouseButton.X < (_start_sprite.GetPosition().x +_start_sprite.GetSize().x ) && e.MouseButton.X > _start_sprite.GetPosition().x )&& (e.MouseButton.Y > _start_sprite.GetPosition().y && e.MouseButton.Y < _start_sprite.GetPosition().y + _start_sprite.GetSize().y)){
+                                    m_model->setEcranJeu(true);
+                                    m_model->setGoToView(1);
+                                    isEnable = true;
+                                }
+                                
+                                if((e.MouseButton.X < (_exit_sprite.GetPosition().x +_exit_sprite.GetSize().x ) && e.MouseButton.X > _exit_sprite.GetPosition().x )&& (e.MouseButton.Y > _exit_sprite.GetPosition().y && e.MouseButton.Y < _exit_sprite.GetPosition().y + _exit_sprite.GetSize().y )  && m_model->getEcranJeu() == false){
+                                    m_window->Close();
+                                }
                             }
-                            
-                            if((e.MouseButton.X < (_exit_sprite.GetPosition().x +_exit_sprite.GetSize().x ) && e.MouseButton.X > _exit_sprite.GetPosition().x )&& (e.MouseButton.Y > _exit_sprite.GetPosition().y && e.MouseButton.Y < _exit_sprite.GetPosition().y + _exit_sprite.GetSize().y )  && m_model->getEcranJeu() == false){
-                                m_window->Close();
+                            if(m_langue->getNom() == "francais"){
+                                if((e.MouseButton.X < (_jouer_sprite.GetPosition().x +_jouer_sprite.GetSize().x ) && e.MouseButton.X > _jouer_sprite.GetPosition().x )&& (e.MouseButton.Y > _jouer_sprite.GetPosition().y && e.MouseButton.Y < _jouer_sprite.GetPosition().y + _jouer_sprite.GetSize().y)){
+                                    m_model->setEcranJeu(true);
+                                    m_model->setGoToView(1);
+                                    isEnable = true;
+                                }
+                                
+                                if((e.MouseButton.X < (_quitter_sprite.GetPosition().x +_quitter_sprite.GetSize().x ) && e.MouseButton.X > _quitter_sprite.GetPosition().x )&& (e.MouseButton.Y > _quitter_sprite.GetPosition().y && e.MouseButton.Y < _quitter_sprite.GetPosition().y + _quitter_sprite.GetSize().y )  && m_model->getEcranJeu() == false){
+                                    m_window->Close();
+                                }
                             }
                             if((e.MouseButton.X < (_option_sprite.GetPosition().x + _option_sprite.GetSize().x ) && e.MouseButton.X >  _option_sprite.GetPosition().x )&& (e.MouseButton.Y >  _option_sprite.GetPosition().y && e.MouseButton.Y <  _option_sprite.GetPosition().y + _option_sprite.GetSize().y )  && m_model->getEcranJeu() == false){
                                 s_option();
@@ -642,6 +655,7 @@ bool GameView::treatEvents()
                         }
                         
                         if((e.MouseButton.X < (_francais_sprite.GetPosition().x +_francais_sprite.GetSize().x ) && e.MouseButton.X > _francais_sprite.GetPosition().x )&& (e.MouseButton.Y > _francais_sprite.GetPosition().y && e.MouseButton.Y < _francais_sprite.GetPosition().y + _francais_sprite.GetSize().y )){
+                            
                             m_langue->setNom("francais");
                             m_l = m_langue->getlangues();
                         }
