@@ -101,7 +101,7 @@ void GameView::s_afficheBonus()
     ostringstream out;
     out << m_l[3] << m_model->getLvl().get_score_bonus() << m_l[4] << m_model->getLvl().get_b_temps() <<  m_l[5] << m_model->getLvl().get_b_vie()  <<  m_l[6] << m_model->getLvl().getLevel();
     affiche_Bonus = String(out.str());
-    affiche_Bonus.SetPosition(WIDTH - 300, 100);
+    affiche_Bonus.SetPosition(WIDTH - 250, 100);
     
     affiche_Bonus.SetSize(25.0F);
     m_window->Draw(affiche_Bonus);
@@ -111,7 +111,7 @@ void GameView::s_afficheScore()
     ostringstream out;
     out<<  m_l[7] << m_model->getScore().getDeplacement() <<  m_l[8] << m_model->getScore().getCible() << m_l[17] << m_model->getScore().getScoreTotal() << m_l[9] << m_model->getLvl().getTemps() << endl;
     affiche_Score = String(out.str());
-    affiche_Score.SetPosition(WIDTH - 300, 200);
+    affiche_Score.SetPosition(WIDTH - 250, 200);
     
     affiche_Score.SetSize(25.0F);
     m_window->Draw(affiche_Score);
@@ -121,7 +121,7 @@ void GameView::s_viePlayer()
     ostringstream out;
     out<< m_l[10] << m_model->getPlayer().getVie();
     _vie_player = String(out.str());
-    _vie_player.SetPosition(WIDTH - 300, 275);
+    _vie_player.SetPosition(WIDTH - 250, 275);
     
     _vie_player.SetSize(25.0F);
     m_window->Draw(_vie_player);
@@ -157,7 +157,7 @@ void GameView::draw()
     for(int i=0; i<18; i++){
         for(int j=0; j<18; j++){
             if(dynamic_cast<Bomb*>(matrice[i][j])){
-                _bombe_sprite.SetPosition(j*WIDTH_PIECE,i*WIDTH_PIECE);
+                _bombe_sprite.SetPosition((j*WIDTH_PIECE)+50,(i*WIDTH_PIECE)+30);
                 _bombe_sprite.SetColor(sf::Color(255,255,255,128));
                 
                 Sprite *bomb = &_bombe_sprite;
@@ -168,9 +168,9 @@ void GameView::draw()
                 ostringstream out;
                 out << matrice[i][j]->getObj();
                 String s = String(out.str());
-                s.SetPosition(j*WIDTH_PIECE, i*WIDTH_PIECE);
+                s.SetPosition((j*WIDTH_PIECE)+50, (i*WIDTH_PIECE)+30);
                 
-                _bonus_sprite.SetPosition(j*WIDTH_PIECE,i*WIDTH_PIECE);
+                _bonus_sprite.SetPosition((j*WIDTH_PIECE)+50,(i*WIDTH_PIECE)+30);
                 _bonus_sprite.SetColor(sf::Color(77,77,77,128));
                 Sprite *bonus = &_bonus_sprite;
                 images.push_back(bonus);
@@ -179,7 +179,7 @@ void GameView::draw()
             }
             else if(dynamic_cast<Croix*>(matrice[i][j]))
             {
-                _vide_sprite.SetPosition(j*WIDTH_PIECE, i*WIDTH_PIECE);
+                _vide_sprite.SetPosition((j*WIDTH_PIECE)+50, (i*WIDTH_PIECE)+30);
                 if(m_window->GetInput().IsMouseButtonDown(sf::Mouse::Left)){
                     _vide_sprite.Move(0, 3);
                 }
@@ -193,8 +193,8 @@ void GameView::draw()
                 ostringstream out;
                 out << matrice[i][j]->getObj();
                 String s = String(out.str());
-                s.SetPosition(j*WIDTH_PIECE + 10, i*WIDTH_PIECE);
-                _tuile_sprite.SetPosition(j*WIDTH_PIECE,i*WIDTH_PIECE);
+                s.SetPosition(j*WIDTH_PIECE + 60, (i*WIDTH_PIECE)+30);
+                _tuile_sprite.SetPosition((j*WIDTH_PIECE) + 50,(i*WIDTH_PIECE)+30);
                 _tuile_sprite.SetColor(sf::Color(192,192,192,128));
                 Sprite *tuile = &_tuile_sprite;
                 images.push_back(tuile);
@@ -209,9 +209,9 @@ void GameView::draw()
         image.LoadFromFile("tuile_bonus.png");
         sf::Sprite sprite = Sprite(image);
         sprite.Resize(38, 38);
-        sprite.SetPosition(m_model->getPlayer().get_x()*WIDTH_PIECE, m_model->getPlayer().get_y()*WIDTH_PIECE);
+        sprite.SetPosition((m_model->getPlayer().get_x()*WIDTH_PIECE)+50, (m_model->getPlayer().get_y()*WIDTH_PIECE)+30);
          m_window->Draw(sprite);
-        _digger_sprite.SetPosition(((m_model->getPlayer().get_x()*WIDTH_PIECE)), (m_model->getPlayer().get_y()*WIDTH_PIECE));
+        _digger_sprite.SetPosition(((m_model->getPlayer().get_x()*WIDTH_PIECE) +50), (m_model->getPlayer().get_y()*WIDTH_PIECE)+30);
     }
     
     Sprite *dig = &_digger_sprite;
