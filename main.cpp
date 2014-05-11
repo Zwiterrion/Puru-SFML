@@ -14,11 +14,9 @@ int main()
     GameModel *model = new GameModel();
     GameView *view = new GameView(1024,768,32);
     view->setModel(model);
-    //view->s_Presentation();
-    while(view->treatEvents()){
-    }
+    view->treatEvents();
     delete view;
     delete model;
-
+    
     return EXIT_SUCCESS;
 }

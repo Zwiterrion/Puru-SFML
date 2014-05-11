@@ -95,31 +95,49 @@ void Lvl::initTemps() {
     m_firstTime = 0;
     m_fin = 0;
 }
-void Lvl::calculDuTemps()
-{
-    if(m_firstTime == 0){
-        cout << "Temps restant : " << m_temps << endl;
-        m_firstTime = 1;
-        time(&secondes);
-        instant=*localtime(&secondes);
-        m_fin = instant.tm_sec;
-        m_minutes = instant.tm_min;
-        m_compteur = m_minutes * 60+ m_fin;
-    }
-    else
-    {
-        time(&secondes);
-        instant=*localtime(&secondes);
-        m_fin = instant.tm_sec;
-        m_minutes = instant.tm_min;
-        m_difference = ((m_minutes * 60) + m_fin) - m_compteur;
-        m_temps -= m_difference;
-        m_compteur = (m_minutes * 60 )+ m_fin;
-    
-        if(m_temps <= 0)
-            m_temps = 0;
-    }
-    
+
+void Lvl::setFirstTime(int a) {
+    m_firstTime = a;
+}
+void Lvl::setDifference(int a) {
+    m_difference = a;
+}
+int Lvl::getFirstTime() const {
+    return m_firstTime;
+}
+int Lvl::getDifference() const {
+    return m_difference;
+}
+
+void Lvl::setSecondes(time_t s) {
+    secondes = s;
+}
+void Lvl::setInstant(struct tm ins) {
+    instant = ins;
+}
+void Lvl::setMinutes(int a) {
+    m_minutes = a;
+}
+void Lvl::setFin(int a) {
+    m_fin = a;
+}
+time_t Lvl::getSecondes() const {
+    return secondes;
+}
+struct tm Lvl::getInstant() const {
+    return instant;
+}
+int Lvl::getMinutes() const {
+    return m_minutes;
+}
+int Lvl::getFin() const {
+    return m_fin;
+}
+int Lvl::getCompteur() const {
+    return m_compteur;
+}
+void Lvl::setCompteur(int a) {
+    m_compteur = a;
 }
 
 

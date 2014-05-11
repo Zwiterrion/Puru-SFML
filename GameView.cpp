@@ -1,6 +1,7 @@
 #include "GameView.h"
 #include "GameModel.h"
 #include "Const.h"
+#include "Langage.h"
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -21,7 +22,7 @@ GameView::GameView(int h, int w, int bpp){
 
     m_window->Clear(sf::Color(20,20,20));
     
-    if(!_background_image.LoadFromFile("background.png") || !_digger_image.LoadFromFile("digger_face.png") || !_bombe_image.LoadFromFile("tuile_bombe.png") || !_bonus_image.LoadFromFile("tuile_bonus.png") || !_tuile_image.LoadFromFile("tuile.png") || !_exit_image.LoadFromFile("exitButton.png") || !_start_image.LoadFromFile("startButton.png") || !_vide_image.LoadFromFile("vide.png") || !_option_image.LoadFromFile("optionButton.png") || !_menu_image.LoadFromFile("menu.png") || !Buffer.LoadFromFile("music.wav") || !bonus.LoadFromFile("bonus.wav") || !_bestScore_image.LoadFromFile("bestScore.png")) {
+    if(!_background_image.LoadFromFile("background.png") || !_digger_image.LoadFromFile("digger_face.png") || !_bombe_image.LoadFromFile("tuile_bombe.png") || !_bonus_image.LoadFromFile("tuile_bonus.png") || !_tuile_image.LoadFromFile("tuile.png") || !_exit_image.LoadFromFile("exitButton.png") || !_start_image.LoadFromFile("startButton.png") || !_vide_image.LoadFromFile("vide.png") || !_option_image.LoadFromFile("optionButton.png") || !_menu_image.LoadFromFile("menu.png") || !Buffer.LoadFromFile("music.wav") || !bonus.LoadFromFile("bonus.wav") || !_bestScore_image.LoadFromFile("bestScore.png") || !_francais_image.LoadFromFile("francais.png") || !_anglais_image.LoadFromFile("anglais.png")) {
         
         cerr << "ERROR";
     }
@@ -37,6 +38,8 @@ GameView::GameView(int h, int w, int bpp){
         _exit_sprite = Sprite(_exit_image);
         _start_sprite = Sprite(_start_image);
         _vide_sprite = Sprite(_vide_image);
+        _anglais_sprite = Sprite(_anglais_image);
+        _francais_sprite = Sprite(_francais_image);
     }
 
     _background_sprite.Resize(38, 38);
@@ -59,6 +62,10 @@ GameView::GameView(int h, int w, int bpp){
     // Aide pour démarrer le chrono au bon moment
     isEnable = false;
     afficherScore = true;
+    
+    //Chargement de la langue par défaut
+    m_langue = new Langage("anglais");
+    m_l = m_langue->getlangues();
 }
 /************************************************************
  * Nom: ~GameView                                           *
@@ -69,6 +76,8 @@ GameView::~GameView()
 {
     if(m_window != NULL)
         delete m_window;
+    if(m_langue != NULL)
+        delete m_langue;
 
 }
 /************************************************************
@@ -87,7 +96,7 @@ void GameView::setModel(GameModel *model)
 void GameView::s_afficheBonus()
 {
     ostringstream out;
-    out << "Score Bonus :" << m_model->getLvl().get_score_bonus() << "\nBonus Temps: " << m_model->getLvl().get_b_temps() << "\nBonus Vie: " << m_model->getLvl().get_b_vie()  << "\nLevel : " << m_model->getLvl().getLevel();
+    out << m_l[3] << m_model->getLvl().get_score_bonus() << m_l[4] << m_model->getLvl().get_b_temps() <<  m_l[5] << m_model->getLvl().get_b_vie()  <<  m_l[6] << m_model->getLvl().getLevel();
     affiche_Bonus = String(out.str());
     affiche_Bonus.SetPosition(WIDTH - 300, 100);
     
@@ -97,7 +106,7 @@ void GameView::s_afficheBonus()
 void GameView::s_afficheScore()
 {
     ostringstream out;
-    out<< "Le score deplacement: " << m_model->getScore().getDeplacement() << "\nLe score cible: " << m_model->getScore().getCible() << "\t\t\nLe score total: " << m_model->getScore().getScoreTotal() << "\nTemps restant : " << m_model->getLvl().getTemps() << endl;
+    out<<  m_l[7] << m_model->getScore().getDeplacement() <<  m_l[8] << m_model->getScore().getCible() << m_l[17] << m_model->getScore().getScoreTotal() << m_l[9] << m_model->getLvl().getTemps() << endl;
     affiche_Score = String(out.str());
     affiche_Score.SetPosition(WIDTH - 300, 200);
     
@@ -107,7 +116,7 @@ void GameView::s_afficheScore()
 void GameView::s_viePlayer()
 {
     ostringstream out;
-    out<< "\nVie du joueur: " << m_model->getPlayer().getVie();
+    out<< m_l[10] << m_model->getPlayer().getVie();
     _vie_player = String(out.str());
     _vie_player.SetPosition(WIDTH - 300, 275);
     
@@ -223,7 +232,7 @@ void GameView::draw()
 
 void GameView::s_Presentation()
 {
-    titre = String("Puru Puru Digger");
+    titre = String(m_l[11]);
     titre.SetColor(sf::Color(200,200,200));
     titre.SetFont(_font);
     titre.SetSize(80.0f);
@@ -251,7 +260,7 @@ void GameView::s_Presentation()
 void GameView::s_rejouer()
 {
     ostringstream out;
-    out << "Vous avez perdu ou décider d'abandonner !" << "\nVoulez rejouer ? ";
+    out << m_l[12];
     _start_sprite.SetPosition(WIDTH/2 -300, HEIGHT/2);
     m_window->Draw(_start_sprite);
     
@@ -276,19 +285,19 @@ void GameView::s_rejouer()
 void GameView::s_perteVie()
 {
     
-    jouer = String("Jouer");
+    jouer = String(m_l[0]);
     jouer.SetSize(40);
     jouer.SetPosition((WIDTH/2)-300, HEIGHT/2+50);
     jouer.SetColor(sf::Color(125, 205, 128));
     
-    quitter = String("Quitter");
+    quitter = String(m_l[2]);
     quitter.SetSize(40);
     quitter.SetPosition((WIDTH/2)+100, HEIGHT/2+50);
     quitter.SetColor(sf::Color(125, 205, 128));
     
     m_window->Clear(sf::Color(20,20,20));
-    sf::String perte = String(" \nVous venez de perdre une vie !");
-    sf::String suite = String("Voulez-vous continuer ?");
+    sf::String perte = String(m_l[13]);
+    sf::String suite = String(m_l[14]);
     suite.SetPosition(WIDTH/2 - 250, HEIGHT/2-30);
     perte.SetPosition(WIDTH/2 - 300, HEIGHT/2-150);
     perte.SetSize(40);
@@ -301,18 +310,22 @@ void GameView::s_perteVie()
 }
 void GameView::s_changeLvl()
 {
-    jouer = String("Jouer");
+    jouer = String(m_l[0]);
     jouer.SetSize(40);
     jouer.SetPosition((WIDTH/2)-300, HEIGHT/2+50);
     
     
-    quitter = String("Quitter");
+    quitter = String(m_l[2]);
     quitter.SetSize(40);
     quitter.SetPosition((WIDTH/2)+100, HEIGHT/2+50);
     
-    sf::String text = String("Vous avez change de niveau ! ");
+    sf::String text = String(m_l[15]);
     text.SetSize(50.0f);
-    text.SetPosition(WIDTH/2 -350, HEIGHT/2 -50);
+    if(m_langue->getNom() == "anglais"){
+        text.SetPosition(WIDTH/2 -300, HEIGHT/2 -50);
+    }
+    else
+        text.SetPosition(WIDTH/2 -350, HEIGHT/2 -50);
     m_window->Draw(text);
     m_window->Draw(jouer);
     m_window->Draw(quitter);
@@ -320,7 +333,7 @@ void GameView::s_changeLvl()
 void GameView::s_plusDeVie()
 {
     ostringstream out;
-    out << "Vous n'avez plus de vies. Entrez Votre nom :";
+    out << m_l[18];
     String text = String(out.str());
     text.SetPosition(WIDTH/2-400, HEIGHT/2- 100);
     nom.SetPosition(WIDTH/2-150, HEIGHT/2);
@@ -332,19 +345,19 @@ void GameView::s_plusDeVie()
 void GameView::s_perteParTemps()
 {
     
-    jouer = String("Jouer");
+    jouer = String(m_l[0]);
     jouer.SetSize(40);
     jouer.SetPosition((WIDTH/2)-300, HEIGHT/2+50);
     jouer.SetColor(sf::Color(125, 205, 128));
     
-    quitter = String("Quitter");
+    quitter = String(m_l[2]);
     quitter.SetSize(40);
     quitter.SetPosition((WIDTH/2)+100, HEIGHT/2+50);
     quitter.SetColor(sf::Color(125, 205, 128));
     
     m_window->Clear(sf::Color(20,20,20));
-    sf::String perte = String(" \nPlus de Temps. Perte de Vie!");
-    sf::String suite = String("Voulez-vous continuer ?");
+    sf::String perte = String(m_l[16]);
+    sf::String suite = String(m_l[14]);
     suite.SetPosition(WIDTH/2 - 250, HEIGHT/2-30);
     perte.SetPosition(WIDTH/2 - 300, HEIGHT/2-150);
     perte.SetSize(40);
@@ -357,11 +370,11 @@ void GameView::s_perteParTemps()
 }
 void GameView::s_option()
 {
-    String e = String("Option");
+    String e = String(m_l[1]);
     e.SetColor(sf::Color(200,200,200));
     e.SetFont(_font);
     e.SetSize(80.0f);
-    e.SetPosition(WIDTH/2-150,HEIGHT/2 - 200);
+    e.SetPosition(WIDTH/2-150,100);
     
     _menu_sprite.SetPosition(WIDTH/2-100, HEIGHT/2 + 250);
     m_window->Draw(_menu_sprite);
@@ -434,6 +447,17 @@ void GameView::affichageScore()
     }
     afficherScore = false;
 
+}
+void GameView::s_affichageLangue()
+{
+    langue = String(m_l[19]);
+    langue.SetPosition(100, HEIGHT/2 - 150);
+    langue.SetSize(50);
+    _anglais_sprite.SetPosition(WIDTH/2 - 200, HEIGHT/2 - 200);
+    _francais_sprite.SetPosition(WIDTH/2 - 50, HEIGHT/2 - 200);
+    m_window->Draw(_anglais_sprite);
+    m_window->Draw(_francais_sprite);
+    m_window->Draw(langue);
 }
 /**************************************************************
  * Nom: s_sauvegarde_Score                                    *
@@ -562,7 +586,7 @@ bool GameView::treatEvents()
                         break;
                     case 4:
                         if(e.Type == sf::Event::TextEntered){
-                            if(s_nom.length() <= 9)
+                            if(s_nom.length() <= 8)
                             {
                                 s_nom += static_cast<char>(e.Text.Unicode);
                                 nom.SetText(s_nom);
@@ -580,7 +604,6 @@ bool GameView::treatEvents()
                             afficherScore = true;
                             s_sauvegarde_score();
                             m_model->setEcranJeu(false);
-                           // s_nom.clear();
                             m_model->rejouerPartie();
                             m_model->setGoToView(0);
                         }
@@ -593,6 +616,16 @@ bool GameView::treatEvents()
                         }
                         if (e.Type == sf::Event::Closed)
                             m_window->Close();
+                        
+                        if((e.MouseButton.X < (_anglais_sprite.GetPosition().x +_anglais_sprite.GetSize().x ) && e.MouseButton.X > _anglais_sprite.GetPosition().x )&& (e.MouseButton.Y > _anglais_sprite.GetPosition().y && e.MouseButton.Y < _anglais_sprite.GetPosition().y + _anglais_sprite.GetSize().y )){
+                            m_langue->setNom("anglais");
+                            m_l = m_langue->getlangues();
+                        }
+                        
+                        if((e.MouseButton.X < (_francais_sprite.GetPosition().x +_francais_sprite.GetSize().x ) && e.MouseButton.X > _francais_sprite.GetPosition().x )&& (e.MouseButton.Y > _francais_sprite.GetPosition().y && e.MouseButton.Y < _francais_sprite.GetPosition().y + _francais_sprite.GetSize().y )){
+                            m_langue->setNom("francais");
+                            m_l = m_langue->getlangues();
+                        }
                         break;
                     case 6:
                         if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() == false){
@@ -642,6 +675,7 @@ bool GameView::treatEvents()
         else if(m_model->getGoToView() == 5) {
             isEnable = false;
             s_option();
+            s_affichageLangue();
         }
         else if(m_model->getGoToView() == 6) {
             isEnable = false;

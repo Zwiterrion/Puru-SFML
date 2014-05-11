@@ -17,6 +17,7 @@
 class GameModel;
 class Case;
 class Button;
+class Langage;
 
 class GameView{
 
@@ -36,6 +37,8 @@ private:
     bool isEnable;
     std::map<int, std::string>m_e;
     bool afficherScore;
+    Langage *m_langue;
+    std::map<int,std::string>m_l;
     
 public: // SFML
     void draw();
@@ -52,6 +55,7 @@ public: // SFML
     void s_perteParTemps();
     void s_sauvegarde_score();
     void s_chargementScore();
+    void s_affichageLangue();
     
 private: // SFML
     sf::RenderWindow *m_window;
@@ -67,7 +71,11 @@ private: // SFML
     sf::Image _option_image;
     sf::Image _menu_image;
     sf::Image _bestScore_image;
+    sf::Image _francais_image;
+    sf::Image _anglais_image;
     
+    sf::Sprite _anglais_sprite;
+    sf::Sprite _francais_sprite;
     sf::Sprite _background_sprite;
     sf::Sprite _digger_sprite;
     sf::Sprite _bombe_sprite;
@@ -90,6 +98,7 @@ private: // SFML
     sf::String quitter;
     sf::String nom;
     sf::String score;
+    sf::String langue;
     
     sf::SoundBuffer Buffer;
     sf::Sound::Status status;

@@ -48,7 +48,22 @@ public:
     int getTemps() const;
     void setTemps(int temps);
     void initTemps();
-    void calculDuTemps();
+    
+    void setFirstTime(int a);
+    void setDifference(int a);
+    void setSecondes(time_t s);
+    void setInstant(struct tm ins);
+    void setMinutes(int a);
+    void setFin(int a);
+    void setCompteur(int a);
+    
+    int getFirstTime() const;
+    int getDifference() const;
+    time_t getSecondes() const;
+    struct tm getInstant() const;
+    int getMinutes() const;
+    int getFin() const;
+    int getCompteur() const;
 };
 
 #endif /* defined(__THE_PURU__Lvl__) */
