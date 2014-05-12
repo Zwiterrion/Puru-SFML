@@ -249,13 +249,15 @@ void GameModel::move(int pos_x, int pos_y)
             if(!plusDeTemps())
                 objectifAtteint();
         }
-        else{
+        else
+        {
             m_s->setScoreTotal(m_s->getScoreTotal()-nb_cases*10);
             perteVie();
         }
     }
     
-    else    {
+    else
+    {
         perteVie();
     }
     
@@ -299,6 +301,34 @@ void GameModel::changeLevel()
         setGoToView(3);
     }
 
+}
+/************************************************************
+ * Nom: check_answer                                        *
+ ************************************************************
+ * Type: bool                                               *
+ ************************************************************
+ * @param string                                            *
+ ************************************************************
+ * Rôle:  Retourne vrai ou faux en fonction de la saisie de *
+ *     l'utilisateur au clavier lors de la demande de       *
+ *     la direction voulue.                                 *
+ ************************************************************/
+bool GameModel::check_answer(std::string a){
+    
+    if ((a == "N" || a == "NE" || a == "NO") && m_p->get_y() == 0){
+        return false;
+    }
+    else if ((a == "S" || a == "SO" || a == "SE") && m_p->get_y() == HEIGHT_GAME-1){
+        return false;
+    }
+    else if ((a == "O" || a == "NO" || a == "SO") && m_p->get_x() == 0){
+        return false;
+    }
+    else if ((a == "E" || a == "NE" || a == "SE") && m_p->get_x() == WIDTH_GAME-1){
+        return false;
+    }
+    else
+        return true;
 }
 /************************************************************
  * Nom: deplacement                                         *

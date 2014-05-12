@@ -22,11 +22,22 @@ GameView::GameView(int h, int w, int bpp){
 
     m_window->Clear(sf::Color(20,20,20));
     
-    if(!_background_image.LoadFromFile("background.png") || !_digger_image.LoadFromFile("digger_face.png") || !_bombe_image.LoadFromFile("tuile_bombe.png") || !_bonus_image.LoadFromFile("tuile_bonus.png") || !_tuile_image.LoadFromFile("tuile.png") || !_exit_image.LoadFromFile("exitButton.png") || !_start_image.LoadFromFile("startButton.png") || !_vide_image.LoadFromFile("vide.png") || !_option_image.LoadFromFile("optionButton.png") || !_menu_image.LoadFromFile("menu.png") || !Buffer.LoadFromFile("music.wav") || !bonus.LoadFromFile("bonus.wav") || !_bestScore_image.LoadFromFile("bestScore.png") || !_francais_image.LoadFromFile("francais.png") || !_anglais_image.LoadFromFile("anglais.png") || !_jouer_image.LoadFromFile("jouer.png") || !_quitter_image.LoadFromFile("quitter.png")) {
+    if(!_background_image.LoadFromFile("background.png") || !_digger_image.LoadFromFile("digger_face.png") ||
+       !_bombe_image.LoadFromFile("tuile_bombe.png") || !_bonus_image.LoadFromFile("tuile_bonus.png") ||
+       !_tuile_image.LoadFromFile("tuile.png") || !_exit_image.LoadFromFile("exitButton.png") ||
+       !_start_image.LoadFromFile("startButton.png") || !_vide_image.LoadFromFile("vide.png") ||
+       !_option_image.LoadFromFile("optionButton.png") || !_menu_image.LoadFromFile("menu.png") ||
+       !Buffer.LoadFromFile("music.wav") || !bonus.LoadFromFile("bonus.wav") ||
+       !_bestScore_image.LoadFromFile("bestScore.png") || !_francais_image.LoadFromFile("francais.png") ||
+       !_anglais_image.LoadFromFile("anglais.png") || !_jouer_image.LoadFromFile("jouer.png") ||
+       !_quitter_image.LoadFromFile("quitter.png") || !_son_image.LoadFromFile("son.png") ||
+       !_notSon_image.LoadFromFile("notSon.png")) {
         
         cerr << "ERROR";
     }
     else {
+        _son_sprite = Sprite(_son_image);
+        _notSon_sprite = Sprite(_notSon_image);
         _background_sprite = Sprite (_background_image);
         _bestScore_sprite = Sprite(_bestScore_image);
         _option_sprite = Sprite(_option_image);
@@ -69,6 +80,7 @@ GameView::GameView(int h, int w, int bpp){
     //Chargement de la langue par défaut
     m_langue = new Langage();
     m_l = m_langue->getlangues();
+    
 }
 /************************************************************
  * Nom: ~GameView                                           *
@@ -424,7 +436,6 @@ void GameView::s_chargementScore()
                 sauv = phrase;
             }
             else {
-               // cout << "ICI";
                 m_e[atoi(phrase.c_str())] = sauv;
             }
             valeur++;
@@ -487,7 +498,7 @@ void GameView::s_affichageLangue()
  **************************************************************/
 void GameView::s_sauvegarde_score() {
     fstream f;
-    f.open( "/Users/Etienne/Desktop/Puru-SFML/meilleursScores.txt", ios::out | ios::app ); // ouverture du fichier en ecriture ficNb
+    f.open( "/Users/Etienne/Desktop/Puru-SFML/meilleursScores.txt", ios::out | ios::app ); // ouverture du fichier en ecriture
     if( f.fail() )
     {
         cerr << "ouverture en lecture impossible" << endl;
@@ -496,6 +507,37 @@ void GameView::s_sauvegarde_score() {
     f << s_nom << endl;
     f << m_model->getScore().getScoreTotal() << endl;
     f.close();
+}
+void GameView::s_quitte_inGame()
+{
+    if(m_langue->getNom() == "anglais")
+        _quitte_inGame = Sprite(_exit_image);
+    else
+        _quitte_inGame = Sprite(_quitter_image);
+    
+    _quitte_inGame.SetPosition(800, HEIGHT-100);
+    m_window->Draw(_quitte_inGame);
+}
+void GameView::s_boutton_son()
+{
+    _son_sprite.SetPosition(900, 50);
+    _notSon_sprite.SetPosition(840, 50);
+    status = sound.GetStatus();
+    
+    if(status == sf::Music::Playing){
+        m_window->Draw(_son_sprite);
+    }
+    else
+    {
+        m_window->Draw(_notSon_sprite);
+    }
+}
+bool GameView::answer_move(string answer) {
+    if(m_model->check_answer(answer)){
+        return true;
+    }
+    else
+        return false;
 }
 bool GameView::treatEvents()
 {
@@ -548,40 +590,60 @@ bool GameView::treatEvents()
                         if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() ){
                             
                             if((e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x ) && e.MouseButton.X > _digger_sprite.GetPosition().x ) && (e.MouseButton.Y < _digger_sprite.GetPosition().y && e.MouseButton.Y > _digger_sprite.GetPosition().y - 40)){
-                                m_model->direction("N");
+                                if(answer_move("N"))
+                                    m_model->direction("N");
                             }
                             if((e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x ) && e.MouseButton.X > _digger_sprite.GetPosition().x ) && (e.MouseButton.Y > (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y) && e.MouseButton.Y < (_digger_sprite.GetPosition().y) + _digger_sprite.GetSize().y + 40)){
-                                m_model->direction("S");
+                                 if(answer_move("S"))
+                                     m_model->direction("S");
 
                             }
                             if((e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x + 40) && e.MouseButton.X > (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x)) && (e.MouseButton.Y > _digger_sprite.GetPosition().y && e.MouseButton.Y < (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y))){
-                                m_model->direction("E");
+                                 if(answer_move("E"))
+                                     m_model->direction("E");
                 
                             }
                             
                             if((e.MouseButton.X > (_digger_sprite.GetPosition().x + -40) && e.MouseButton.X < _digger_sprite.GetPosition().x  && e.MouseButton.Y > _digger_sprite.GetPosition().y && e.MouseButton.Y < (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y))){
-                                m_model->direction("O");
+                                 if(answer_move("O"))
+                                     m_model->direction("O");
                      
                             }
                             
                             if(e.MouseButton.X > (_digger_sprite.GetPosition().x + -40) && e.MouseButton.X < _digger_sprite.GetPosition().x  && e.MouseButton.Y < _digger_sprite.GetPosition().y && e.MouseButton.Y > (_digger_sprite.GetPosition().y - 40)){
-                                m_model->direction("NO");
+                                if(answer_move("NO"))
+                                    m_model->direction("NO");
                        
                             }
                             
                             if(e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x + 40) && e.MouseButton.X > (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x)  && e.MouseButton.Y < _digger_sprite.GetPosition().y && e.MouseButton.Y > (_digger_sprite.GetPosition().y - 40)){
-                                m_model->direction("NE");
-                            
+                                if(answer_move("NE"))
+                                     m_model->direction("NE");
                             }
                             
                             if(e.MouseButton.X > (_digger_sprite.GetPosition().x + -40) && e.MouseButton.X < _digger_sprite.GetPosition().x  && e.MouseButton.Y > (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y) && e.MouseButton.Y < (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y + 40)){
-                                m_model->direction("SO");
+                                if(answer_move("SO"))
+                                    m_model->direction("SO");
                           
                             }
                             if(e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x + 40) && e.MouseButton.X > (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x) && e.MouseButton.Y > (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y) && e.MouseButton.Y < (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y + 40)){
-                                m_model->direction("SE");
+                                if(answer_move("SE"))
+                                    m_model->direction("SE");
                           
                             }
+                            if((e.MouseButton.X < (_quitte_inGame.GetPosition().x +_quitte_inGame.GetSize().x ) && e.MouseButton.X > _quitte_inGame.GetPosition().x )&& (e.MouseButton.Y > _quitte_inGame.GetPosition().y && e.MouseButton.Y < _quitte_inGame.GetPosition().y + _quitte_inGame.GetSize().y)){
+                                m_model->setEcranJeu(false);
+                                m_model->rejouerPartie();
+                                isEnable = false;
+                                m_model->setGoToView(0);
+                            }
+                            if((e.MouseButton.X < (_son_sprite.GetPosition().x +_son_sprite.GetSize().x ) && e.MouseButton.X > _son_sprite.GetPosition().x )&& (e.MouseButton.Y > _son_sprite.GetPosition().y && e.MouseButton.Y < _son_sprite.GetPosition().y + _son_sprite.GetSize().y)){
+                                sound.Pause();
+                            }
+                            if((e.MouseButton.X < (_notSon_sprite.GetPosition().x +_notSon_sprite.GetSize().x ) && e.MouseButton.X > _notSon_sprite.GetPosition().x )&& (e.MouseButton.Y > _notSon_sprite.GetPosition().y && e.MouseButton.Y < _notSon_sprite.GetPosition().y + _notSon_sprite.GetSize().y)){
+                                sound.Play();
+                            }
+
                         }
                         break;
                     case 2:
@@ -618,23 +680,25 @@ bool GameView::treatEvents()
                         break;
                     case 4:
                         if(e.Type == sf::Event::TextEntered){
-                            if(s_nom.length() <= 10)
+                            if(s_nom_player.length() <= 10)
                             {
-                                s_nom += static_cast<char>(e.Text.Unicode);
-                                nom.SetText(s_nom);
+                                s_nom_player += static_cast<char>(e.Text.Unicode);
+                                nom.SetText(s_nom_player);
                             }
                         }
                         if ((e.Type == sf::Event::KeyPressed) && (e.Key.Code == sf::Key::Back)) {
-                            if(s_nom.length() > 0){
-                                s_nom.erase(s_nom.length()-1,1);
-                                nom.SetText(s_nom);
-                                if(s_nom.length() >= 1)
-                                    s_nom.resize(s_nom.length()-1);
+                            if(s_nom_player.length() > 0){
+                                s_nom_player.erase(s_nom_player.length()-1,1);
+                                nom.SetText(s_nom_player);
+                                if(s_nom_player.length() >= 1)
+                                    s_nom_player.resize(s_nom_player.length()-1);
                             }
                         }
                         if(e.Type == sf::Event::KeyPressed  && (e.Key.Code == sf::Key::Return)) {
+                            s_nom = s_nom_player;
                             afficherScore = true;
                             s_sauvegarde_score();
+                            s_nom_player.resize(0);
                             m_model->setEcranJeu(false);
                             m_model->rejouerPartie();
                             m_model->setGoToView(0);
@@ -683,14 +747,15 @@ bool GameView::treatEvents()
         
         m_window->Clear();
         if(m_model->getGoToView() == 0){
+            sound.Pause();
             s_Presentation();
             affichageScore();
         }
         else if(m_model->getGoToView() == 1) {
             status = sound.GetStatus();
-            if(status != sf::Music::Playing)
-                sound.Play();
+            s_boutton_son();
             draw();
+            s_quitte_inGame();
         }
         else if(m_model->getGoToView() == 2) {
             isEnable = false;

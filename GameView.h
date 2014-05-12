@@ -25,15 +25,14 @@ public:
     GameView(int h, int w, int bpp);
     virtual ~GameView();
     void setModel(GameModel *model);
-      void affichageScore();
-    std::string afficheBonus() const;
-    std::string afficheScore() const;
-    std::string viePlayer() const;
+    void affichageScore();
+    bool answer_move(std::string answer);
 
 private:
     GameModel *m_model;
     std::vector<sf::Sprite*> images;
     std::string s_nom;
+    std::string s_nom_player;
     bool isEnable;
     std::map<int, std::string>m_e;
     bool afficherScore;
@@ -56,6 +55,8 @@ public: // SFML
     void s_sauvegarde_score();
     void s_chargementScore();
     void s_affichageLangue();
+    void s_quitte_inGame();
+    void s_boutton_son();
     
 private: // SFML
     sf::RenderWindow *m_window;
@@ -75,7 +76,11 @@ private: // SFML
     sf::Image _anglais_image;
     sf::Image _jouer_image;
     sf::Image _quitter_image;
-    
+    sf::Image _son_image;
+    sf::Image _notSon_image;
+
+    sf::Sprite _son_sprite;
+    sf::Sprite _notSon_sprite;
     sf::Sprite _jouer_sprite;
     sf::Sprite _quitter_sprite;
     sf::Sprite _anglais_sprite;
@@ -91,6 +96,7 @@ private: // SFML
     sf::Sprite _option_sprite;
     sf::Sprite _menu_sprite;
     sf::Sprite _bestScore_sprite;
+    sf::Sprite _quitte_inGame;
     
     sf::Font _font;
     sf::String titre;

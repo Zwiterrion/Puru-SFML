@@ -43,6 +43,7 @@ public:
     void set_answer_move(std::string a);
     std::string get_answer_move();
 
+    bool check_answer(std::string a);
     const Player& getPlayer() const;
     const Score& getScore() const;
     Lvl& getLvl() const;
