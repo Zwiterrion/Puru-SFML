@@ -36,23 +36,23 @@ GameView::GameView(int h, int w, int bpp){
         cerr << "ERROR";
     }
     else {
-        _son_sprite = Sprite(_son_image);
-        _notSon_sprite = Sprite(_notSon_image);
+        _son_sprite        = Sprite(_son_image);
+        _notSon_sprite     = Sprite(_notSon_image);
         _background_sprite = Sprite (_background_image);
-        _bestScore_sprite = Sprite(_bestScore_image);
-        _option_sprite = Sprite(_option_image);
-        _menu_sprite = Sprite(_menu_image);
-        _digger_sprite = Sprite(_digger_image);
-        _bombe_sprite = Sprite(_bombe_image);
-        _tuile_sprite = Sprite(_tuile_image);
-        _bonus_sprite = Sprite(_bonus_image);
-        _exit_sprite = Sprite(_exit_image);
-        _start_sprite = Sprite(_start_image);
-        _vide_sprite = Sprite(_vide_image);
-        _anglais_sprite = Sprite(_anglais_image);
-        _francais_sprite = Sprite(_francais_image);
-        _jouer_sprite = Sprite(_jouer_image);
-        _quitter_sprite = Sprite(_quitter_image);
+        _bestScore_sprite  = Sprite(_bestScore_image);
+        _option_sprite     = Sprite(_option_image);
+        _menu_sprite       = Sprite(_menu_image);
+        _digger_sprite     = Sprite(_digger_image);
+        _bombe_sprite      = Sprite(_bombe_image);
+        _tuile_sprite      = Sprite(_tuile_image);
+        _bonus_sprite      = Sprite(_bonus_image);
+        _exit_sprite       = Sprite(_exit_image);
+        _start_sprite      = Sprite(_start_image);
+        _vide_sprite       = Sprite(_vide_image);
+        _anglais_sprite    = Sprite(_anglais_image);
+        _francais_sprite   = Sprite(_francais_image);
+        _jouer_sprite      = Sprite(_jouer_image);
+        _quitter_sprite    = Sprite(_quitter_image);
     }
 
     _background_sprite.Resize(38, 38);
@@ -415,7 +415,7 @@ void GameView::s_option()
 void GameView::s_chargementScore()
 {
     fstream f;
-    f.open("/Users/Etienne/Desktop/Puru-SFML/meilleursScores.txt", ios::in);
+    f.open("meilleursScores.txt", ios::in);
     
     if( f.fail() )
     {
@@ -498,7 +498,7 @@ void GameView::s_affichageLangue()
  **************************************************************/
 void GameView::s_sauvegarde_score() {
     fstream f;
-    f.open( "/Users/Etienne/Desktop/Puru-SFML/meilleursScores.txt", ios::out | ios::app ); // ouverture du fichier en ecriture
+    f.open( "meilleursScores.txt", ios::out | ios::app ); // ouverture du fichier en ecriture
     if( f.fail() )
     {
         cerr << "ouverture en lecture impossible" << endl;

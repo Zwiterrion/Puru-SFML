@@ -74,8 +74,12 @@ public:
     bool getEcranJeu() const;
 
     bool plusDeTemps();
-    
     void calculDuTemps();
+   /*
+    bool verification_niveau();
+    bool moveBis(int x, int y);
+    bool directionBis(std::string answer);
+*/
 };
 
 
