@@ -122,6 +122,7 @@ bool GameView::initSprite(){
     return false;
 }
 
+
 /************************************************************
  * Nom: setModel                                            *
  ************************************************************
@@ -139,30 +140,26 @@ void GameView::s_afficheBonus()
 {
     ostringstream out;
     out << m_l[3] << m_model->getLvl().get_score_bonus() << m_l[4] << m_model->getLvl().get_b_temps() <<  m_l[5] << m_model->getLvl().get_b_vie()  <<  m_l[6] << m_model->getLvl().getLevel();
-    affiche_Bonus = String(out.str());
-    affiche_Bonus.SetPosition(WIDTH - 250, 100);
     
-    affiche_Bonus.SetSize(25.0F);
+    loadText(affiche_Bonus, WIDTH-250, 100, 25.0F, out.str());
     m_window->Draw(affiche_Bonus);
 }
 void GameView::s_afficheScore()
 {
     ostringstream out;
     out<<  m_l[7] << m_model->getScore().getDeplacement() <<  m_l[8] << m_model->getScore().getCible() << m_l[17] << m_model->getScore().getScoreTotal() << m_l[9] << m_model->getLvl().getTemps() << endl;
-    affiche_Score = String(out.str());
-    affiche_Score.SetPosition(WIDTH - 250, 200);
     
-    affiche_Score.SetSize(25.0F);
+    loadText(affiche_Score, WIDTH-250, 200, 25.0F, out.str());
+
     m_window->Draw(affiche_Score);
 }
 void GameView::s_viePlayer()
 {
     ostringstream out;
     out<< m_l[10] << m_model->getPlayer().getVie();
-    _vie_player = String(out.str());
-    _vie_player.SetPosition(WIDTH - 250, 275);
     
-    _vie_player.SetSize(25.0F);
+    loadText(_vie_player, WIDTH-250, 275, 25.0F, out.str());
+
     m_window->Draw(_vie_player);
 }
 /************************************************************
@@ -206,8 +203,9 @@ void GameView::draw()
             else if(dynamic_cast<BonusCase*>(matrice[i][j])){
                 ostringstream out;
                 out << matrice[i][j]->getObj();
-                String s = String(out.str());
-                s.SetPosition((j*WIDTH_PIECE)+50, (i*WIDTH_PIECE)+30);
+                
+                sf::String s;
+                loadText(s, j*WIDTH_PIECE+50, i*WIDTH_PIECE+30, out.str());
                 
                 _bonus_sprite.SetPosition((j*WIDTH_PIECE)+50,(i*WIDTH_PIECE)+30);
                 _bonus_sprite.SetColor(sf::Color(77,77,77,128));
@@ -231,8 +229,9 @@ void GameView::draw()
             {
                 ostringstream out;
                 out << matrice[i][j]->getObj();
-                String s = String(out.str());
-                s.SetPosition(j*WIDTH_PIECE + 60, (i*WIDTH_PIECE)+30);
+                sf::String s;
+                loadText(s, j*WIDTH_PIECE+60, i*WIDTH_PIECE+30, out.str());
+                
                 _tuile_sprite.SetPosition((j*WIDTH_PIECE) + 50,(i*WIDTH_PIECE)+30);
                 _tuile_sprite.SetColor(sf::Color(192,192,192,128));
                 Sprite *tuile = &_tuile_sprite;
@@ -274,17 +273,8 @@ void GameView::draw()
 
 void GameView::s_Presentation()
 {
-    titre = String(m_l[11]);
-    titre.SetColor(sf::Color(200,200,200));
-    titre.SetFont(_font);
-    titre.SetSize(80.0f);
-    
-    meilleursScore = String(m_l[20]);
-    meilleursScore.SetFont(_font);
-    meilleursScore.SetSize(45.0f);
-    meilleursScore.SetPosition(WIDTH/2 + 80, 225);
-    
-    titre.SetPosition(50 , 50);
+    loadText(titre, 50, 50, 80.0F, m_l[11], _font, 200, 200, 200);
+    loadText(meilleursScore, WIDTH/2 + 80, 225, 45.0F, m_l[20]);
     
     if(m_langue->getNom() == "anglais"){
         _start_sprite.SetPosition(100, 250);
@@ -319,18 +309,15 @@ void GameView::s_rejouer()
 {
     ostringstream out;
     out << m_l[12];
+    loadText(_abandon, WIDTH/2, HEIGHT/2-200, 80.0F, out.str());
+    
+    
     _start_sprite.SetPosition(WIDTH/2 -300, HEIGHT/2);
-    m_window->Draw(_start_sprite);
-    
     _exit_sprite.SetPosition(WIDTH/2 +100, HEIGHT/2);
+    
+    
     m_window->Draw(_exit_sprite);
-    
-    string s = out.str();
-    _abandon = String(s);
-    
-    _abandon.SetPosition(WIDTH/2, HEIGHT/2 - 200);
-    _abandon.SetSize(80.0f);
-    
+    m_window->Draw(_start_sprite);
     m_window->Draw(_abandon);
 }
 /************************************************************
@@ -343,47 +330,37 @@ void GameView::s_rejouer()
 void GameView::s_perteVie()
 {
     
-    jouer = String(m_l[0]);
-    jouer.SetSize(40);
-    jouer.SetPosition((WIDTH/2)-300, HEIGHT/2+50);
-    jouer.SetColor(sf::Color(125, 205, 128));
+    loadText(jouer, WIDTH/2-300, HEIGHT/2+50, 40.0F, m_l[0], 125, 205, 128);
+    loadText(quitter, WIDTH/2+100, HEIGHT/2+50, 40, m_l[2], 20, 20, 20);
     
-    quitter = String(m_l[2]);
-    quitter.SetSize(40);
-    quitter.SetPosition((WIDTH/2)+100, HEIGHT/2+50);
-    quitter.SetColor(sf::Color(125, 205, 128));
+    sf::String perte;
+    sf::String suite;
+    loadText(suite, WIDTH/2-250, HEIGHT/2-30, 40.0F, m_l[13]);
+    loadText(perte, WIDTH/2-300, HEIGHT/2-150, 40.0F, m_l[14]);
     
     m_window->Clear(sf::Color(20,20,20));
-    sf::String perte = String(m_l[13]);
-    sf::String suite = String(m_l[14]);
-    suite.SetPosition(WIDTH/2 - 250, HEIGHT/2-30);
-    perte.SetPosition(WIDTH/2 - 300, HEIGHT/2-150);
-    perte.SetSize(40);
-    suite.SetSize(40);
     
     m_window->Draw(suite);
     m_window->Draw(perte);
     m_window->Draw(jouer);
     m_window->Draw(quitter);
 }
+
 void GameView::s_changeLvl()
 {
-    jouer = String(m_l[0]);
-    jouer.SetSize(40);
-    jouer.SetPosition((WIDTH/2)-300, HEIGHT/2+50);
-    
-    
-    quitter = String(m_l[2]);
-    quitter.SetSize(40);
-    quitter.SetPosition((WIDTH/2)+100, HEIGHT/2+50);
+    loadText(jouer, WIDTH/2-300, HEIGHT/2+50, 40.0F, m_l[0], 125, 205, 128);
+    loadText(quitter, WIDTH/2+100, HEIGHT/2+50, 40, m_l[2], 20, 20, 20);
     
     sf::String text = String(m_l[15]);
     text.SetSize(50.0f);
+    
+    
     if(m_langue->getNom() == "anglais"){
-        text.SetPosition(WIDTH/2 -300, HEIGHT/2 -50);
+        loadText(text, WIDTH/2-300, HEIGHT/2-50, 50.0F, m_l[15]);
     }
     else
-        text.SetPosition(WIDTH/2 -350, HEIGHT/2 -50);
+        loadText(text, WIDTH/2-350, HEIGHT/2-50, 50.0F, m_l[15]);
+    
     m_window->Draw(text);
     m_window->Draw(jouer);
     m_window->Draw(quitter);
@@ -392,53 +369,46 @@ void GameView::s_plusDeVie()
 {
     ostringstream out;
     out << m_l[18];
-    String text = String(out.str());
-    text.SetPosition(WIDTH/2-400, HEIGHT/2- 100);
+    String text;
+
+    
     nom.SetPosition(WIDTH/2-150, HEIGHT/2);
     nom.SetSize(40);
-    text.SetSize(40);
+    
+    loadText(text, WIDTH/2-400, HEIGHT/2-100, 40.0F, m_l[18]);
     
     m_window->Draw(text);
 }
 void GameView::s_perteParTemps()
 {
+    sf::String perte;
+    sf::String suite;
     
-    jouer = String(m_l[0]);
-    jouer.SetSize(40);
-    jouer.SetPosition((WIDTH/2)-300, HEIGHT/2+50);
-    jouer.SetColor(sf::Color(125, 205, 128));
-    
-    quitter = String(m_l[2]);
-    quitter.SetSize(40);
-    quitter.SetPosition((WIDTH/2)+100, HEIGHT/2+50);
-    quitter.SetColor(sf::Color(125, 205, 128));
+    loadText(jouer, WIDTH/2-300, HEIGHT/2+50,40.0F, m_l[0], 125, 205, 128);
+    loadText(quitter, WIDTH/2+100, HEIGHT/2+50, 40, m_l[2], 125, 205, 128);
+    loadText(perte, WIDTH/2-250, HEIGHT/2-30, 40.0F, m_l[16]);
+    loadText(suite, WIDTH/2-300, HEIGHT/2-150, 40.0F, m_l[14]);
     
     m_window->Clear(sf::Color(20,20,20));
-    sf::String perte = String(m_l[16]);
-    sf::String suite = String(m_l[14]);
-    suite.SetPosition(WIDTH/2 - 250, HEIGHT/2-30);
-    perte.SetPosition(WIDTH/2 - 300, HEIGHT/2-150);
-    perte.SetSize(40);
-    suite.SetSize(40);
     
     m_window->Draw(suite);
     m_window->Draw(perte);
     m_window->Draw(jouer);
     m_window->Draw(quitter);
 }
+
 void GameView::s_option()
 {
-    String e = String(m_l[1]);
-    e.SetColor(sf::Color(200,200,200));
-    e.SetFont(_font);
-    e.SetSize(80.0f);
-    e.SetPosition(WIDTH/2-150,100);
+    String e;
+    
+    loadText(e, WIDTH/2-150, 100, 80.0F, m_l[1], _font, 200, 200, 200);
     
     _menu_sprite.SetPosition(WIDTH/2-100, HEIGHT/2 + 250);
     m_window->Draw(_menu_sprite);
     
     m_window->Draw(e);
 }
+
 void GameView::s_chargementScore()
 {
     fstream f;
@@ -505,6 +475,7 @@ void GameView::affichageScore()
     afficherScore = false;
     
 }
+
 void GameView::s_affichageLangue()
 {
     langue = String(m_l[19]);
@@ -535,6 +506,7 @@ void GameView::s_sauvegarde_score() {
     f << m_model->getScore().getScoreTotal() << endl;
     f.close();
 }
+
 void GameView::s_quitte_inGame()
 {
     if(m_langue->getNom() == "anglais")
@@ -545,6 +517,7 @@ void GameView::s_quitte_inGame()
     _quitte_inGame.SetPosition(800, HEIGHT-100);
     m_window->Draw(_quitte_inGame);
 }
+
 void GameView::s_boutton_son()
 {
     _son_sprite.SetPosition(900, 50);
@@ -559,6 +532,7 @@ void GameView::s_boutton_son()
         m_window->Draw(_notSon_sprite);
     }
 }
+
 bool GameView::answer_move(string answer) {
     if(m_model->check_answer(answer)){
         return true;
@@ -566,6 +540,7 @@ bool GameView::answer_move(string answer) {
     else
         return false;
 }
+
 bool GameView::treatEvents()
 {
     if(initSprite()){

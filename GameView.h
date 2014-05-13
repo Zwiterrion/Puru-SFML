@@ -150,6 +150,39 @@ private:
     
     // INIT SPRITE
     bool initSprite();
-
+    
+    // INIT TEXT
+    void loadText(sf::String &s, const int x, const int y, const float size, const std::string text){
+        s = sf::String(text);
+        s.SetPosition(x, y);
+        s.SetSize(size);
+    }
+    
+    void loadText(sf::String &s, const int x, const int y, const float size, const std::string text, const sf::Font &f){
+        s = sf::String(text);
+        s.SetPosition(x, y);
+        s.SetSize(size);
+        s.SetFont(_font);
+    }
+    
+    void loadText(sf::String &s, const int x, const int y, const float size, const std::string text, const int r, const int g, const int b){
+        s = sf::String(text);
+        s.SetPosition(x, y);
+        s.SetSize(size);
+        s.SetColor(sf::Color(r, g, b));
+    }
+    
+    void loadText(sf::String &s, const int x, const int y, const float size, const std::string text, const sf::Font &f, const int r, const int g, const int b){
+        s = sf::String(text);
+        s.SetPosition(x, y);
+        s.SetSize(size);
+        s.SetColor(sf::Color(r, g, b));
+        s.SetFont(_font);
+    }
+    
+    void loadText(sf::String &s, const int x, const int y, const std::string text){
+        s = sf::String(text);
+        s.SetPosition(x, y);
+    }
 };
 #endif /* defined(__THE_PURU__GameView__) */
