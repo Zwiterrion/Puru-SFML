@@ -59,6 +59,24 @@ public: // SFML
     void s_boutton_son();
     
 private: // SFML
+    std::string _namePictureBackground;     //background.png
+    std::string _namePictureDigger;         //digger_face.png
+    std::string _namePictureBomb;           //tuile_bombe.png
+    std::string _namePictureBonus;          //tuile_bonus.png
+    std::string _namePictureCase;           //tuile.png
+    std::string _namePictureExitButton;     //exitButton.png
+    std::string _namePicturePlayButton;     //startButton.png
+    std::string _namePictureCaseVide;       //vide.png
+    std::string _namePictureOptionButton;   //optionButton.png
+    std::string _namePictureMenu;           //menu.png
+    std::string _namePictureBestscore;      //bestScore.png
+    std::string _namePictureFrancais;       //francais.png
+    std::string _namePictureAnglais;        //anglais.png
+    std::string _namePictureJouer;          //jouer.png
+    std::string _namePictureQuitter;        //quitter.png
+    std::string _namePictureSound;          //son.png
+    std::string _namePictureNotSound;       //notSon.png
+    
     sf::RenderWindow *m_window;
     
     sf::Image _background_image;
@@ -99,6 +117,7 @@ private: // SFML
     sf::Sprite _quitte_inGame;
     
     sf::Font _font;
+    
     sf::String titre;
     sf::String affiche_Bonus;
     sf::String affiche_Score;
@@ -118,6 +137,19 @@ private: // SFML
     sf::SoundBuffer bonus;
     sf::Sound::Status bonus_status;
     sf::Sound bonusSound;
+    
+    
+    
+private:
+    
+    // PICTURE & SPRITE
+    bool loadPicture(const std::string name, sf::Image &picture);
+    bool loadSprite(const std::string name, sf::Image &picture, sf::Sprite &sprite);
+    bool loadSpriteResize(const std::string name, sf::Image &picture, sf::Sprite &sprite, const int rx, const int ry);
+    void loadNamePicture();
+    
+    // INIT SPRITE
+    bool initSprite();
 
 };
 #endif /* defined(__THE_PURU__GameView__) */
