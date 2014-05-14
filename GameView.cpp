@@ -69,7 +69,7 @@ bool GameView::loadSprite(const std::string name, sf::Image &picture, sf::Sprite
     return false;
 }
 
-bool GameView::loadSpriteResize(const std::string name, sf::Image &picture, sf::Sprite &sprite, const int rx, const int ry){
+bool GameView::loadSprite(const std::string name, sf::Image &picture, sf::Sprite &sprite, const int rx, const int ry){
     if(loadPicture(name, picture)){
         sprite = sf::Sprite(picture);
         sprite.Resize(rx, ry);
@@ -100,17 +100,17 @@ void GameView::loadNamePicture(){
 }
 
 bool GameView::initSprite(){
-    if(loadSpriteResize(_namePictureBackground, _background_image, _background_sprite, 38, 38) &&
-       loadSpriteResize(_namePictureDigger, _digger_image, _digger_sprite, 38, 38) &&
-       loadSpriteResize(_namePictureBomb, _bombe_image, _bombe_sprite, 38, 38) &&
-       loadSpriteResize(_namePictureBonus, _bonus_image, _bonus_sprite, 38, 38) &&
-       loadSpriteResize(_namePictureCase, _tuile_image, _tuile_sprite, 38, 38) &&
+    if(loadSprite(_namePictureBackground, _background_image, _background_sprite, 38, 38) &&
+       loadSprite(_namePictureDigger, _digger_image, _digger_sprite, 38, 38) &&
+       loadSprite(_namePictureBomb, _bombe_image, _bombe_sprite, 38, 38) &&
+       loadSprite(_namePictureBonus, _bonus_image, _bonus_sprite, 38, 38) &&
+       loadSprite(_namePictureCase, _tuile_image, _tuile_sprite, 38, 38) &&
        loadSprite(_namePictureExitButton, _exit_image, _exit_sprite) &&
        loadSprite(_namePicturePlayButton, _start_image, _start_sprite) &&
-       loadSpriteResize(_namePictureCaseVide, _vide_image, _vide_sprite, 38, 38) &&
+       loadSprite(_namePictureCaseVide, _vide_image, _vide_sprite, 38, 38) &&
        loadSprite(_namePictureOptionButton, _option_image, _option_sprite) &&
        loadSprite(_namePictureMenu, _menu_image, _menu_sprite) &&
-       loadSpriteResize(_namePictureBestscore, _bestScore_image, _bestScore_sprite, 500, 600) &&
+       loadSprite(_namePictureBestscore, _bestScore_image, _bestScore_sprite, 500, 600) &&
        loadSprite(_namePictureFrancais, _francais_image, _francais_sprite) &&
        loadSprite(_namePictureAnglais, _anglais_image, _anglais_sprite) &&
        loadSprite(_namePictureJouer, _jouer_image, _jouer_sprite) &&
@@ -122,6 +122,78 @@ bool GameView::initSprite(){
     return false;
 }
 
+void GameView::loadText(sf::String &s, const int x, const int y, const float size, const std::string text)
+{
+    s = sf::String(text);
+    s.SetPosition(x, y);
+    s.SetSize(size);
+}
+
+void GameView::loadText(sf::String &s, const int x, const int y, const float size, const std::string text, const sf::Font &f)
+{
+    s = sf::String(text);
+    s.SetPosition(x, y);
+    s.SetSize(size);
+    s.SetFont(_font);
+}
+
+
+void GameView::loadText(sf::String &s, const int x, const int y, const float size, const std::string text, const int r, const int g, const int b)
+{
+    s = sf::String(text);
+    s.SetPosition(x, y);
+    s.SetSize(size);
+    s.SetColor(sf::Color(r, g, b));
+}
+
+
+void GameView::loadText(sf::String &s, const int x, const int y, const float size, const std::string text, const sf::Font &f, const int r, const int g, const int b)
+{
+    s = sf::String(text);
+    s.SetPosition(x, y);
+    s.SetSize(size);
+    s.SetColor(sf::Color(r, g, b));
+    s.SetFont(_font);
+}
+
+
+void GameView::loadText(sf::String &s, const int x, const int y, const std::string text)
+{
+    s = sf::String(text);
+    s.SetPosition(x, y);
+}
+
+void GameView::changeSprite(sf::Sprite &s, const float x, const float y){
+    s.SetPosition(x, y);
+}
+
+void GameView::changeSprite(sf::Sprite &s, const float x, const float y, const int r, const int g, const int b, const int alpha){
+    s.SetPosition(x, y);
+    s.SetColor(sf::Color(r, g, b, alpha));
+}
+
+void GameView::changeSprite(sf::Sprite &s, const float x, const float y, const int r, const int g, const int b, const int alpha, const float mx, const float my){
+    s.SetPosition(x, y);
+    s.SetColor(sf::Color(r, g, b, alpha));
+    s.Move(mx, my);
+}
+
+void GameView::changeSpriteResize(sf::Sprite &s, const float x, const float y, const int r, const int g, const int b, const int alpha, const float rx, const float ry){
+    s.SetPosition(x, y);
+    s.SetColor(sf::Color(r, g, b, alpha));
+    s.Resize(rx, ry);
+}
+
+// Focus
+
+bool GameView::onTheSprite(const sf::Sprite &s, const int x, const int y) const{
+    return (x < (s.GetPosition().x + s.GetSize().x ) && x > s.GetPosition().x )&& (y > s.GetPosition().y && y < s.GetPosition().y + s.GetSize().y );
+}
+
+bool GameView::onTheText(const sf::String &s, const int x, const int y) const{
+    sf::FloatRect sizeText = s.GetRect();
+    return (x < (s.GetPosition().x + sizeText.GetWidth() ) && x > s.GetPosition().x )&& (y > s.GetPosition().y && y < s.GetPosition().y + sizeText.GetHeight());
+}
 
 /************************************************************
  * Nom: setModel                                            *
@@ -136,6 +208,7 @@ void GameView::setModel(GameModel *model)
 {
     m_model = model;
 }
+
 void GameView::s_afficheBonus()
 {
     ostringstream out;
@@ -144,6 +217,7 @@ void GameView::s_afficheBonus()
     loadText(affiche_Bonus, WIDTH-250, 100, 25.0F, out.str());
     m_window->Draw(affiche_Bonus);
 }
+
 void GameView::s_afficheScore()
 {
     ostringstream out;
@@ -153,6 +227,7 @@ void GameView::s_afficheScore()
 
     m_window->Draw(affiche_Score);
 }
+
 void GameView::s_viePlayer()
 {
     ostringstream out;
@@ -174,9 +249,9 @@ void GameView::draw()
 {
     
     // Image background
-    _background_sprite.Resize(WIDTH, HEIGHT);
-    _background_sprite.SetPosition(0,0);
-    _background_sprite.SetColor(sf::Color(126,126,126,128));
+    
+    changeSprite(_background_sprite, 0, 0, 126, 126, 126, 128, WIDTH, HEIGHT);
+
     m_window->Draw(_background_sprite);
     
     Case ***matrice = m_model->getMatrice();
@@ -193,8 +268,7 @@ void GameView::draw()
     for(int i=0; i<18; i++){
         for(int j=0; j<18; j++){
             if(dynamic_cast<Bomb*>(matrice[i][j])){
-                _bombe_sprite.SetPosition((j*WIDTH_PIECE)+50,(i*WIDTH_PIECE)+30);
-                _bombe_sprite.SetColor(sf::Color(255,255,255,128));
+                changeSprite(_bombe_sprite, j*WIDTH_PIECE+50, i*WIDTH_PIECE+30, 255, 255, 255, 128);
                 
                 Sprite *bomb = &_bombe_sprite;
                 images.push_back(bomb);
@@ -206,21 +280,21 @@ void GameView::draw()
                 
                 sf::String s;
                 loadText(s, j*WIDTH_PIECE+50, i*WIDTH_PIECE+30, out.str());
-                
-                _bonus_sprite.SetPosition((j*WIDTH_PIECE)+50,(i*WIDTH_PIECE)+30);
-                _bonus_sprite.SetColor(sf::Color(77,77,77,128));
+                changeSprite(_bonus_sprite, j*WIDTH_PIECE+50, i*WIDTH_PIECE+30, 77, 77, 77, 128);
+
                 Sprite *bonus = &_bonus_sprite;
                 images.push_back(bonus);
+                
+                
                 m_window->Draw(*bonus);
                 m_window->Draw(s);
             }
             else if(dynamic_cast<Croix*>(matrice[i][j]))
             {
-                _vide_sprite.SetPosition((j*WIDTH_PIECE)+50, (i*WIDTH_PIECE)+30);
+                changeSprite(_vide_sprite, j*WIDTH_PIECE+50, i*WIDTH_PIECE+30, 246, 246, 246, 128);
                 if(m_window->GetInput().IsMouseButtonDown(sf::Mouse::Left)){
                     _vide_sprite.Move(0, 3);
                 }
-                _vide_sprite.SetColor(sf::Color(246,246,246,128));
                 Sprite *vide = &_vide_sprite;
                 images.push_back(vide);
                 m_window->Draw(*vide);
@@ -232,8 +306,8 @@ void GameView::draw()
                 sf::String s;
                 loadText(s, j*WIDTH_PIECE+60, i*WIDTH_PIECE+30, out.str());
                 
-                _tuile_sprite.SetPosition((j*WIDTH_PIECE) + 50,(i*WIDTH_PIECE)+30);
-                _tuile_sprite.SetColor(sf::Color(192,192,192,128));
+                changeSprite(_tuile_sprite, j*WIDTH_PIECE+50, i*WIDTH_PIECE+30, 192, 192, 192, 128);
+
                 Sprite *tuile = &_tuile_sprite;
                 images.push_back(tuile);
                 m_window->Draw(*tuile);
@@ -243,12 +317,11 @@ void GameView::draw()
         
     }
     if(m_model->getPlayer().get_y()*WIDTH_PIECE < 18*WIDTH_PIECE && m_model->getPlayer().get_x()*WIDTH_PIECE < 18*WIDTH_PIECE){
-        sf::Image image;
-        image.LoadFromFile("tuile_bonus.png");
-        sf::Sprite sprite = Sprite(image);
-        sprite.Resize(38, 38);
-        sprite.SetPosition((m_model->getPlayer().get_x()*WIDTH_PIECE)+50, (m_model->getPlayer().get_y()*WIDTH_PIECE)+30);
-        m_window->Draw(sprite);
+        changeSprite(_bonus_sprite,m_model->getPlayer().get_x()*WIDTH_PIECE+50, m_model->getPlayer().get_y()*WIDTH_PIECE+30);
+      
+        m_window->Draw(_bonus_sprite);
+        
+        
         _digger_sprite.SetPosition(((m_model->getPlayer().get_x()*WIDTH_PIECE) +50), (m_model->getPlayer().get_y()*WIDTH_PIECE)+30);
     }
     
@@ -331,7 +404,7 @@ void GameView::s_perteVie()
 {
     
     loadText(jouer, WIDTH/2-300, HEIGHT/2+50, 40.0F, m_l[0], 125, 205, 128);
-    loadText(quitter, WIDTH/2+100, HEIGHT/2+50, 40, m_l[2], 20, 20, 20);
+    loadText(quitter, WIDTH/2+100, HEIGHT/2+50, 40, m_l[2], 125, 205, 128);
     
     sf::String perte;
     sf::String suite;
@@ -349,7 +422,7 @@ void GameView::s_perteVie()
 void GameView::s_changeLvl()
 {
     loadText(jouer, WIDTH/2-300, HEIGHT/2+50, 40.0F, m_l[0], 125, 205, 128);
-    loadText(quitter, WIDTH/2+100, HEIGHT/2+50, 40, m_l[2], 20, 20, 20);
+    loadText(quitter, WIDTH/2+100, HEIGHT/2+50, 40, m_l[2], 125, 205, 128);
     
     sf::String text = String(m_l[15]);
     text.SetSize(50.0f);
@@ -365,6 +438,7 @@ void GameView::s_changeLvl()
     m_window->Draw(jouer);
     m_window->Draw(quitter);
 }
+
 void GameView::s_plusDeVie()
 {
     ostringstream out;
@@ -379,6 +453,7 @@ void GameView::s_plusDeVie()
     
     m_window->Draw(text);
 }
+
 void GameView::s_perteParTemps()
 {
     sf::String perte;
@@ -481,6 +556,7 @@ void GameView::s_affichageLangue()
     langue = String(m_l[19]);
     langue.SetPosition(100, HEIGHT/2 - 150);
     langue.SetSize(50);
+    
     _anglais_sprite.SetPosition(WIDTH/2 - 200, HEIGHT/2 - 200);
     _francais_sprite.SetPosition(WIDTH/2 - 50, HEIGHT/2 - 200);
     m_window->Draw(_anglais_sprite);
@@ -562,28 +638,27 @@ bool GameView::treatEvents()
                         if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() == false){
                             
                             if(m_langue->getNom() == "anglais"){
-                                if((e.MouseButton.X < (_start_sprite.GetPosition().x +_start_sprite.GetSize().x ) && e.MouseButton.X > _start_sprite.GetPosition().x )&& (e.MouseButton.Y > _start_sprite.GetPosition().y && e.MouseButton.Y < _start_sprite.GetPosition().y + _start_sprite.GetSize().y)){
+                                if(onTheSprite(_start_sprite, e.MouseButton.X, e.MouseButton.Y)){
                                     m_model->setEcranJeu(true);
                                     m_model->setGoToView(1);
                                     isEnable = true;
                                 }
                                 
-                                if((e.MouseButton.X < (_exit_sprite.GetPosition().x +_exit_sprite.GetSize().x ) && e.MouseButton.X > _exit_sprite.GetPosition().x )&& (e.MouseButton.Y > _exit_sprite.GetPosition().y && e.MouseButton.Y < _exit_sprite.GetPosition().y + _exit_sprite.GetSize().y )  && m_model->getEcranJeu() == false){
+                                if( onTheSprite(_exit_sprite, e.MouseButton.X, e.MouseButton.Y)&& m_model->getEcranJeu() == false){
                                     m_window->Close();
                                 }
                             }
                             if(m_langue->getNom() == "francais"){
-                                if((e.MouseButton.X < (_jouer_sprite.GetPosition().x +_jouer_sprite.GetSize().x ) && e.MouseButton.X > _jouer_sprite.GetPosition().x )&& (e.MouseButton.Y > _jouer_sprite.GetPosition().y && e.MouseButton.Y < _jouer_sprite.GetPosition().y + _jouer_sprite.GetSize().y)){
+                                if(onTheSprite(_jouer_sprite, e.MouseButton.X, e.MouseButton.Y)){
                                     m_model->setEcranJeu(true);
                                     m_model->setGoToView(1);
                                     isEnable = true;
                                 }
-                                
-                                if((e.MouseButton.X < (_quitter_sprite.GetPosition().x +_quitter_sprite.GetSize().x ) && e.MouseButton.X > _quitter_sprite.GetPosition().x )&& (e.MouseButton.Y > _quitter_sprite.GetPosition().y && e.MouseButton.Y < _quitter_sprite.GetPosition().y + _quitter_sprite.GetSize().y )  && m_model->getEcranJeu() == false){
+                                if(onTheSprite(_quitter_sprite, e.MouseButton.X, e.MouseButton.Y) && m_model->getEcranJeu() == false){
                                     m_window->Close();
                                 }
                             }
-                            if((e.MouseButton.X < (_option_sprite.GetPosition().x + _option_sprite.GetSize().x ) && e.MouseButton.X >  _option_sprite.GetPosition().x )&& (e.MouseButton.Y >  _option_sprite.GetPosition().y && e.MouseButton.Y <  _option_sprite.GetPosition().y + _option_sprite.GetSize().y )  && m_model->getEcranJeu() == false){
+                            if(onTheSprite(_option_sprite, e.MouseButton.X, e.MouseButton.Y) && m_model->getEcranJeu() == false){
                                 s_option();
                                 m_model->setGoToView(5);
                             }
@@ -634,16 +709,16 @@ bool GameView::treatEvents()
                                     m_model->direction("SE");
                                 
                             }
-                            if((e.MouseButton.X < (_quitte_inGame.GetPosition().x +_quitte_inGame.GetSize().x ) && e.MouseButton.X > _quitte_inGame.GetPosition().x )&& (e.MouseButton.Y > _quitte_inGame.GetPosition().y && e.MouseButton.Y < _quitte_inGame.GetPosition().y + _quitte_inGame.GetSize().y)){
+                            if(onTheSprite(_quitte_inGame, e.MouseButton.X, e.MouseButton.Y)){
                                 m_model->setEcranJeu(false);
                                 m_model->rejouerPartie();
                                 isEnable = false;
                                 m_model->setGoToView(0);
                             }
-                            if((e.MouseButton.X < (_son_sprite.GetPosition().x +_son_sprite.GetSize().x ) && e.MouseButton.X > _son_sprite.GetPosition().x )&& (e.MouseButton.Y > _son_sprite.GetPosition().y && e.MouseButton.Y < _son_sprite.GetPosition().y + _son_sprite.GetSize().y)){
+                            if(onTheSprite(_son_sprite, e.MouseButton.X, e.MouseButton.Y)){
                                 sound.Pause();
                             }
-                            if((e.MouseButton.X < (_notSon_sprite.GetPosition().x +_notSon_sprite.GetSize().x ) && e.MouseButton.X > _notSon_sprite.GetPosition().x )&& (e.MouseButton.Y > _notSon_sprite.GetPosition().y && e.MouseButton.Y < _notSon_sprite.GetPosition().y + _notSon_sprite.GetSize().y)){
+                            if(onTheSprite(_notSon_sprite, e.MouseButton.X, e.MouseButton.Y)){
                                 sound.Play();
                             }
                             
@@ -651,14 +726,13 @@ bool GameView::treatEvents()
                         break;
                     case 2:
                         if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() == false){
-                            if((e.MouseButton.X < (jouer.GetPosition().x + jouer.GetRect().GetWidth() ) && e.MouseButton.X > jouer.GetPosition().x )&& (e.MouseButton.Y > jouer.GetPosition().y && e.MouseButton.Y < jouer.GetPosition().y + jouer.GetRect().GetHeight())){
+                            if(onTheText(jouer, e.MouseButton.X, e.MouseButton.Y)){
                                 m_model->genereMatrice();
                                 m_model->setGoToView(1);
                                 m_model->setEcranJeu(true);
                                 isEnable = true;
                             }
-                            
-                            if((e.MouseButton.X < (quitter.GetPosition().x + 150) && e.MouseButton.X > quitter.GetPosition().x )&& (e.MouseButton.Y > quitter.GetPosition().y && e.MouseButton.Y < 50 + quitter.GetPosition().y)  && m_model->getEcranJeu() == false){
+                            if(onTheText(quitter, e.MouseButton.X, e.MouseButton.Y)){
                                 m_window->Close();
                             }
                             
@@ -667,15 +741,14 @@ bool GameView::treatEvents()
                     case 3:
                         
                         if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() == false){
-                            if((e.MouseButton.X < (jouer.GetPosition().x + 150 ) && e.MouseButton.X > jouer.GetPosition().x )&& (e.MouseButton.Y > jouer.GetPosition().y && e.MouseButton.Y < jouer.GetPosition().y + 50)){
+                            if(onTheText(jouer, e.MouseButton.X, e.MouseButton.Y)){
                                 m_model->genereMatrice();
                                 m_model->setGoToView(1);
                                 m_model->setEcranJeu(true);
                                 isEnable = true;
                             }
                             
-                            
-                            if((e.MouseButton.X < (quitter.GetPosition().x + 150) && e.MouseButton.X > quitter.GetPosition().x )&& (e.MouseButton.Y > quitter.GetPosition().y && e.MouseButton.Y < quitter.GetPosition().y + 50)  && m_model->getEcranJeu() == false){
+                            if(onTheText(quitter, e.MouseButton.X, e.MouseButton.Y)){
                                 m_window->Close();
                             }
                             
@@ -710,33 +783,31 @@ bool GameView::treatEvents()
                         
                     case 5:
                         // Menu dans l'écran Option
-                        if((e.MouseButton.X < (_menu_sprite.GetPosition().x +_menu_sprite.GetSize().x ) && e.MouseButton.X > _menu_sprite.GetPosition().x )&& (e.MouseButton.Y > _menu_sprite.GetPosition().y && e.MouseButton.Y < _menu_sprite.GetPosition().y + _menu_sprite.GetSize().y )){
+                        if(onTheSprite(_menu_sprite, e.MouseButton.X, e.MouseButton.Y)){
                             m_model->setGoToView(0);
                         }
                         if (e.Type == sf::Event::Closed)
                             m_window->Close();
                         
-                        if((e.MouseButton.X < (_anglais_sprite.GetPosition().x +_anglais_sprite.GetSize().x ) && e.MouseButton.X > _anglais_sprite.GetPosition().x )&& (e.MouseButton.Y > _anglais_sprite.GetPosition().y && e.MouseButton.Y < _anglais_sprite.GetPosition().y + _anglais_sprite.GetSize().y )){
+                        if(onTheSprite(_anglais_sprite, e.MouseButton.X, e.MouseButton.Y)){
                             m_langue->setNom("anglais");
                             m_l = m_langue->getlangues();
                         }
                         
-                        if((e.MouseButton.X < (_francais_sprite.GetPosition().x +_francais_sprite.GetSize().x ) && e.MouseButton.X > _francais_sprite.GetPosition().x )&& (e.MouseButton.Y > _francais_sprite.GetPosition().y && e.MouseButton.Y < _francais_sprite.GetPosition().y + _francais_sprite.GetSize().y )){
-                            
+                        if(onTheSprite(_francais_sprite, e.MouseButton.X, e.MouseButton.Y)){
                             m_langue->setNom("francais");
                             m_l = m_langue->getlangues();
                         }
                         break;
                     case 6:
                         if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() == false){
-                            if((e.MouseButton.X < (jouer.GetPosition().x + jouer.GetRect().GetWidth() ) && e.MouseButton.X > jouer.GetPosition().x )&& (e.MouseButton.Y > jouer.GetPosition().y && e.MouseButton.Y < jouer.GetPosition().y + jouer.GetRect().GetHeight())){
+                            if(onTheText(jouer, e.MouseButton.X, e.MouseButton.Y)){
                                 m_model->genereMatrice();
                                 m_model->setGoToView(1);
                                 m_model->setEcranJeu(true);
                                 isEnable = true;
                             }
-                            
-                            if((e.MouseButton.X < (quitter.GetPosition().x + 150) && e.MouseButton.X > quitter.GetPosition().x )&& (e.MouseButton.Y > quitter.GetPosition().y && e.MouseButton.Y < 50 + quitter.GetPosition().y)  && m_model->getEcranJeu() == false){
+                            if(onTheText(quitter, e.MouseButton.X, e.MouseButton.Y)){
                                 m_window->Close();
                             }
                             

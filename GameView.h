@@ -145,44 +145,33 @@ private:
     // PICTURE & SPRITE
     bool loadPicture(const std::string name, sf::Image &picture);
     bool loadSprite(const std::string name, sf::Image &picture, sf::Sprite &sprite);
-    bool loadSpriteResize(const std::string name, sf::Image &picture, sf::Sprite &sprite, const int rx, const int ry);
+    bool loadSprite(const std::string name, sf::Image &picture, sf::Sprite &sprite, const int rx, const int ry);
     void loadNamePicture();
+    
+    // change sprite
+    void changeSprite(sf::Sprite &s, const float x, const float y);
+    void changeSprite(sf::Sprite &s, const float x, const float y, const int r, const int g, const int b, const int alpha);
+    void changeSprite(sf::Sprite &s, const float x, const float y, const int r, const int g, const int b, const int alpha, const float mx, const float my);
+    
+    void changeSpriteResize(sf::Sprite &s, const float x, const float y, const int r, const int g, const int b, const int alpha, const float rx, const float ry);
     
     // INIT SPRITE
     bool initSprite();
     
     // INIT TEXT
-    void loadText(sf::String &s, const int x, const int y, const float size, const std::string text){
-        s = sf::String(text);
-        s.SetPosition(x, y);
-        s.SetSize(size);
-    }
+    void loadText(sf::String &s, const int x, const int y, const float size, const std::string text);
     
-    void loadText(sf::String &s, const int x, const int y, const float size, const std::string text, const sf::Font &f){
-        s = sf::String(text);
-        s.SetPosition(x, y);
-        s.SetSize(size);
-        s.SetFont(_font);
-    }
+    void loadText(sf::String &s, const int x, const int y, const float size, const std::string text, const sf::Font &f);
     
-    void loadText(sf::String &s, const int x, const int y, const float size, const std::string text, const int r, const int g, const int b){
-        s = sf::String(text);
-        s.SetPosition(x, y);
-        s.SetSize(size);
-        s.SetColor(sf::Color(r, g, b));
-    }
+    void loadText(sf::String &s, const int x, const int y, const float size, const std::string text, const int r, const int g, const int b);
     
-    void loadText(sf::String &s, const int x, const int y, const float size, const std::string text, const sf::Font &f, const int r, const int g, const int b){
-        s = sf::String(text);
-        s.SetPosition(x, y);
-        s.SetSize(size);
-        s.SetColor(sf::Color(r, g, b));
-        s.SetFont(_font);
-    }
+    void loadText(sf::String &s, const int x, const int y, const float size, const std::string text, const sf::Font &f, const int r, const int g, const int b);
     
-    void loadText(sf::String &s, const int x, const int y, const std::string text){
-        s = sf::String(text);
-        s.SetPosition(x, y);
-    }
+    void loadText(sf::String &s, const int x, const int y, const std::string text);
+    
+    // Focus
+    bool onTheSprite(const sf::Sprite &s, const int x, const int y) const;
+    bool onTheText(const sf::String &s, const int x, const int y) const;
+    
 };
 #endif /* defined(__THE_PURU__GameView__) */
