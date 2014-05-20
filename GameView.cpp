@@ -21,7 +21,7 @@ GameView::GameView(int h, int w, int bpp){
     _font.LoadFromFile("arial.ttf");
     
     m_window->Clear(sf::Color(20,20,20));
-
+    
     loadNamePicture();
     
     sound.SetBuffer(Buffer);
@@ -40,6 +40,8 @@ GameView::GameView(int h, int w, int bpp){
     //Chargement de la langue par défaut
     m_langue = new Langage();
     m_l = m_langue->getlangues();
+    
+    // BAC À SABLE
     
 }
 /************************************************************
@@ -224,7 +226,7 @@ void GameView::s_afficheScore()
     out<<  m_l[7] << m_model->getScore().getDeplacement() <<  m_l[8] << m_model->getScore().getCible() << m_l[17] << m_model->getScore().getScoreTotal() << m_l[9] << m_model->getLvl().getTemps() << endl;
     
     loadText(affiche_Score, WIDTH-250, 200, 25.0F, out.str());
-
+    
     m_window->Draw(affiche_Score);
 }
 
@@ -234,7 +236,7 @@ void GameView::s_viePlayer()
     out<< m_l[10] << m_model->getPlayer().getVie();
     
     loadText(_vie_player, WIDTH-250, 275, 25.0F, out.str());
-
+    
     m_window->Draw(_vie_player);
 }
 /************************************************************
@@ -251,7 +253,7 @@ void GameView::draw()
     // Image background
     
     changeSprite(_background_sprite, 0, 0, 126, 126, 126, 128, WIDTH, HEIGHT);
-
+    
     m_window->Draw(_background_sprite);
     
     Case ***matrice = m_model->getMatrice();
@@ -281,7 +283,7 @@ void GameView::draw()
                 sf::String s;
                 loadText(s, j*WIDTH_PIECE+50, i*WIDTH_PIECE+30, out.str());
                 changeSprite(_bonus_sprite, j*WIDTH_PIECE+50, i*WIDTH_PIECE+30, 77, 77, 77, 128);
-
+                
                 Sprite *bonus = &_bonus_sprite;
                 images.push_back(bonus);
                 
@@ -307,7 +309,7 @@ void GameView::draw()
                 loadText(s, j*WIDTH_PIECE+60, i*WIDTH_PIECE+30, out.str());
                 
                 changeSprite(_tuile_sprite, j*WIDTH_PIECE+50, i*WIDTH_PIECE+30, 192, 192, 192, 128);
-
+                
                 Sprite *tuile = &_tuile_sprite;
                 images.push_back(tuile);
                 m_window->Draw(*tuile);
@@ -318,7 +320,7 @@ void GameView::draw()
     }
     if(m_model->getPlayer().get_y()*WIDTH_PIECE < 18*WIDTH_PIECE && m_model->getPlayer().get_x()*WIDTH_PIECE < 18*WIDTH_PIECE){
         changeSprite(_bonus_sprite,m_model->getPlayer().get_x()*WIDTH_PIECE+50, m_model->getPlayer().get_y()*WIDTH_PIECE+30);
-      
+        
         m_window->Draw(_bonus_sprite);
         
         
@@ -444,7 +446,7 @@ void GameView::s_plusDeVie()
     ostringstream out;
     out << m_l[18];
     String text;
-
+    
     
     nom.SetPosition(WIDTH/2-150, HEIGHT/2);
     nom.SetSize(40);
@@ -863,9 +865,266 @@ bool GameView::treatEvents()
     return true;
 }
 
+// BAC À SABLE BALBLABLABLABLABLABALBALABALLLALALL
+
+// MAIN TREAT MAIN TREAT MAIN TREAT MAIN TREAT MAIN TREAT MAIN TREAT MAIN TREAT MAIN TREAT
+void GameView::Test(){
+    if(initSprite()){
+        _screen = 0;
+        _refresh = true;
+        while(m_window->IsOpened()){
+            while(m_window->GetEvent(_event)){
+                if(_event.Type == sf::Event::Closed || _screen == -1)
+                    m_window->Close();
+                
+                switch (_screen) {
+                    case 1:
+                        //std::cout << "1" << std::endl; // ingame
+                        eventGame();
+                        initGame();
+                        displayGame();
+                        break;
+                    case 2:
+                        //std::cout << "2" << std::endl; // option
+                        eventOption();
+                        displayOption();
+                        break;
+                    default:
+                        //std::cout << "0" << std::endl; // menu
+                        eventMenu();
+                        initMenu();
+                        displayMenu();
+                        break;
+                }
+                m_window->Display();
+            }
+        }
+    }
+    else{
+        std::cout << "Erreur de chargement des images" << std::endl;
+    }
+}
+
+// MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU
+void GameView::initMenu(){
+    changeSprite(_start_sprite, WIDTH/2-_start_sprite.GetSize().x/2, HEIGHT/4);
+    changeSprite(_exit_sprite, WIDTH/2-_exit_sprite.GetSize().x/2, HEIGHT/3);
+}
+void GameView::displayMenu(){
+    m_window->Clear(sf::Color(255,255,255));
+    m_window->Draw(_start_sprite);
+    m_window->Draw(_exit_sprite);
+}
+
+void GameView::eventMenu(){
+    if(onTheSprite(_start_sprite, _event.MouseButton.X, _event.MouseButton.Y)){
+        _screen = 1;
+    }
+    else if(onTheSprite(_exit_sprite, _event.MouseButton.X, _event.MouseButton.Y)){
+        _screen = -1;
+    }
+    else if((_event.Type == sf::Event::KeyPressed) && (_event.Key.Code == sf::Key::Escape)){
+        _previousScreen = _screen;
+        _screen = 2;
+    }
+}
+
+// GAME GAME GAME GAME GAME GAME GAME GAME GAME GAME GAME GAME GAME GAME GAME GAME GAME GAME GAME
+
+void GameView::initGame(){
+    changeSprite(_quitter_sprite, WIDTH-_quitter_sprite.GetSize().x/2-_quitter_sprite.GetSize().x, HEIGHT-_quitter_sprite.GetSize().y-_quitter_sprite.GetSize().y/2);
+}
 
 
 
+void GameView::displayGame(){
+    m_window->Clear(sf::Color(0,0,0));
+    m_window->Draw(_quitter_sprite);
+    displayPlateau();
+}
+
+void GameView::eventGame(){
+    if(onTheSprite(_quitter_sprite, _event.MouseButton.X, _event.MouseButton.Y)){
+        _screen = 0;
+    }
+    else if((_event.Type == sf::Event::KeyPressed) && (_event.Key.Code == sf::Key::Escape)){
+        _previousScreen = _screen;
+        _screen = 2;
+    }
+    if(_event.Type == sf::Event::MouseButtonPressed && _event.MouseButton.Button == Mouse::Left){
+        if(diggerEvent()){
+            std::cout << "in-game" << std::endl;
+        }
+        else{
+            m_model->genereMatrice();
+            std::cout << "partie perdu" << std::endl;
+        }
+    }
+}
+
+void GameView::displayPlateau(){
+    Case ***matrice = m_model->getMatrice();
+    for(int li = 0; li < 18; li++){
+        for(int col = 0; col < 18; col++){
+            if(col == m_model->getPlayer().get_x() && li == m_model->getPlayer().get_y()){
+                changeSprite(_digger_sprite, col*_digger_sprite.GetSize().x, li*_digger_sprite.GetSize().y);
+                m_window->Draw(_digger_sprite);
+            }
+            else if(dynamic_cast<Bomb*>(matrice[li][col])){
+                changeSprite(_bombe_sprite, col*_bombe_sprite.GetSize().x, li*_bombe_sprite.GetSize().y);
+                m_window->Draw(_bombe_sprite);
+            }
+            else if(dynamic_cast<Croix*>(matrice[li][col])){
+                changeSprite(_vide_sprite, col*_vide_sprite.GetSize().x, li*_vide_sprite.GetSize().y);
+                m_window->Draw(_vide_sprite);
+            }
+            else if(dynamic_cast<BonusCase*>(matrice[li][col])){
+                changeSprite(_bonus_sprite, col*_bonus_sprite.GetSize().x, li*_bonus_sprite.GetSize().y);
+                m_window->Draw(_bonus_sprite);
+            }
+            else{
+                changeSprite(_tuile_sprite, col*_tuile_sprite.GetSize().x, li*_tuile_sprite.GetSize().y);
+                m_window->Draw(_tuile_sprite);
+            }
+        }
+    }
+}
+
+bool GameView::diggerEvent(){
+    if(onTheDiggerEAST()){
+        if(m_model->datMove(1, 0)){
+            std::cout << "EAST" << std::endl;
+            return true;
+        }
+    }
+    else if(onTheDiggerNORTH()){
+        if(m_model->datMove(0, -1)){
+            std::cout << "NORTH" << std::endl;
+            return true;
+        }
+    }
+    else if(onTheDiggerSOUTH()){
+        if(m_model->datMove(0, 1)){
+            std::cout << "SOUTH" << std::endl;
+            return true;
+        }
+    }
+    else if(onTheDiggerWEST()){
+        if(m_model->datMove(-1, 0)){
+            std::cout << "WEST" << std::endl;
+            return true;
+        }
+    }
+    else if(onTheDiggerDIAG_NORTH_WEST()){
+        if(m_model->datMove(-1, -1)){
+            std::cout << "NORTH_WEST" << std::endl;
+            return true;
+        }
+    }
+    else if(onTheDiggerDIAG_NORTH_EAST()){
+        if(m_model->datMove(-1, 1)){
+            std::cout << "NORTH_EAST" << std::endl;
+            return true;
+        }
+    }
+    else if(onTheDiggerDIAG_SOUTH_EAST()){
+        if(m_model->datMove(1, 1)){
+            std::cout << "SOUTH_EAST" << std::endl;
+            return true;
+        }
+    }
+    else if(onTheDiggerDIAG_SOUTH_WEST()){
+        if(m_model->datMove(-1, 1)){
+            std::cout << "SOUTH_WEST" << std::endl;
+            return true;
+        }
+    }
+    std::cout << "return false" << std::endl;
+    return false;
+}
+
+bool GameView::onTheDiggerSOUTH(){
+    return(_event.MouseButton.X >= _digger_sprite.GetPosition().x &&
+           _event.MouseButton.X <= _digger_sprite.GetPosition().x + _digger_sprite.GetSize().x &&
+           _event.MouseButton.Y >= _digger_sprite.GetPosition().y + _digger_sprite.GetSize().y &&
+           _event.MouseButton.Y <= _digger_sprite.GetPosition().y + 2*_digger_sprite.GetSize().y);
+}
+
+bool GameView::onTheDiggerNORTH(){
+    return(_event.MouseButton.X >= _digger_sprite.GetPosition().x &&
+           _event.MouseButton.X <= _digger_sprite.GetPosition().x + _digger_sprite.GetSize().x &&
+           _event.MouseButton.Y >= _digger_sprite.GetPosition().y - _digger_sprite.GetSize().y &&
+           _event.MouseButton.Y <= _digger_sprite.GetPosition().y);
+}
+
+bool GameView::onTheDiggerWEST(){
+    return(_event.MouseButton.X <= _digger_sprite.GetPosition().x &&
+           _event.MouseButton.X >= _digger_sprite.GetPosition().x - _digger_sprite.GetSize().x &&
+           _event.MouseButton.Y >= _digger_sprite.GetPosition().y &&
+           _event.MouseButton.Y <= _digger_sprite.GetPosition().y + _digger_sprite.GetSize().y);
+}
+
+bool GameView::onTheDiggerEAST(){
+    return(_event.MouseButton.X >= _digger_sprite.GetPosition().x + _digger_sprite.GetSize().x &&
+           _event.MouseButton.X <= _digger_sprite.GetPosition().x + 2*_digger_sprite.GetSize().x &&
+           _event.MouseButton.Y >= _digger_sprite.GetPosition().y &&
+           _event.MouseButton.Y <= _digger_sprite.GetPosition().y + _digger_sprite.GetSize().y);
+}
+
+bool GameView::onTheDiggerDIAG_SOUTH_EAST(){
+    return(_event.MouseButton.X <= _digger_sprite.GetPosition().x + 2*_digger_sprite.GetSize().x &&
+           _event.MouseButton.X >= _digger_sprite.GetPosition().x + _digger_sprite.GetSize().x &&
+           _event.MouseButton.Y >= _digger_sprite.GetPosition().y + _digger_sprite.GetSize().y &&
+           _event.MouseButton.Y <= _digger_sprite.GetPosition().y + 2*_digger_sprite.GetSize().y);
+}
+
+bool GameView::onTheDiggerDIAG_SOUTH_WEST(){
+    return(_event.MouseButton.X >= _digger_sprite.GetPosition().x - _digger_sprite.GetSize().x &&
+           _event.MouseButton.X <= _digger_sprite.GetPosition().x &&
+           _event.MouseButton.Y >= _digger_sprite.GetPosition().y + _digger_sprite.GetSize().y &&
+           _event.MouseButton.Y <= _digger_sprite.GetPosition().y + 2*_digger_sprite.GetSize().y);
+}
+
+bool GameView::onTheDiggerDIAG_NORTH_WEST(){
+    return(_event.MouseButton.X <= _digger_sprite.GetPosition().x &&
+           _event.MouseButton.X >= _digger_sprite.GetPosition().x - _digger_sprite.GetSize().x &&
+           _event.MouseButton.Y >= _digger_sprite.GetPosition().y-_digger_sprite.GetSize().y &&
+           _event.MouseButton.Y <= _digger_sprite.GetPosition().y);
+}
+
+bool GameView::onTheDiggerDIAG_NORTH_EAST(){
+    return(_event.MouseButton.X >= _digger_sprite.GetPosition().x + _digger_sprite.GetSize().x &&
+           _event.MouseButton.X <= _digger_sprite.GetPosition().x + 2*_digger_sprite.GetSize().x &&
+           _event.MouseButton.Y >= _digger_sprite.GetPosition().y - _digger_sprite.GetSize().y &&
+           _event.MouseButton.Y <= _digger_sprite.GetPosition().y);
+}
+
+
+// OPTION OPTION OPTION OPTION OPTION OPTION OPTION OPTION OPTION OPTION OPTION OPTION OPTION OPTION
+
+//void GameView::initOption(){
+//}
+
+void GameView::displayOption(){
+    m_window->Clear(sf::Color(0,0,0));
+    s_affichageLangue();
+    s_option();
+}
+
+void GameView::eventOption(){
+    if((_event.Type == sf::Event::KeyPressed) && (_event.Key.Code == sf::Key::Escape)){
+        _screen = _previousScreen;
+        _refresh = true;
+    }
+    else if(onTheSprite(_francais_sprite, _event.MouseButton.X, _event.MouseButton.Y)){
+        m_langue->setNom("francais");
+        m_l = m_langue->getlangues();
+    }
+    else if(onTheSprite(_anglais_sprite, _event.MouseButton.X, _event.MouseButton.Y)){
+        m_langue->setNom("anglais");
+        m_l = m_langue->getlangues();
+    }
+}
 
 
 

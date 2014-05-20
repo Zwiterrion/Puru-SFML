@@ -12,3 +12,9 @@ Bomb::Bomb():Case() // Appel du constructeur de la class Mère
     set_pos(rand()%(WIDTH_GAME), rand()%(HEIGHT_GAME));
 }
 Bomb::~Bomb(){}
+
+// BAC À SABLE
+
+int Bomb::getMov(){
+    return -1;
+}

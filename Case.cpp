@@ -20,3 +20,7 @@ string Case::getObj() const
     return m_obj;
 }
 Case::~Case(){}
+
+int Case::getMov() const{
+    return atoi(this->getObj().c_str());
+}

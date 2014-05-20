@@ -20,6 +20,11 @@ class Bomb : public Case{
 public:
     Bomb();
     virtual ~Bomb();
+    
+    
+    // BAC À SABLE
+public:
+    virtual int getMov();
 };
 
 #endif /* defined(__THE_PURU__Bomb__) */

@@ -15,6 +15,7 @@ int main()
     GameView *view = new GameView(1024,768,32);
     view->setModel(model);
     view->treatEvents();
+    //view->Test();
     delete view;
     delete model;
     

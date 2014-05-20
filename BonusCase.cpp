@@ -8,8 +8,20 @@ using namespace std;
 
 BonusCase::BonusCase():Case() // Appel du constructeur de la class Mère
 {
-    string entier = ELEM[rand()%(NB_ELEM)];
-    m_obj= "-" + entier + "-";
+    _entier = ELEM[rand()%(NB_ELEM)];
+    m_obj= "-" + _entier + "-";
     set_pos(rand()%WIDTH_GAME, rand()%HEIGHT_GAME);
 }
 BonusCase::~BonusCase(){}
+
+std::string BonusCase::getEntier()const{
+    return _entier;
+}
+
+
+
+// BAC À SABLE
+int BonusCase::getMov() const{
+    return atoi(_entier.c_str());
+}
+

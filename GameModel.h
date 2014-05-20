@@ -80,6 +80,13 @@ public:
     bool moveBis(int x, int y);
     bool directionBis(std::string answer);
 */
+    
+    
+// BAC À SABLE DU GAMEMODEL
+private:
+    bool testCase(const int x, const int y) const;
+public:
+    bool datMove(const int x, const int y);
 };
 
 

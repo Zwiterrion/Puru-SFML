@@ -10,6 +10,9 @@ class Croix : public Case{
 public:
     Croix();
     virtual ~Croix();
+    
+    // BAC À SABLE
+    virtual int getMov();
 };
 
 #endif

@@ -173,5 +173,50 @@ private:
     bool onTheSprite(const sf::Sprite &s, const int x, const int y) const;
     bool onTheText(const sf::String &s, const int x, const int y) const;
     
+    
+    // MON BAC À SABLE
+    
+public:
+    void Test();
+private:
+    sf::Event _event;
+    
+    int _previousScreen;
+    int _screen;
+    bool _refresh;
+    
+    // ECRAN MENU
+    void initMenu();
+    void displayMenu();
+    void eventMenu();
+    
+    // ECRAN JEU
+    void initGame();
+    void displayGame();
+    void eventGame();
+    
+    void displayPlateau();
+    
+    void removeNeighbour();
+    
+    bool onTheDiggerSOUTH();
+    bool onTheDiggerNORTH();
+    bool onTheDiggerWEST();
+    bool onTheDiggerEAST();
+    bool onTheDiggerDIAG_SOUTH_EAST();
+    bool onTheDiggerDIAG_SOUTH_WEST();
+    bool onTheDiggerDIAG_NORTH_WEST();
+    bool onTheDiggerDIAG_NORTH_EAST();
+    
+    bool diggerEvent();
+    
+    // OPTION
+    void initOption();
+    void displayOption();
+    void eventOption();
+    
+    
+    // EVENT
+    bool detectNewEvent();
 };
 #endif /* defined(__THE_PURU__GameView__) */

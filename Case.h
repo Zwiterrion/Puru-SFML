@@ -24,5 +24,9 @@ public:
     void add_o(std::string o);
     virtual std::string getObj() const;  // retourne l'objet
 
+    //BAC À SABLE
+    
+public:
+    virtual int getMov() const;
 };
 #endif /* defined(__THE_PURU__Case__) */
