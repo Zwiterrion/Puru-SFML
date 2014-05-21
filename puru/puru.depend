@@ -1,0 +1,174 @@
+# depslib dependency file v1.0
+1400604367 source:/info-nfs/users/etianne/Puru-SFML/puru/Bomb.cpp
+	"Bomb.h"
+	"Position.h"
+	<string>
+	<cstdlib>
+	"Const.h"
+
+1400604367 /info-nfs/users/etianne/Puru-SFML/puru/Bomb.h
+	<iostream>
+	<string>
+	"Position.h"
+	"Case.h"
+
+1400604368 /info-nfs/users/etianne/Puru-SFML/puru/Position.h
+	<iostream>
+
+1400605302 /info-nfs/users/etianne/Puru-SFML/puru/Case.h
+	<iostream>
+	<string>
+	"Position.h"
+
+1400604367 /info-nfs/users/etianne/Puru-SFML/puru/Const.h
+	<string>
+
+1400605254 source:/info-nfs/users/etianne/Puru-SFML/puru/BonusCase.cpp
+	"BonusCase.h"
+	"Position.h"
+	<string>
+	<cstdlib>
+	"Const.h"
+
+1400605269 /info-nfs/users/etianne/Puru-SFML/puru/BonusCase.h
+	<iostream>
+	<string>
+	"Case.h"
+
+1400605289 source:/info-nfs/users/etianne/Puru-SFML/puru/Case.cpp
+	<string>
+	<sstream>
+	<cstdlib>
+	<ctime>
+	"Case.h"
+	"Const.h"
+
+1400604367 source:/info-nfs/users/etianne/Puru-SFML/puru/Croix.cpp
+	"Croix.h"
+	"Position.h"
+	<string>
+	<cstdlib>
+	"Const.h"
+
+1400604367 /info-nfs/users/etianne/Puru-SFML/puru/Croix.h
+	<iostream>
+	<string>
+	"Case.h"
+
+1400685841 source:/info-nfs/users/etianne/Puru-SFML/puru/GameModel.cpp
+	<iostream>
+	<string>
+	<fstream>
+	<sstream>
+	<cstdlib>
+	<ctime>
+	<vector>
+	"GameModel.h"
+	"GameView.h"
+	"Const.h"
+
+1400604367 /info-nfs/users/etianne/Puru-SFML/puru/GameModel.h
+	<iostream>
+	<string>
+	<map>
+	"Player.h"
+	"Case.h"
+	"BonusCase.h"
+	"Const.h"
+	"Bomb.h"
+	"Lvl.h"
+	"Croix.h"
+	"Score.h"
+
+1400604368 /info-nfs/users/etianne/Puru-SFML/puru/Player.h
+	<iostream>
+	"Case.h"
+	"Position.h"
+
+1400604368 /info-nfs/users/etianne/Puru-SFML/puru/Lvl.h
+	<iostream>
+	<ctime>
+
+1400604368 /info-nfs/users/etianne/Puru-SFML/puru/Score.h
+	<string>
+
+1400654531 /info-nfs/users/etianne/Puru-SFML/puru/GameView.h
+	<string>
+	<SFML/Graphics.hpp>
+	<SFML/Audio.hpp>
+	<map>
+
+1400685809 source:/info-nfs/users/etianne/Puru-SFML/puru/GameView.cpp
+	"GameView.h"
+	"GameModel.h"
+	"Const.h"
+	"Langage.h"
+	"Editeur.h"
+	<iostream>
+	<sstream>
+	<fstream>
+	<string>
+
+1400604368 /info-nfs/users/etianne/Puru-SFML/puru/Langage.h
+	<map>
+	<string>
+
+1400604368 source:/info-nfs/users/etianne/Puru-SFML/puru/Langage.cpp
+	"Langage.h"
+	<iostream>
+	<string>
+	<map>
+
+1400604368 source:/info-nfs/users/etianne/Puru-SFML/puru/Lvl.cpp
+	"Lvl.h"
+	<sstream>
+	<iostream>
+
+1400604829 source:/info-nfs/users/etianne/Puru-SFML/puru/main.cpp
+	"GameView.h"
+	"GameModel.h"
+	"Const.h"
+	<cstdlib>
+	<stdio.h>
+	<sstream>
+	<iostream>
+
+1400604368 source:/info-nfs/users/etianne/Puru-SFML/puru/Player.cpp
+	"Player.h"
+	"Position.h"
+	<string>
+	<cstdlib>
+	<sstream>
+	"Const.h"
+
+1400604368 source:/info-nfs/users/etianne/Puru-SFML/puru/Position.cpp
+	<ctime>
+	<iostream>
+	<cstdlib>
+	"Position.h"
+	"Const.h"
+
+1400604368 source:/info-nfs/users/etianne/Puru-SFML/puru/Score.cpp
+	"Score.h"
+	"Const.h"
+	"Lvl.h"
+	<iostream>
+	<sstream>
+	<fstream>
+
+1400605584 source:/info-nfs/users/etianne/Puru-SFML/puru/Editeur.cpp
+	"Editeur.h"
+	"Case.h"
+	"GameModel.h"
+	<iostream>
+	<string>
+	<fstream>
+	<sstream>
+	<stdio.h>
+	<stdlib.h>
+	<vector>
+
+1400340678 /info-nfs/users/etianne/Puru-SFML/puru/Editeur.h
+	<string>
+	<vector>
+

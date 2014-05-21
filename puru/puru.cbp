@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="puru" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/puru" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="sfml-graphics" />
+					<Add library="sfml-window" />
+					<Add library="sfml-system" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/puru" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="sfml-graphics" />
+					<Add library="sfml-window" />
+					<Add library="sfml-system" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="Bomb.cpp" />
+		<Unit filename="Bomb.h" />
+		<Unit filename="BonusCase.cpp" />
+		<Unit filename="BonusCase.h" />
+		<Unit filename="Case.cpp" />
+		<Unit filename="Case.h" />
+		<Unit filename="Const.h" />
+		<Unit filename="Croix.cpp" />
+		<Unit filename="Croix.h" />
+		<Unit filename="Editeur.cpp" />
+		<Unit filename="Editeur.h" />
+		<Unit filename="GameModel.cpp" />
+		<Unit filename="GameModel.h" />
+		<Unit filename="GameView.cpp" />
+		<Unit filename="GameView.h" />
+		<Unit filename="Langage.cpp" />
+		<Unit filename="Langage.h" />
+		<Unit filename="Lvl.cpp" />
+		<Unit filename="Lvl.h" />
+		<Unit filename="Player.cpp" />
+		<Unit filename="Player.h" />
+		<Unit filename="Position.cpp" />
+		<Unit filename="Position.h" />
+		<Unit filename="Score.cpp" />
+		<Unit filename="Score.h" />
+		<Unit filename="anglais.png" />
+		<Unit filename="arial.ttf" />
+		<Unit filename="bestScore.png" />
+		<Unit filename="button.png" />
+		<Unit filename="exitButton.png" />
+		<Unit filename="francais.png" />
+		<Unit filename="jouer.png" />
+		<Unit filename="main.cpp" />
+		<Unit filename="menu.png" />
+		<Unit filename="notSon.png" />
+		<Unit filename="optionButton.png" />
+		<Unit filename="quitter.png" />
+		<Unit filename="son.png" />
+		<Unit filename="startButton.png" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
