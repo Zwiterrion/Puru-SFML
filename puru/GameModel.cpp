@@ -572,6 +572,38 @@ void GameModel::calculDuTemps()
 
 }
 
+bool GameModel::testCase(const int x, const int y) const{
+    //std::cout << "x : " << x << " y : " << y << std::endl;
+    std::cout << "matrice[" << y << "][" << x << "] : " << matrice[y][x]->getMov() << std::endl;
+    if(matrice[y][x]->getMov() == -1 || matrice[y][x]->getMov()){
+        std::cout << "LA CASE SUIVANTE N'EST PAS ACCESSIBLE" << std::endl;
+        return false;
+    }
+    else
+        std::cout << "LA CASE SUIVANTE EST DISPONIBLE" << std::endl;
+        return true;
+}
+
+bool GameModel::datMove(const int x, const int y){
+    std::cout << "x : " << x << " y : " << y << std::endl;
+    if(testCase(m_p->get_x()+x, m_p->get_y()+y)){
+        int nbCase = matrice[m_p->get_y()+y][m_p->get_x()+x]->getMov();
+        std::cout << "nbCase : " << nbCase << std::endl;
+        int dep=0;
+        while(dep < nbCase && testCase(m_p->get_x()+x, m_p->get_y()+y)){
+            matrice[m_p->get_y()][m_p->get_x()] = new Croix();
+            m_p->set_position(m_p->get_x() + x, m_p->get_y()+ y);
+            ++dep;
+        }
+        if(dep == nbCase)
+            return true;
+
+        return false;
+    }
+    else
+        return false;
+}
+
 
 
 

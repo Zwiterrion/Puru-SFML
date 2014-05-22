@@ -43,6 +43,10 @@ GameView::GameView(int h, int w, int bpp){
     //Initialisation de l'éditeur
     m_editeur = new Editeur();
     a = 255;
+
+    compteur = 4000;
+    compteurDig = 30000;
+
 }
 /************************************************************
  * Nom: ~GameView                                           *
@@ -67,7 +71,7 @@ bool GameView::loadSprite(const std::string name, sf::Image &picture, sf::Sprite
         sprite = sf::Sprite(picture);
         return true;
     }
-    std::cout << "loadPicture "<<name <<" was failed" << std::endl;
+    std::cout << "loadPicture "<< name <<" was failed" << std::endl;
     return false;
 }
 
@@ -77,7 +81,7 @@ bool GameView::loadSprite(const std::string name, sf::Image &picture, sf::Sprite
         sprite.Resize(rx, ry);
         return true;
     }
-    std::cout << "loadPicture "<<name <<" was failed" << std::endl;
+    std::cout << "loadPicture "<< name <<" was failed" << std::endl;
     return false;
 }
 
@@ -99,25 +103,33 @@ void GameView::loadNamePicture(){
     _namePictureQuitter = "quitter.png";
     _namePictureSound = "son.png";
     _namePictureNotSound = "notSon.png";
+    _namePictureEditeur = "editerBis.png";
+    _namePictureNouveau = "nouveauBis.png";
+    _namePictureEnregistrer = "enregistrerBis.png";
+    _namePictureCharger = "chargerBis.png";
 }
 void GameView::loadNamePictureTheme(){
-    _namePictureBackground = "background.png";
-    _namePictureDigger = "dig.png";
-    _namePictureBomb = "boum.png";
-    _namePictureBonus = "bleu.png";
-    _namePictureCase = "jaune.png";
+    _namePictureBackground = "back.png";
+    _namePictureDigger = "digger.png";
+    _namePictureBomb = "bomb.png";
+    _namePictureBonus = "tuile_bonus.png";
+    _namePictureCase = "case.png";
     _namePictureExitButton = "exitButton.png";
     _namePicturePlayButton = "startButton.png";
-    _namePictureCaseVide = "croix.png";
-    _namePictureOptionButton = "optionButton.png";
+    _namePictureCaseVide = "eclair.png";
+    _namePictureOptionButton = "optionBies.png";
     _namePictureMenu = "menu.png";
-    _namePictureBestscore = "bestScore.png";
+    _namePictureBestscore = "bestScoreBis.png";
     _namePictureFrancais = "francais.png";
     _namePictureAnglais = "anglais.png";
-    _namePictureJouer = "jouer.png";
-    _namePictureQuitter = "quitter.png";
+    _namePictureJouer = "jouerBis.png";
+    _namePictureQuitter = "quitterBis.png";
     _namePictureSound = "son.png";
     _namePictureNotSound = "notSon.png";
+    _namePictureEditeur = "editerBis.png";
+    _namePictureNouveau = "nouveauBis.png";
+    _namePictureEnregistrer = "enregistrerBis.png";
+    _namePictureCharger = "chargerBis.png";
 }
 bool GameView::initSprite(){
     if(loadSprite(_namePictureBackground, _background_image, _background_sprite, 38, 38) &&
@@ -136,7 +148,11 @@ bool GameView::initSprite(){
        loadSprite(_namePictureJouer, _jouer_image, _jouer_sprite) &&
        loadSprite(_namePictureQuitter, _quitter_image, _quitter_sprite) &&
        loadSprite(_namePictureSound, _son_image, _son_sprite) &&
-       loadSprite(_namePictureNotSound, _notSon_image, _notSon_sprite)){
+       loadSprite(_namePictureNotSound, _notSon_image, _notSon_sprite) &&
+       loadSprite(_namePictureEditeur, _editer_image, _editer_sprite) &&
+       loadSprite(_namePictureEnregistrer, _enregistrer_image, _enregistrer_sprite) &&
+       loadSprite(_namePictureCharger, _charger_image, _charger_sprite) &&
+       loadSprite(_namePictureNouveau, _nouveau_image, _nouveau_sprite)){
         return true;
     }
     return false;
@@ -281,8 +297,10 @@ void GameView::draw(Case*** matrice)
     m_window->Draw(_background_sprite);
 
 
-    if(images.size() != 0) {
-        for(std::vector<sf::Sprite*>::iterator it = images.begin(); it != images.end(); ++it) {
+    if(images.size() != 0)
+    {
+        for(std::vector<sf::Sprite*>::iterator it = images.begin(); it != images.end(); ++it)
+        {
             *it = NULL;
             delete *it;
         }
@@ -290,17 +308,32 @@ void GameView::draw(Case*** matrice)
     images.clear();
     images.resize(0);
 
-    for(int i=0; i<18; i++){
-        for(int j=0; j<18; j++){
-            if(dynamic_cast<Bomb*>(matrice[i][j])){
+    for(int i=0; i<18; i++)
+    {
+        for(int j=0; j<18; j++)
+        {
+            if(dynamic_cast<Bomb*>(matrice[i][j]))
+            {
                 _bombe_sprite.SetPosition((j*WIDTH_PIECE)+50,(i*WIDTH_PIECE)+30);
-                _bombe_sprite.SetColor(sf::Color(255,255,255,128));
-
                 Sprite *bomb = &_bombe_sprite;
-                images.push_back(bomb);
-                m_window->Draw(*bomb);
+
+
+                if(compteur == 4000){
+                    _bombe_sprite.SetColor(sf::Color(200,200,200));
+                }
+                if(compteur == 2000){
+                    _bombe_sprite.SetColor(sf::Color(100,100,100));
+                }
+                if(compteur >= 0)
+                    compteur-=2;
+                else
+                    compteur = 4000;
+
+                   images.push_back(bomb);
+                  m_window->Draw(*bomb);
             }
-            else if(dynamic_cast<BonusCase*>(matrice[i][j])){
+            else if(dynamic_cast<BonusCase*>(matrice[i][j]))
+            {
                 ostringstream out;
                 out << matrice[i][j]->getObj();
                 String s = String(out.str());
@@ -316,7 +349,6 @@ void GameView::draw(Case*** matrice)
             else if(dynamic_cast<Croix*>(matrice[i][j]))
             {
                 _vide_sprite.SetPosition((j*WIDTH_PIECE)+50, (i*WIDTH_PIECE)+30);
-                _vide_sprite.SetColor(sf::Color(246,246,246,128));
                 Sprite *vide = &_vide_sprite;
                 images.push_back(vide);
                 m_window->Draw(*vide);
@@ -337,28 +369,129 @@ void GameView::draw(Case*** matrice)
         }
 
     }
-    if(m_model->getEcranJeu() == true && m_model->getGoToView() == 1 && isInLevelEditing == false){
+
+    if(m_model->getEcranJeu() == true && m_model->getGoToView() == 1 && isInLevelEditing == false)
+    {
         Sprite *dig = &_digger_sprite;
-        if(m_model->getPlayer().get_y()*WIDTH_PIECE < 18*WIDTH_PIECE && m_model->getPlayer().get_x()*WIDTH_PIECE < 18*WIDTH_PIECE){
+        if(m_model->getPlayer().get_y()*WIDTH_PIECE < 18*WIDTH_PIECE && m_model->getPlayer().get_x()*WIDTH_PIECE < 18*WIDTH_PIECE)
+        {
             images.push_back(dig);
-            sf::Image image;
-            image.LoadFromFile("tuile_bonus.png");
-            sf::Sprite sprite = Sprite(image);
-            sprite.Resize(38, 38);
-            sprite.SetPosition((m_model->getPlayer().get_x()*WIDTH_PIECE)+50, (m_model->getPlayer().get_y()*WIDTH_PIECE)+30);
-            m_window->Draw(sprite);
 
-                _digger_sprite.SetPosition(((m_model->getPlayer().get_x()*WIDTH_PIECE) +50), (m_model->getPlayer().get_y()*WIDTH_PIECE)+30);
-                m_window->Draw(*dig);
+            _digger_sprite.SetPosition((m_model->getPlayer().get_x()*WIDTH_PIECE)+50, (m_model->getPlayer().get_y()*WIDTH_PIECE)+30);
 
+            if(!isThemColor)
+            {
+                _bonus_sprite.SetPosition((m_model->getPlayer().get_x()*WIDTH_PIECE)+50, (m_model->getPlayer().get_y()*WIDTH_PIECE)+30);
+                m_window->Draw(_bonus_sprite);
+                _digger_sprite.SetPosition((m_model->getPlayer().get_x()*WIDTH_PIECE)+50, (m_model->getPlayer().get_y()*WIDTH_PIECE)+30);
+                m_window->Draw(_digger_sprite);
+            }
+            if(isThemColor)
+            {
+                _digger_sprite.SetPosition((m_model->getPlayer().get_x()*WIDTH_PIECE)+50, (m_model->getPlayer().get_y()*WIDTH_PIECE)+30);
+                m_window->Draw(_digger_sprite);
+                if(compteurDig >= 30000 && compteurDig > 28000)
+                {
+                    _digger_image.LoadFromFile("digger1.png");
+                    m_window->Draw(_digger_sprite);
+                }
+                if(compteurDig <= 28000 && compteurDig > 26000)
+                {
+                    _digger_image.LoadFromFile("digger2.png");
+                    m_window->Draw(_digger_sprite);
+                }
+                if(compteurDig <= 26000 && compteurDig > 24000)
+                {
+                    _digger_image.LoadFromFile("digger3-1.png");
+                    m_window->Draw(_digger_sprite);
+                }
+                if(compteurDig <= 24000 && compteurDig > 22000)
+                {
+                    _digger_image.LoadFromFile("digger3-2.png");
+                    m_window->Draw(_digger_sprite);
+                }
+                if(compteurDig <= 22000 && compteurDig > 20000)
+                {
+                    _digger_image.LoadFromFile("digger3-3.png");
+                    m_window->Draw(_digger_sprite);
+                }
+                if(compteurDig <= 20000 && compteurDig > 18000)
+                {
+                    _digger_image.LoadFromFile("digger4.png");
+                    m_window->Draw(_digger_sprite);
+                }
+                if(compteurDig <= 18000 && compteurDig > 16000)
+                {
+                    _digger_image.LoadFromFile("digger5.png");
+                    m_window->Draw(_digger_sprite);
+                }
+                if(compteurDig == 16000 && compteurDig > 14000)
+                {
+                    _digger_image.LoadFromFile("digger6.png");
+                    m_window->Draw(_digger_sprite);
+                }
+                if(compteurDig <= 14000 && compteurDig > 12000)
+                {
+                    _digger_image.LoadFromFile("digger7.png");
+                    m_window->Draw(_digger_sprite);
+                }
+                if(compteurDig <= 12000 && compteurDig > 10000)
+                {
+                    _digger_image.LoadFromFile("digger8.png");
+                    m_window->Draw(_digger_sprite);
+                }
+                if(compteurDig <= 10000 && compteurDig > 8000)
+                {
+                    _digger_image.LoadFromFile("digger9.png");
+                    m_window->Draw(_digger_sprite);
+                }
+                if(compteurDig <= 8000 && compteurDig > 6000)
+                {
+                    _digger_image.LoadFromFile("digger10.png");
+                    m_window->Draw(_digger_sprite);
+                }
+                if(compteurDig <= 6000 && compteurDig >= 4000)
+                {
+                    _digger_image.LoadFromFile("digger11.png");
+                    m_window->Draw(_digger_sprite);
+                }
+                if(compteurDig <= 4000 && compteurDig >= 3000)
+                {
+                    _digger_image.LoadFromFile("digger12.png");
+                    m_window->Draw(_digger_sprite);
+                }
+                if(compteurDig <= 3000 && compteurDig >= 2000)
+                {
+                    _digger_image.LoadFromFile("digger13.png");
+                    m_window->Draw(_digger_sprite);
+                }
+                if(compteurDig <= 2000 && compteurDig >= 1000)
+                {
+                    _digger_image.LoadFromFile("digger14.png");
+                    m_window->Draw(_digger_sprite);
+                }
+                if(compteurDig <= 1000 && compteurDig > 500)
+                {
+                    _digger_image.LoadFromFile("digger15.png");
+                    m_window->Draw(_digger_sprite);
+                }
+                if(compteurDig <= 500 && compteurDig > 100)
+                {
+                    _digger_image.LoadFromFile("digger16.png");
+                    m_window->Draw(_digger_sprite);
+                    compteurDig = 30000;
+                }
+
+                if(compteurDig > 200)
+                    compteurDig-=250;
+            }
         }
 
-
-
-        s_afficheBonus();
-        s_afficheScore();
-        s_viePlayer();
+    s_afficheBonus();
+    s_afficheScore();
+    s_viePlayer();
     }
+
 }
 /************************************************************
  * Nom: presentation                                        *
@@ -370,7 +503,7 @@ void GameView::draw(Case*** matrice)
 
 void GameView::s_Presentation()
 {
-    loadText(titre, 50, 50, 80.0F, m_l[11], _font, 200, 200, 200);
+    loadText(titre, 50, 50, 80.0F, m_l[11], _font, 0, 0, 255);
     loadText(meilleursScore, WIDTH/2 + 80, 225, 45.0F, m_l[20]);
 
     if(m_langue->getNom() == "anglais"){
@@ -392,7 +525,8 @@ void GameView::s_Presentation()
     m_window->Draw(_bestScore_sprite);
     m_window->Draw(_option_sprite);
     m_window->Draw(meilleursScore);
-    m_window->Draw(titre);
+    if(!isThemColor)
+        m_window->Draw(titre);
 
 }
 /************************************************************
@@ -427,20 +561,21 @@ void GameView::s_rejouer()
 void GameView::s_perteVie()
 {
 
-    loadText(jouer, WIDTH/2-300, HEIGHT/2+50, 40.0F, m_l[0], 125, 205, 128);
-    loadText(quitter, WIDTH/2+100, HEIGHT/2+50, 40, m_l[2], 125, 205, 128);
-
     sf::String perte;
     sf::String suite;
     loadText(suite, WIDTH/2-250, HEIGHT/2-30, 40.0F, m_l[13]);
     loadText(perte, WIDTH/2-300, HEIGHT/2-150, 40.0F, m_l[14]);
 
+    _jouer_sprite.SetPosition(WIDTH/2-300,HEIGHT/2+50);
+    _quitter_sprite.SetPosition(WIDTH/2+100, HEIGHT/2+50);
+
     m_window->Clear(sf::Color(20,20,20));
 
+    m_window->Draw(_jouer_sprite);
+    m_window->Draw(_quitter_sprite);
     m_window->Draw(suite);
     m_window->Draw(perte);
-    m_window->Draw(jouer);
-    m_window->Draw(quitter);
+
 }
 
 void GameView::s_changeLvl()
@@ -649,13 +784,20 @@ bool GameView::answer_move(string answer) {
         return false;
 }
 void GameView::s_boutonEditeur() {
-    _editer = String("Editer");
-    _editer.SetPosition(WIDTH -200, 50);
-    _editer.SetSize(40);
-    _editer.SetColor(sf::Color(200,200,200));
 
-
-    m_window->Draw(_editer);
+    if(!isThemColor)
+    {
+        _editer = String("Editer");
+        _editer.SetPosition(WIDTH -200, 50);
+        _editer.SetSize(40);
+        _editer.SetColor(sf::Color(20,20,20));
+        m_window->Draw(_editer);
+    }
+    else
+    {
+        _editer_sprite.SetPosition(WIDTH -250, 50);
+        m_window->Draw(_editer_sprite);
+    }
 }
 void GameView::s_verifiationSelectionBomb(const sf::Sprite *s, int x, int y){
     if((x < (s->GetPosition().x + s->GetSize().x ) && x > s->GetPosition().x && (y > s->GetPosition().y) && y < s->GetPosition().y + s->GetSize().y )){
@@ -697,28 +839,48 @@ void GameView::s_affiche_choix()
 }
 void GameView::s_bouton_save()
 {
-    _enregistrer = String("Enregistrer");
-    _enregistrer.SetPosition(WIDTH-200, 600);
-    _enregistrer.SetSize(30);
-    m_window->Draw(_enregistrer);
+    if(!isThemColor)
+    {
+        _enregistrer = String("Enregistrer");
+        _enregistrer.SetPosition(WIDTH-200, 600);
+        _enregistrer.SetSize(30);
+        m_window->Draw(_enregistrer);
+    }
+    else
+    {
+        _enregistrer_sprite.SetPosition(WIDTH-300, 600);
+        m_window->Draw(_enregistrer_sprite);
+    }
 }
 void GameView::s_buttonInEdit() {
-    _nouveau = String("Nouveau");
-    _chargerNiveau = String("Charger Niveau");
+
+    if(!isThemColor)
+    {
+        _nouveau = String("Nouveau");
+        _chargerNiveau = String("Charger Niveau");
+        _nouveau.SetPosition(100, 250);
+        _chargerNiveau.SetPosition(100, 550);
+        _nouveau.SetSize(50.0f);
+        _chargerNiveau.SetSize(50.0f);
+
+        m_window->Draw(_nouveau);
+        m_window->Draw(_chargerNiveau);
+    }
+    else {
+        _nouveau_sprite.SetPosition(100, 250);
+        _charger_sprite.SetPosition(100, 550);
+        m_window->Draw(_charger_sprite);
+        m_window->Draw(_nouveau_sprite);
+    }
     _fichierExistant = String("Fichier Recent");
 
     _fichierExistant.SetSize(45.0f);
     _fichierExistant.SetPosition(WIDTH/2 + 80, 225);
 
-    _nouveau.SetPosition(100, 250);
-    _chargerNiveau.SetPosition(100, 550);
-    _nouveau.SetSize(50.0f);
-    _chargerNiveau.SetSize(50.0f);
 
     m_window->Draw(_bestScore_sprite);
     m_window->Draw(_fichierExistant);
-    m_window->Draw(_nouveau);
-    m_window->Draw(_chargerNiveau);
+
 }
 void GameView::s_afficheFichierRecent() {
     m_editeur->chargementListeFichier();
@@ -746,14 +908,16 @@ void GameView::s_inscrireNomFichier(){
 
     m_window->Draw(text);
 }
-void GameView::s_menuDemarrage() {
+void GameView::s_menuDemarrage()
+{
     sf::String presentation;
     loadText(presentation, WIDTH/8, HEIGHT/6, 80, " ANNE & GUILBAUD \n\n\t\t\t   Vous presentent ... \n\n  Puru Puru Digger", _font, -a, 255, 255);
     m_window->Draw(presentation);
 }
 bool GameView::treatEvents()
 {
-    if(initSprite()){
+    if(initSprite())
+    {
         while (m_window->IsOpened())
         {
             if(isEnable)
@@ -768,159 +932,194 @@ bool GameView::treatEvents()
 
                 switch (m_model->getGoToView())
                 {
-                    case 0:
-                        if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() == false){
+                case 0:
+                    if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() == false)
+                    {
 
-                            if(m_langue->getNom() == "anglais"){
-                                if(onTheSprite(_start_sprite, e.MouseButton.X, e.MouseButton.Y)){
-                                    m_model->setEcranJeu(true);
-                                    m_model->setGoToView(1);
-                                    isEnable = true;
-                                }
-
-                                if( onTheSprite(_exit_sprite, e.MouseButton.X, e.MouseButton.Y)&& m_model->getEcranJeu() == false){
-                                    m_window->Close();
-                                }
-                            }
-                            if(m_langue->getNom() == "francais"){
-                                if(onTheSprite(_jouer_sprite, e.MouseButton.X, e.MouseButton.Y)){
-                                    m_model->setEcranJeu(true);
-                                    m_model->setGoToView(1);
-                                    isEnable = true;
-                                }
-                                if(onTheSprite(_quitter_sprite, e.MouseButton.X, e.MouseButton.Y) && m_model->getEcranJeu() == false){
-                                    m_window->Close();
-                                }
-                            }
-                            if(onTheSprite(_option_sprite, e.MouseButton.X, e.MouseButton.Y) && m_model->getEcranJeu() == false){
-                                s_option();
-                                m_model->setGoToView(5);
-                            }
-                            if(onTheText(_editer, e.MouseButton.X, e.MouseButton.Y) && m_model->getEcranJeu() == false){
-                                m_model->setGoToView(7);
-                            }
-                        }
-                    case 1:
-
-                        if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() ){
-
-                            if((e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x ) && e.MouseButton.X > _digger_sprite.GetPosition().x ) && (e.MouseButton.Y < _digger_sprite.GetPosition().y && e.MouseButton.Y > _digger_sprite.GetPosition().y - 40)){
-                                if(answer_move("N"))
-                                    m_model->direction("N");
-                            }
-                            if((e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x ) && e.MouseButton.X > _digger_sprite.GetPosition().x ) && (e.MouseButton.Y > (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y) && e.MouseButton.Y < (_digger_sprite.GetPosition().y) + _digger_sprite.GetSize().y + 40)){
-                                if(answer_move("S"))
-                                    m_model->direction("S");
-
-                            }
-                            if((e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x + 40) && e.MouseButton.X > (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x)) && (e.MouseButton.Y > _digger_sprite.GetPosition().y && e.MouseButton.Y < (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y))){
-                                if(answer_move("E"))
-                                    m_model->direction("E");
-
-                            }
-
-                            if((e.MouseButton.X > (_digger_sprite.GetPosition().x + -40) && e.MouseButton.X < _digger_sprite.GetPosition().x && e.MouseButton.Y > _digger_sprite.GetPosition().y && e.MouseButton.Y < (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y))){
-                                if(answer_move("O"))
-                                    m_model->direction("O");
-
-                            }
-
-                            if(e.MouseButton.X > (_digger_sprite.GetPosition().x + -40) && e.MouseButton.X < _digger_sprite.GetPosition().x && e.MouseButton.Y < _digger_sprite.GetPosition().y && e.MouseButton.Y > (_digger_sprite.GetPosition().y - 40)){
-                                if(answer_move("NO"))
-                                    m_model->direction("NO");
-
-                            }
-
-                            if(e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x + 40) && e.MouseButton.X > (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x) && e.MouseButton.Y < _digger_sprite.GetPosition().y && e.MouseButton.Y > (_digger_sprite.GetPosition().y - 40)){
-                                if(answer_move("NE"))
-                                    m_model->direction("NE");
-                            }
-
-                            if(e.MouseButton.X > (_digger_sprite.GetPosition().x + -40) && e.MouseButton.X < _digger_sprite.GetPosition().x && e.MouseButton.Y > (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y) && e.MouseButton.Y < (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y + 40)){
-                                if(answer_move("SO"))
-                                    m_model->direction("SO");
-
-                            }
-                            if(e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x + 40) && e.MouseButton.X > (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x) && e.MouseButton.Y > (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y) && e.MouseButton.Y < (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y + 40)){
-                                if(answer_move("SE"))
-                                    m_model->direction("SE");
-
-                            }
-                            if(onTheSprite(_quitte_inGame, e.MouseButton.X, e.MouseButton.Y)){
-                                m_model->setEcranJeu(false);
-                                m_model->rejouerPartie();
-                                isEnable = false;
-                                m_model->setGoToView(0);
-                            }
-                            if(onTheSprite(_son_sprite, e.MouseButton.X, e.MouseButton.Y)){
-                                sound.Pause();
-                            }
-                            if(onTheSprite(_notSon_sprite, e.MouseButton.X, e.MouseButton.Y)){
-                                cout << " ICI " << endl;
-                                sound.Play();
-                            }
-
-
-                        }
-                        break;
-                    case 2:
-                        if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() == false){
-                            if(onTheText(jouer, e.MouseButton.X, e.MouseButton.Y)){
-                                m_model->genereMatrice();
-                                m_model->setGoToView(1);
-                                m_model->setEcranJeu(true);
-                                isEnable = true;
-                            }
-                            if(onTheText(quitter, e.MouseButton.X, e.MouseButton.Y)){
-                                m_window->Close();
-                            }
-
-                        }
-                        break;
-                    case 3:
-
-                        if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() == false){
-                            if(onTheText(jouer, e.MouseButton.X, e.MouseButton.Y)){
-                                m_model->genereMatrice();
-                                m_model->setGoToView(1);
-                                m_model->setEcranJeu(true);
-                                isEnable = true;
-                            }
-
-                            if(onTheText(quitter, e.MouseButton.X, e.MouseButton.Y)){
-                                m_window->Close();
-                            }
-
-                        }
-                        break;
-                    case 4:
-                        if(e.Type == sf::Event::TextEntered){
-                            if(s_nom_player.length() <= 10)
+                        if(m_langue->getNom() == "anglais")
+                        {
+                            if(onTheSprite(_start_sprite, e.MouseButton.X, e.MouseButton.Y))
                             {
-                                s_nom_player += static_cast<char>(e.Text.Unicode);
-                                nom.SetText(s_nom_player);
+                                m_model->setEcranJeu(true);
+                                m_model->setGoToView(1);
+                                isEnable = true;
+                            }
+
+                            if( onTheSprite(_exit_sprite, e.MouseButton.X, e.MouseButton.Y)&& m_model->getEcranJeu() == false)
+                            {
+                                m_window->Close();
                             }
                         }
-                        if ((e.Type == sf::Event::KeyPressed) && (e.Key.Code == sf::Key::Back)) {
-                            if(s_nom_player.length() > 0){
-                                s_nom_player.erase(s_nom_player.length()-1,1);
-                                nom.SetText(s_nom_player);
-                                if(s_nom_player.length() >= 1)
-                                    s_nom_player.resize(s_nom_player.length()-1);
+                        if(m_langue->getNom() == "francais")
+                        {
+                            if(onTheSprite(_jouer_sprite, e.MouseButton.X, e.MouseButton.Y))
+                            {
+                                m_model->setEcranJeu(true);
+                                m_model->setGoToView(1);
+                                isEnable = true;
+                            }
+                            if(onTheSprite(_quitter_sprite, e.MouseButton.X, e.MouseButton.Y) && m_model->getEcranJeu() == false)
+                            {
+                                m_window->Close();
                             }
                         }
-                        if(e.Type == sf::Event::KeyPressed && (e.Key.Code == sf::Key::Return)) {
-                            s_nom = s_nom_player;
-                            afficherScore = true;
-                            s_sauvegarde_score();
-                            s_nom_player.resize(0);
+                        if(onTheSprite(_option_sprite, e.MouseButton.X, e.MouseButton.Y) && m_model->getEcranJeu() == false)
+                        {
+                            s_option();
+                            m_model->setGoToView(5);
+                        }
+                        if(onTheText(_editer, e.MouseButton.X, e.MouseButton.Y) && m_model->getEcranJeu() == false)
+                        {
+                            m_model->setGoToView(7);
+                        }
+                        if(onTheSprite(_editer_sprite, e.MouseButton.X, e.MouseButton.Y) && m_model->getEcranJeu() == false)
+                        {
+                            m_model->setGoToView(7);
+                        }
+                    }
+                case 1:
+
+                    if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() )
+                    {
+
+                        if((e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x ) && e.MouseButton.X > _digger_sprite.GetPosition().x ) && (e.MouseButton.Y < _digger_sprite.GetPosition().y && e.MouseButton.Y > _digger_sprite.GetPosition().y - 40))
+                        {
+                            if(answer_move("N"))
+                                m_model->direction("N");
+                        }
+                        if((e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x ) && e.MouseButton.X > _digger_sprite.GetPosition().x ) && (e.MouseButton.Y > (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y) && e.MouseButton.Y < (_digger_sprite.GetPosition().y) + _digger_sprite.GetSize().y + 40))
+                        {
+                            if(answer_move("S"))
+                                m_model->direction("S");
+
+                        }
+                        if((e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x + 40) && e.MouseButton.X > (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x)) && (e.MouseButton.Y > _digger_sprite.GetPosition().y && e.MouseButton.Y < (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y)))
+                        {
+                            if(answer_move("E"))
+                                m_model->direction("E");
+
+                        }
+
+                        if((e.MouseButton.X > (_digger_sprite.GetPosition().x + -40) && e.MouseButton.X < _digger_sprite.GetPosition().x && e.MouseButton.Y > _digger_sprite.GetPosition().y && e.MouseButton.Y < (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y)))
+                        {
+                            if(answer_move("O"))
+                                m_model->direction("O");
+
+                        }
+
+                        if(e.MouseButton.X > (_digger_sprite.GetPosition().x + -40) && e.MouseButton.X < _digger_sprite.GetPosition().x && e.MouseButton.Y < _digger_sprite.GetPosition().y && e.MouseButton.Y > (_digger_sprite.GetPosition().y - 40))
+                        {
+                            if(answer_move("NO"))
+                                m_model->direction("NO");
+
+                        }
+
+                        if(e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x + 40) && e.MouseButton.X > (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x) && e.MouseButton.Y < _digger_sprite.GetPosition().y && e.MouseButton.Y > (_digger_sprite.GetPosition().y - 40))
+                        {
+                            if(answer_move("NE"))
+                                m_model->direction("NE");
+                        }
+
+                        if(e.MouseButton.X > (_digger_sprite.GetPosition().x + -40) && e.MouseButton.X < _digger_sprite.GetPosition().x && e.MouseButton.Y > (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y) && e.MouseButton.Y < (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y + 40))
+                        {
+                            if(answer_move("SO"))
+                                m_model->direction("SO");
+
+                        }
+                        if(e.MouseButton.X < (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x + 40) && e.MouseButton.X > (_digger_sprite.GetPosition().x +_digger_sprite.GetSize().x) && e.MouseButton.Y > (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y) && e.MouseButton.Y < (_digger_sprite.GetPosition().y + _digger_sprite.GetSize().y + 40))
+                        {
+                            if(answer_move("SE"))
+                                m_model->direction("SE");
+
+                        }
+                        if(onTheSprite(_quitte_inGame, e.MouseButton.X, e.MouseButton.Y))
+                        {
                             m_model->setEcranJeu(false);
                             m_model->rejouerPartie();
+                            isEnable = false;
                             m_model->setGoToView(0);
                         }
-                        break;
+                        if(onTheSprite(_son_sprite, e.MouseButton.X, e.MouseButton.Y))
+                        {
+                            sound.Pause();
+                        }
+                        if(onTheSprite(_notSon_sprite, e.MouseButton.X, e.MouseButton.Y))
+                        {
+                            cout << " ICI " << endl;
+                            sound.Play();
+                        }
 
-                    case 5:
+
+                    }
+                    break;
+                case 2:
+                    if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() == false)
+                    {
+                        if(onTheText(jouer, e.MouseButton.X, e.MouseButton.Y))
+                        {
+                            m_model->genereMatrice();
+                            m_model->setGoToView(1);
+                            m_model->setEcranJeu(true);
+                            isEnable = true;
+                        }
+                        if(onTheText(quitter, e.MouseButton.X, e.MouseButton.Y))
+                        {
+                            m_window->Close();
+                        }
+
+                    }
+                    break;
+                case 3:
+
+                    if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() == false)
+                    {
+                        if(onTheText(jouer, e.MouseButton.X, e.MouseButton.Y))
+                        {
+                            m_model->genereMatrice();
+                            m_model->setGoToView(1);
+                            m_model->setEcranJeu(true);
+                            isEnable = true;
+                        }
+
+                        if(onTheText(quitter, e.MouseButton.X, e.MouseButton.Y))
+                        {
+                            m_window->Close();
+                        }
+
+                    }
+                    break;
+                case 4:
+                    if(e.Type == sf::Event::TextEntered)
+                    {
+                        if(s_nom_player.length() <= 10)
+                        {
+                            s_nom_player += static_cast<char>(e.Text.Unicode);
+                            nom.SetText(s_nom_player);
+                        }
+                    }
+                    if ((e.Type == sf::Event::KeyPressed) && (e.Key.Code == sf::Key::Back))
+                    {
+                        if(s_nom_player.length() > 0)
+                        {
+                            s_nom_player.erase(s_nom_player.length()-1,1);
+                            nom.SetText(s_nom_player);
+                            if(s_nom_player.length() >= 1)
+                                s_nom_player.resize(s_nom_player.length()-1);
+                        }
+                    }
+                    if(e.Type == sf::Event::KeyPressed && (e.Key.Code == sf::Key::Return))
+                    {
+                        s_nom = s_nom_player;
+                        afficherScore = true;
+                        s_sauvegarde_score();
+                        s_nom_player.resize(0);
+                        m_model->setEcranJeu(false);
+                        m_model->rejouerPartie();
+                        m_model->setGoToView(0);
+                    }
+                    break;
+
+                case 5:
                     if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() == false)
                     {
                         // Menu dans l'écran Option
@@ -955,252 +1154,314 @@ bool GameView::treatEvents()
                             initSprite();
                         }
                     }
-                        break;
-                    case 6:
-                        if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() == false){
-                            if(onTheText(jouer, e.MouseButton.X, e.MouseButton.Y)){
-                                m_model->genereMatrice();
-                                m_model->setGoToView(1);
-                                m_model->setEcranJeu(true);
-                                isEnable = true;
-                            }
-                            if(onTheText(quitter, e.MouseButton.X, e.MouseButton.Y)){
-                                m_window->Close();
-                            }
+                    break;
+                case 6:
+                    if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() == false)
+                    {
 
+                        if(onTheSprite(_jouer_sprite, e.MouseButton.X, e.MouseButton.Y))
+                        {
+                            m_model->genereMatrice();
+                            m_model->setGoToView(1);
+                            m_model->setEcranJeu(true);
+                            isEnable = true;
                         }
-                        break;
-                    case 7: // Vue avant editeur
-                        if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() == false){
+                        if(onTheSprite(_quitter_sprite, e.MouseButton.X, e.MouseButton.Y))
+                        {
+                            m_window->Close();
+                        }
 
-                             if(onTheText(_nouveau, e.MouseButton.X, e.MouseButton.Y)){
+                    }
+                    break;
+                case 7: // Vue avant editeur
+                    if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() == false)
+                    {
+                        if(!isThemColor)
+                        {
+                            if(onTheText(_nouveau, e.MouseButton.X, e.MouseButton.Y))
+                            {
                                 m_editeur->genereMatriceEditeur();
                                 m_model->setGoToView(8);
                             }
 
-                             if(onTheText(_chargerNiveau, e.MouseButton.X, e.MouseButton.Y)){
+                            if(onTheText(_chargerNiveau, e.MouseButton.X, e.MouseButton.Y))
+                            {
                                 m_model->setGoToView(10);
                             }
                         }
-                        break;
-                    case 8:
-                        if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() == false){
-                            s_verifiationSelectionBomb(&_bombe_sprite, e.MouseButton.X, e.MouseButton.Y);
-                            s_verifiationSelectionBonus(&_bonus_sprite, e.MouseButton.X, e.MouseButton.Y);
-                            m_editeur->ajouterBomb(e.MouseButton.X, e.MouseButton.Y, isBombSelecting);
-                            m_editeur->ajouterBonus(e.MouseButton.X, e.MouseButton.Y, isBonusSelecting);
+                        else {
+                            if(onTheSprite(_nouveau_sprite, e.MouseButton.X, e.MouseButton.Y))
+                            {
+                                m_editeur->genereMatriceEditeur();
+                                m_model->setGoToView(8);
+                            }
 
-                           if(onTheText(_enregistrer, e.MouseButton.X, e.MouseButton.Y)){
+                            if(onTheSprite(_charger_sprite, e.MouseButton.X, e.MouseButton.Y))
+                            {
+                                m_model->setGoToView(10);
+                            }
+                        }
+                    }
+                    break;
+                case 8:
+                    if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() == false)
+                    {
+                        s_verifiationSelectionBomb(&_bombe_sprite, e.MouseButton.X, e.MouseButton.Y);
+                        s_verifiationSelectionBonus(&_bonus_sprite, e.MouseButton.X, e.MouseButton.Y);
+                        m_editeur->ajouterBomb(e.MouseButton.X, e.MouseButton.Y, isBombSelecting);
+                        m_editeur->ajouterBonus(e.MouseButton.X, e.MouseButton.Y, isBonusSelecting);
+
+                        if(!isThemColor)
+                        {
+
+                            if(onTheText(_enregistrer, e.MouseButton.X, e.MouseButton.Y))
+                            {
+                                m_model->setGoToView(9);
+                            }
+                        }
+                        else {
+                            if(onTheSprite(_enregistrer_sprite, e.MouseButton.X, e.MouseButton.Y))
+                            {
                                 m_model->setGoToView(9);
                             }
 
                         }
-                        break;
-                    case 9:
-                        if(e.Type == sf::Event::TextEntered){
-                            if(_nomDuFichier.length() <= 15)
-                            {
-                                _nomDuFichier += static_cast<char>(e.Text.Unicode);
-                                nom.SetText(_nomDuFichier);
-                            }
+
+                    }
+                    break;
+                case 9:
+                    if(e.Type == sf::Event::TextEntered)
+                    {
+                        if(_nomDuFichier.length() <= 15)
+                        {
+                            _nomDuFichier += static_cast<char>(e.Text.Unicode);
+                            nom.SetText(_nomDuFichier);
                         }
-                        if ((e.Type == sf::Event::KeyPressed) && (e.Key.Code == sf::Key::Back)) {
-                            if(_nomDuFichier.length() > 0){
-                                _nomDuFichier.erase(_nomDuFichier.length()-1,1);
-                                nom.SetText(_nomDuFichier);
-                            }
+                    }
+                    if ((e.Type == sf::Event::KeyPressed) && (e.Key.Code == sf::Key::Back))
+                    {
+                        if(_nomDuFichier.length() > 0)
+                        {
+                            _nomDuFichier.erase(_nomDuFichier.length()-1,1);
+                            nom.SetText(_nomDuFichier);
+                        }
+                        if(_nomDuFichier.length() >= 1)
+                            _nomDuFichier.resize(_nomDuFichier.length()-1);
+                    }
+                    if(e.Type == sf::Event::KeyPressed  && (e.Key.Code == sf::Key::Return))
+                    {
+                        m_editeur->sauvegardeFichier(_nomDuFichier);
+                        s_nom_player.resize(0);
+                        m_model->setGoToView(7);
+                    }
+                    break;
+
+                case 10:
+                    if(e.Type == sf::Event::TextEntered)
+                    {
+                        if(_nomDuFichier.length() <= 15)
+                        {
+                            _nomDuFichier += static_cast<char>(e.Text.Unicode);
+                            nom.SetText(_nomDuFichier);
+                        }
+                    }
+                    if ((e.Type == sf::Event::KeyPressed) && (e.Key.Code == sf::Key::Back))
+                    {
+                        if(_nomDuFichier.length() > 0)
+                        {
+                            _nomDuFichier.erase(_nomDuFichier.length()-1,1);
+                            nom.SetText(_nomDuFichier);
                             if(_nomDuFichier.length() >= 1)
                                 _nomDuFichier.resize(_nomDuFichier.length()-1);
                         }
-                        if(e.Type == sf::Event::KeyPressed  && (e.Key.Code == sf::Key::Return)) {
-                            m_editeur->sauvegardeFichier(_nomDuFichier);
-                            s_nom_player.resize(0);
-                            m_model->setGoToView(7);
-                        }
-                        break;
+                    }
+                    if(e.Type == sf::Event::KeyPressed  && (e.Key.Code == sf::Key::Return))
+                    {
+                        m_editeur->chargerNiveau(_nomDuFichier);
+                        _nomDuFichier = " ";
+                        nom.SetText(_nomDuFichier);
+                        isEnable = true;
+                        s_nom_player.resize(0);
+                        m_model->setGoToView(11);
+                    }
+                    break;
+                default:
+                    break;
 
-                    case 10:
-                        if(e.Type == sf::Event::TextEntered){
-                            if(_nomDuFichier.length() <= 15)
-                            {
-                                _nomDuFichier += static_cast<char>(e.Text.Unicode);
-                                nom.SetText(_nomDuFichier);
-                            }
-                        }
-                        if ((e.Type == sf::Event::KeyPressed) && (e.Key.Code == sf::Key::Back)) {
-                            if(_nomDuFichier.length() > 0){
-                                _nomDuFichier.erase(_nomDuFichier.length()-1,1);
-                                nom.SetText(_nomDuFichier);
-                                if(_nomDuFichier.length() >= 1)
-                                    _nomDuFichier.resize(_nomDuFichier.length()-1);
-                            }
-                        }
-                        if(e.Type == sf::Event::KeyPressed  && (e.Key.Code == sf::Key::Return)) {
-                            m_editeur->chargerNiveau(_nomDuFichier);
-                            _nomDuFichier = " ";
-                            nom.SetText(_nomDuFichier);
-                            isEnable = true;
-                            s_nom_player.resize(0);
-                            m_model->setGoToView(11);
-                        }
-                        break;
-                    default:
-                        break;
-
+                }
             }
-        }
 
-        if(m_model->getGoToView() == -1)
-            m_window->Clear(sf::Color(a,a,a));
-        else if(isThemColor)
-             m_window->Clear(sf::Color(10,0,0));
-        else
-            m_window->Clear(sf::Color(0,50,100));
-
-        if(m_model->getGoToView() == -1){
-            s_menuDemarrage();
-            a -= 0.2;
-            if(a <= 0){
-              m_model->setGoToView(0);
-            }
-        }
-        if(m_model->getGoToView() == 0){
-            sound.Pause();
-            s_Presentation();
-            s_boutonEditeur();
-            affichageScore();
-        }
-        else if(m_model->getGoToView() == 1) {
-            status = sound.GetStatus();
-            s_boutton_son();
-            if(isInLevelEditing)
-                draw(m_editeur->getMatriceEditeur());
+            if(m_model->getGoToView() == -1)
+                m_window->Clear(sf::Color(a,a,a));
+            else if(isThemColor)
+                m_window->Clear(sf::Color(20,10,100));
             else
-                draw(m_model->getMatrice());
-            s_quitte_inGame();
+                m_window->Clear(sf::Color(0,50,100));
+
+            if(m_model->getGoToView() == -1)
+            {
+                s_menuDemarrage();
+                a -= 0.2;
+                if(a <= 0)
+                {
+                    m_model->setGoToView(0);
+                }
+            }
+            if(m_model->getGoToView() == 0)
+            {
+                _background_sprite.Resize(1024,768);
+                m_window->Draw(_background_sprite);
+                sound.Pause();
+                s_Presentation();
+                s_boutonEditeur();
+                affichageScore();
+            }
+            else if(m_model->getGoToView() == 1)
+            {
+                status = sound.GetStatus();
+                s_boutton_son();
+                if(isInLevelEditing)
+                    draw(m_editeur->getMatriceEditeur());
+                else
+                    draw(m_model->getMatrice());
+                s_quitte_inGame();
+            }
+            else if(m_model->getGoToView() == 2)
+            {
+                isInLevelEditing = false;
+                isEnable = false;
+                s_perteVie();
+            }
+            else if(m_model->getGoToView() == 3)
+            {
+                isInLevelEditing = false;
+                isEnable = false;
+                s_changeLvl();
+            }
+            else if(m_model->getGoToView() == 4)
+            {
+                isEnable = false;
+                s_plusDeVie();
+                m_window->Draw(nom);
+            }
+            else if(m_model->getGoToView() == 5)
+            {
+                isEnable = false;
+                s_option();
+                s_affichageLangue();
+            }
+            else if(m_model->getGoToView() == 6)
+            {
+                isInLevelEditing = false;
+                isEnable = false;
+                s_perteParTemps();
+            }
+            else if(m_model->getGoToView() == 7)
+            {
+                isInLevelEditing = false;
+                s_buttonInEdit();
+                s_afficheFichierRecent();
+            }
+            else if(m_model->getGoToView() == 8)
+            {
+                isInLevelEditing = true;
+                draw(m_editeur->getMatriceEditeur());
+                s_affiche_choix();
+                s_bouton_save();
+            }
+            else if(m_model->getGoToView() == 9)
+            {
+                s_inscrireNomFichier();
+                m_window->Draw(nom);
+            }
+            else if(m_model->getGoToView() == 10)
+            {
+                s_inscrireNomFichier();
+                m_window->Draw(nom);
+            }
+            else if(m_model->getGoToView() == 11)
+            {
+                isInLevelEditing = false;
+                m_model->setMatrice(m_editeur->getMatriceEditeur());
+                m_model->setEcranJeu(true);
+                m_model->setGoToView(1);
+            }
+            m_window->Display();
         }
-        else if(m_model->getGoToView() == 2) {
-            isInLevelEditing = false;
-            isEnable = false;
-            s_perteVie();
-        }
-        else if(m_model->getGoToView() == 3) {
-            isInLevelEditing = false;
-            isEnable = false;
-             s_changeLvl();
-        }
-        else if(m_model->getGoToView() == 4) {
-            isEnable = false;
-             s_plusDeVie();
-            m_window->Draw(nom);
-        }
-        else if(m_model->getGoToView() == 5) {
-            isEnable = false;
-            s_option();
-            s_affichageLangue();
-        }
-        else if(m_model->getGoToView() == 6) {
-            isInLevelEditing = false;
-            isEnable = false;
-            s_perteParTemps();
-        }
-        else if(m_model->getGoToView() == 7){
-            isInLevelEditing = false;
-            s_buttonInEdit();
-            s_afficheFichierRecent();
-        }
-        else if(m_model->getGoToView() == 8){
-            isInLevelEditing = true;
-            draw(m_editeur->getMatriceEditeur());
-            s_affiche_choix();
-            s_bouton_save();
-        }
-        else if(m_model->getGoToView() == 9){
-            s_inscrireNomFichier();
-            m_window->Draw(nom);
-        }
-        else if(m_model->getGoToView() == 10){
-            s_inscrireNomFichier();
-            m_window->Draw(nom);
-        }
-        else if(m_model->getGoToView() == 11){
-            isInLevelEditing = false;
-            m_model->setMatrice(m_editeur->getMatriceEditeur());
-            m_model->setEcranJeu(true);
-            m_model->setGoToView(1);
-        }
-        m_window->Display();
+        return true;
     }
-    return true;
-}
 
 }
-
-
-
-
-
-/*
-
 // BAC À SABLE BALBLABLABLABLABLABALBALABALLLALALL
 
 // MAIN TREAT MAIN TREAT MAIN TREAT MAIN TREAT MAIN TREAT MAIN TREAT MAIN TREAT MAIN TREAT
-void GameView::Test(){
-    if(initSprite()){
+void GameView::Test()
+{
+    if(initSprite())
+    {
         _screen = 0;
         _refresh = true;
-        while(m_window->IsOpened()){
-            while(m_window->GetEvent(_event)){
+        while(m_window->IsOpened())
+        {
+            while(m_window->GetEvent(_event))
+            {
                 if(_event.Type == sf::Event::Closed || _screen == -1)
                     m_window->Close();
 
-                switch (_screen) {
-                    case 1:
-                        //std::cout << "1" << std::endl; // ingame
-                        eventGame();
-                        initGame();
-                        displayGame();
-                        break;
-                    case 2:
-                        //std::cout << "2" << std::endl; // option
-                        eventOption();
-                        displayOption();
-                        break;
-                    default:
-                        //std::cout << "0" << std::endl; // menu
-                        eventMenu();
-                        initMenu();
-                        displayMenu();
-                        break;
+                switch (_screen)
+                {
+                case 1:
+//std::cout << "1" << std::endl; // ingame
+                    eventGame();
+                    initGame();
+                    displayGame();
+                    break;
+                case 2:
+//std::cout << "2" << std::endl; // option
+                    eventOption();
+                    displayOption();
+                    break;
+                default:
+//std::cout << "0" << std::endl; // menu
+                    eventMenu();
+                    initMenu();
+                    displayMenu();
+                    break;
                 }
                 m_window->Display();
             }
         }
     }
-    else{
+    else
+    {
         std::cout << "Erreur de chargement des images" << std::endl;
     }
 }
-
 // MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU MENU
-void GameView::initMenu(){
+void GameView::initMenu()
+{
     changeSprite(_start_sprite, WIDTH/2-_start_sprite.GetSize().x/2, HEIGHT/4);
     changeSprite(_exit_sprite, WIDTH/2-_exit_sprite.GetSize().x/2, HEIGHT/3);
 }
-void GameView::displayMenu(){
+void GameView::displayMenu()
+{
     m_window->Clear(sf::Color(255,255,255));
     m_window->Draw(_start_sprite);
     m_window->Draw(_exit_sprite);
 }
 
-void GameView::eventMenu(){
-    if(onTheSprite(_start_sprite, _event.MouseButton.X, _event.MouseButton.Y)){
+void GameView::eventMenu()
+{
+    if(onTheSprite(_start_sprite, _event.MouseButton.X, _event.MouseButton.Y))
+    {
         _screen = 1;
     }
-    else if(onTheSprite(_exit_sprite, _event.MouseButton.X, _event.MouseButton.Y)){
+    else if(onTheSprite(_exit_sprite, _event.MouseButton.X, _event.MouseButton.Y))
+    {
         _screen = -1;
     }
-    else if((_event.Type == sf::Event::KeyPressed) && (_event.Key.Code == sf::Key::Escape)){
+    else if((_event.Type == sf::Event::KeyPressed) && (_event.Key.Code == sf::Key::Escape))
+    {
         _previousScreen = _screen;
         _screen = 2;
     }
@@ -1208,58 +1469,74 @@ void GameView::eventMenu(){
 
 // GAME GAME GAME GAME GAME GAME GAME GAME GAME GAME GAME GAME GAME GAME GAME GAME GAME GAME GAME
 
-void GameView::initGame(){
+void GameView::initGame()
+{
     changeSprite(_quitter_sprite, WIDTH-_quitter_sprite.GetSize().x/2-_quitter_sprite.GetSize().x, HEIGHT-_quitter_sprite.GetSize().y-_quitter_sprite.GetSize().y/2);
 }
 
 
 
-void GameView::displayGame(){
+void GameView::displayGame()
+{
     m_window->Clear(sf::Color(0,0,0));
     m_window->Draw(_quitter_sprite);
     displayPlateau();
 }
 
-void GameView::eventGame(){
-    if(onTheSprite(_quitter_sprite, _event.MouseButton.X, _event.MouseButton.Y)){
+void GameView::eventGame()
+{
+    if(onTheSprite(_quitter_sprite, _event.MouseButton.X, _event.MouseButton.Y))
+    {
         _screen = 0;
     }
-    else if((_event.Type == sf::Event::KeyPressed) && (_event.Key.Code == sf::Key::Escape)){
+    else if((_event.Type == sf::Event::KeyPressed) && (_event.Key.Code == sf::Key::Escape))
+    {
         _previousScreen = _screen;
         _screen = 2;
     }
-    if(_event.Type == sf::Event::MouseButtonPressed && _event.MouseButton.Button == Mouse::Left){
-        if(diggerEvent()){
+    if(_event.Type == sf::Event::MouseButtonPressed && _event.MouseButton.Button == Mouse::Left)
+    {
+        if(diggerEvent())
+        {
             std::cout << "in-game" << std::endl;
         }
-        else{
+        else
+        {
             m_model->genereMatrice();
             std::cout << "partie perdu" << std::endl;
         }
     }
 }
 
-void GameView::displayPlateau(){
+void GameView::displayPlateau()
+{
     Case ***matrice = m_model->getMatrice();
-    for(int li = 0; li < 18; li++){
-        for(int col = 0; col < 18; col++){
-            if(col == m_model->getPlayer().get_x() && li == m_model->getPlayer().get_y()){
+    for(int li = 0; li < 18; li++)
+    {
+        for(int col = 0; col < 18; col++)
+        {
+            if(col == m_model->getPlayer().get_x() && li == m_model->getPlayer().get_y())
+            {
                 changeSprite(_digger_sprite, col*_digger_sprite.GetSize().x, li*_digger_sprite.GetSize().y);
                 m_window->Draw(_digger_sprite);
             }
-            else if(dynamic_cast<Bomb*>(matrice[li][col])){
+            else if(dynamic_cast<Bomb*>(matrice[li][col]))
+            {
                 changeSprite(_bombe_sprite, col*_bombe_sprite.GetSize().x, li*_bombe_sprite.GetSize().y);
                 m_window->Draw(_bombe_sprite);
             }
-            else if(dynamic_cast<Croix*>(matrice[li][col])){
+            else if(dynamic_cast<Croix*>(matrice[li][col]))
+            {
                 changeSprite(_vide_sprite, col*_vide_sprite.GetSize().x, li*_vide_sprite.GetSize().y);
                 m_window->Draw(_vide_sprite);
             }
-            else if(dynamic_cast<BonusCase*>(matrice[li][col])){
+            else if(dynamic_cast<BonusCase*>(matrice[li][col]))
+            {
                 changeSprite(_bonus_sprite, col*_bonus_sprite.GetSize().x, li*_bonus_sprite.GetSize().y);
                 m_window->Draw(_bonus_sprite);
             }
-            else{
+            else
+            {
                 changeSprite(_tuile_sprite, col*_tuile_sprite.GetSize().x, li*_tuile_sprite.GetSize().y);
                 m_window->Draw(_tuile_sprite);
             }
@@ -1267,51 +1544,68 @@ void GameView::displayPlateau(){
     }
 }
 
-bool GameView::diggerEvent(){
-    if(onTheDiggerEAST()){
-        if(m_model->datMove(1, 0)){
+bool GameView::diggerEvent()
+{
+    if(onTheDiggerEAST())
+    {
+        if(m_model->datMove(1, 0))
+        {
             std::cout << "EAST" << std::endl;
             return true;
         }
     }
-    else if(onTheDiggerNORTH()){
-        if(m_model->datMove(0, -1)){
+    else if(onTheDiggerNORTH())
+    {
+        if(m_model->datMove(0, -1))
+        {
             std::cout << "NORTH" << std::endl;
             return true;
         }
     }
-    else if(onTheDiggerSOUTH()){
-        if(m_model->datMove(0, 1)){
+    else if(onTheDiggerSOUTH())
+    {
+        if(m_model->datMove(0, 1))
+        {
             std::cout << "SOUTH" << std::endl;
             return true;
         }
     }
-    else if(onTheDiggerWEST()){
-        if(m_model->datMove(-1, 0)){
+    else if(onTheDiggerWEST())
+    {
+        if(m_model->datMove(-1, 0))
+        {
             std::cout << "WEST" << std::endl;
             return true;
         }
     }
-    else if(onTheDiggerDIAG_NORTH_WEST()){
-        if(m_model->datMove(-1, -1)){
+    else if(onTheDiggerDIAG_NORTH_WEST())
+    {
+        if(m_model->datMove(-1, -1))
+        {
             std::cout << "NORTH_WEST" << std::endl;
             return true;
         }
     }
-    else if(onTheDiggerDIAG_NORTH_EAST()){
-        if(m_model->datMove(-1, 1)){
+    else if(onTheDiggerDIAG_NORTH_EAST())
+    {
+        if(m_model->datMove(-1, 1))
+        {
             std::cout << "NORTH_EAST" << std::endl;
             return true;
         }
     }
-    else if(onTheDiggerDIAG_SOUTH_EAST()){
-        if(m_model->datMove(1, 1)){
+    else if(onTheDiggerDIAG_SOUTH_EAST())
+    {
+        if(m_model->datMove(1, 1))
+        {
             std::cout << "SOUTH_EAST" << std::endl;
             return true;
         }
     }
-    else if(onTheDiggerDIAG_SOUTH_WEST()){
-        if(m_model->datMove(-1, 1)){
+    else if(onTheDiggerDIAG_SOUTH_WEST())
+    {
+        if(m_model->datMove(-1, 1))
+        {
             std::cout << "SOUTH_WEST" << std::endl;
             return true;
         }
@@ -1320,56 +1614,64 @@ bool GameView::diggerEvent(){
     return false;
 }
 
-bool GameView::onTheDiggerSOUTH(){
+bool GameView::onTheDiggerSOUTH()
+{
     return(_event.MouseButton.X >= _digger_sprite.GetPosition().x &&
            _event.MouseButton.X <= _digger_sprite.GetPosition().x + _digger_sprite.GetSize().x &&
            _event.MouseButton.Y >= _digger_sprite.GetPosition().y + _digger_sprite.GetSize().y &&
            _event.MouseButton.Y <= _digger_sprite.GetPosition().y + 2*_digger_sprite.GetSize().y);
 }
 
-bool GameView::onTheDiggerNORTH(){
+bool GameView::onTheDiggerNORTH()
+{
     return(_event.MouseButton.X >= _digger_sprite.GetPosition().x &&
            _event.MouseButton.X <= _digger_sprite.GetPosition().x + _digger_sprite.GetSize().x &&
            _event.MouseButton.Y >= _digger_sprite.GetPosition().y - _digger_sprite.GetSize().y &&
            _event.MouseButton.Y <= _digger_sprite.GetPosition().y);
 }
 
-bool GameView::onTheDiggerWEST(){
+bool GameView::onTheDiggerWEST()
+{
     return(_event.MouseButton.X <= _digger_sprite.GetPosition().x &&
            _event.MouseButton.X >= _digger_sprite.GetPosition().x - _digger_sprite.GetSize().x &&
            _event.MouseButton.Y >= _digger_sprite.GetPosition().y &&
            _event.MouseButton.Y <= _digger_sprite.GetPosition().y + _digger_sprite.GetSize().y);
 }
 
-bool GameView::onTheDiggerEAST(){
+bool GameView::onTheDiggerEAST()
+{
     return(_event.MouseButton.X >= _digger_sprite.GetPosition().x + _digger_sprite.GetSize().x &&
            _event.MouseButton.X <= _digger_sprite.GetPosition().x + 2*_digger_sprite.GetSize().x &&
            _event.MouseButton.Y >= _digger_sprite.GetPosition().y &&
            _event.MouseButton.Y <= _digger_sprite.GetPosition().y + _digger_sprite.GetSize().y);
 }
 
-bool GameView::onTheDiggerDIAG_SOUTH_EAST(){
+bool GameView::onTheDiggerDIAG_SOUTH_EAST()
+{
     return(_event.MouseButton.X <= _digger_sprite.GetPosition().x + 2*_digger_sprite.GetSize().x &&
            _event.MouseButton.X >= _digger_sprite.GetPosition().x + _digger_sprite.GetSize().x &&
            _event.MouseButton.Y >= _digger_sprite.GetPosition().y + _digger_sprite.GetSize().y &&
            _event.MouseButton.Y <= _digger_sprite.GetPosition().y + 2*_digger_sprite.GetSize().y);
 }
 
-bool GameView::onTheDiggerDIAG_SOUTH_WEST(){
+bool GameView::onTheDiggerDIAG_SOUTH_WEST()
+{
     return(_event.MouseButton.X >= _digger_sprite.GetPosition().x - _digger_sprite.GetSize().x &&
            _event.MouseButton.X <= _digger_sprite.GetPosition().x &&
            _event.MouseButton.Y >= _digger_sprite.GetPosition().y + _digger_sprite.GetSize().y &&
            _event.MouseButton.Y <= _digger_sprite.GetPosition().y + 2*_digger_sprite.GetSize().y);
 }
 
-bool GameView::onTheDiggerDIAG_NORTH_WEST(){
+bool GameView::onTheDiggerDIAG_NORTH_WEST()
+{
     return(_event.MouseButton.X <= _digger_sprite.GetPosition().x &&
            _event.MouseButton.X >= _digger_sprite.GetPosition().x - _digger_sprite.GetSize().x &&
            _event.MouseButton.Y >= _digger_sprite.GetPosition().y-_digger_sprite.GetSize().y &&
            _event.MouseButton.Y <= _digger_sprite.GetPosition().y);
 }
 
-bool GameView::onTheDiggerDIAG_NORTH_EAST(){
+bool GameView::onTheDiggerDIAG_NORTH_EAST()
+{
     return(_event.MouseButton.X >= _digger_sprite.GetPosition().x + _digger_sprite.GetSize().x &&
            _event.MouseButton.X <= _digger_sprite.GetPosition().x + 2*_digger_sprite.GetSize().x &&
            _event.MouseButton.Y >= _digger_sprite.GetPosition().y - _digger_sprite.GetSize().y &&
@@ -1382,27 +1684,29 @@ bool GameView::onTheDiggerDIAG_NORTH_EAST(){
 //void GameView::initOption(){
 //}
 
-void GameView::displayOption(){
+void GameView::displayOption()
+{
     m_window->Clear(sf::Color(0,0,0));
     s_affichageLangue();
     s_option();
 }
 
-void GameView::eventOption(){
-    if((_event.Type == sf::Event::KeyPressed) && (_event.Key.Code == sf::Key::Escape)){
+void GameView::eventOption()
+{
+    if((_event.Type == sf::Event::KeyPressed) && (_event.Key.Code == sf::Key::Escape))
+    {
         _screen = _previousScreen;
         _refresh = true;
     }
-    else if(onTheSprite(_francais_sprite, _event.MouseButton.X, _event.MouseButton.Y)){
+    else if(onTheSprite(_francais_sprite, _event.MouseButton.X, _event.MouseButton.Y))
+    {
         m_langue->setNom("francais");
         m_l = m_langue->getlangues();
     }
-    else if(onTheSprite(_anglais_sprite, _event.MouseButton.X, _event.MouseButton.Y)){
+    else if(onTheSprite(_anglais_sprite, _event.MouseButton.X, _event.MouseButton.Y))
+    {
         m_langue->setNom("anglais");
         m_l = m_langue->getlangues();
     }
 }
-
-*/
-
 

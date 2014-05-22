@@ -88,9 +88,16 @@ private: // SFML
     std::string _namePictureQuitter;        //quitter.png
     std::string _namePictureSound;          //son.png
     std::string _namePictureNotSound;       //notSon.png
+    std::string _namePictureEditeur;         //Editeur.png
+    std::string _namePictureNouveau;
+    std::string _namePictureEnregistrer;
+    std::string _namePictureCharger;
 
     sf::RenderWindow *m_window;
 
+    sf::Image _nouveau_image;
+    sf::Image _charger_image;
+    sf::Image _enregistrer_image;
     sf::Image _background_image;
     sf::Image _digger_image;
     sf::Image _bombe_image;
@@ -108,7 +115,13 @@ private: // SFML
     sf::Image _quitter_image;
     sf::Image _son_image;
     sf::Image _notSon_image;
+    sf::Image _editer_image;
 
+
+    sf::Sprite _nouveau_sprite;
+    sf::Sprite _charger_sprite;
+    sf::Sprite _enregistrer_sprite;
+    sf::Sprite _editer_sprite;
     sf::Sprite _son_sprite;
     sf::Sprite _notSon_sprite;
     sf::Sprite _jouer_sprite;
@@ -174,7 +187,8 @@ private: // SFML
     bool isInLevelEditing;
 
     Editeur *m_editeur;
-
+    int compteur;
+    int compteurDig;
     float a;
 
 private:
