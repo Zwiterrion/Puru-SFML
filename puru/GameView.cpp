@@ -848,7 +848,7 @@ void GameView::s_bouton_save()
     }
     else
     {
-        _enregistrer_sprite.SetPosition(WIDTH-300, 600);
+        _enregistrer_sprite.SetPosition(WIDTH-250, 600);
         m_window->Draw(_enregistrer_sprite);
     }
 }
