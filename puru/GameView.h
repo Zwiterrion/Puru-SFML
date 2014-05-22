@@ -67,7 +67,8 @@ public: // SFML
     void s_buttonInEdit();
     void s_afficheFichierRecent();
     void s_inscrireNomFichier();
-
+    void loadText(sf::String &s, const int x, const int y, const float size, const std::string text, const sf::Font &f, const int r, const int g, const int b, float a);
+    void s_menuDemarrage();
 
 private: // SFML
     std::string _namePictureBackground;     //background.png
@@ -161,6 +162,11 @@ private: // SFML
     std::vector<std::string>m_fichierRecent;
     sf::String _nomFichier;
 
+    sf::String m;
+    sf::String g;
+
+    bool isThemColor;
+
     std::string _nomDuFichier;
 
     bool isBonusSelecting;
@@ -169,7 +175,7 @@ private: // SFML
 
     Editeur *m_editeur;
 
-    float angle;
+    float a;
 
 private:
 
@@ -178,7 +184,7 @@ private:
     bool loadSprite(const std::string name, sf::Image &picture, sf::Sprite &sprite);
     bool loadSprite(const std::string name, sf::Image &picture, sf::Sprite &sprite, const int rx, const int ry);
     void loadNamePicture();
-
+    void loadNamePictureTheme();
     // change sprite
     void changeSprite(sf::Sprite &s, const float x, const float y);
     void changeSprite(sf::Sprite &s, const float x, const float y, const int r, const int g, const int b, const int alpha);

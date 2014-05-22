@@ -64,7 +64,7 @@ GameModel::GameModel()
     m_p = new Player();                     // Appel du constructeur du player
 
     // Pour le début du jeu.
-    goToView = 0;
+    goToView = -1;
 }
 /**************************************************************
  * Nom: ~GameModel                                            *
@@ -373,7 +373,6 @@ int GameModel::deplacement(){
             return 6;
     }
     else{
-        std::cout << "deplacement impossible" << std::endl;
         return -1;
     }
 }

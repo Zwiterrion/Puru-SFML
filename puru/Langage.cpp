@@ -22,13 +22,13 @@ Langage::Langage(string nom): m_nom(nom)
 }
 Langage::~Langage()
 {
-    
+
 }
 void Langage::chargementFrancais(){
-    
+
     if(m_langages.size() != 0)
         m_langages.clear();
-    
+
     m_langages[0] = "Jouer";
     m_langages[1] = "Option";
     m_langages[2] = "Quitter";
@@ -52,7 +52,7 @@ void Langage::chargementFrancais(){
     m_langages[20] = "Meilleurs scores";
 }
 void Langage::chargementLangue() {
-    
+
     if(m_nom == "francais") {
         chargementFrancais();
     }
@@ -60,10 +60,10 @@ void Langage::chargementLangue() {
         chargementAnglais();
 }
 void Langage::chargementAnglais(){
-    
+
     if(m_langages.size() != 0)
         m_langages.clear();
-    
+
     m_langages[0] = "Play";
     m_langages[1] = "Option";
     m_langages[2] = "Exit";
@@ -77,9 +77,9 @@ void Langage::chargementAnglais(){
     m_langages[10] = "\nPlayer's Life: ";
     m_langages[11] = "Puru Puru Digger";
     m_langages[12] = "You lose or decide to leave! Do you want to play again?";
-    m_langages[13] = "\nYou just lose a life ! ";
+    m_langages[13] = "\nYou lost a life ! ";
     m_langages[14] = "Do you want to continue ?";
-    m_langages[15] = "You changed level ? ";
+    m_langages[15] = "Do you want to change level ? ";
     m_langages[16] = "\nMore time.Loss of Life !";
     m_langages[17] = "\t\t\nTotal score:  ";
     m_langages[18] = "You do not have lives. Enter your name:";

@@ -42,7 +42,7 @@ GameView::GameView(int h, int w, int bpp){
 
     //Initialisation de l'éditeur
     m_editeur = new Editeur();
-
+    a = 255;
 }
 /************************************************************
  * Nom: ~GameView                                           *
@@ -100,7 +100,25 @@ void GameView::loadNamePicture(){
     _namePictureSound = "son.png";
     _namePictureNotSound = "notSon.png";
 }
-
+void GameView::loadNamePictureTheme(){
+    _namePictureBackground = "background.png";
+    _namePictureDigger = "dig.png";
+    _namePictureBomb = "boum.png";
+    _namePictureBonus = "bleu.png";
+    _namePictureCase = "jaune.png";
+    _namePictureExitButton = "exitButton.png";
+    _namePicturePlayButton = "startButton.png";
+    _namePictureCaseVide = "croix.png";
+    _namePictureOptionButton = "optionButton.png";
+    _namePictureMenu = "menu.png";
+    _namePictureBestscore = "bestScore.png";
+    _namePictureFrancais = "francais.png";
+    _namePictureAnglais = "anglais.png";
+    _namePictureJouer = "jouer.png";
+    _namePictureQuitter = "quitter.png";
+    _namePictureSound = "son.png";
+    _namePictureNotSound = "notSon.png";
+}
 bool GameView::initSprite(){
     if(loadSprite(_namePictureBackground, _background_image, _background_sprite, 38, 38) &&
        loadSprite(_namePictureDigger, _digger_image, _digger_sprite, 38, 38) &&
@@ -157,7 +175,14 @@ void GameView::loadText(sf::String &s, const int x, const int y, const float siz
     s.SetColor(sf::Color(r, g, b));
     s.SetFont(_font);
 }
-
+void GameView::loadText(sf::String &s, const int x, const int y, const float size, const std::string text, const sf::Font &f, const int r, const int g, const int b, float a)
+{
+    s = sf::String(text);
+    s.SetPosition(x, y);
+    s.SetSize(size);
+    s.SetColor(sf::Color(r, g, b, a));
+    s.SetFont(_font);
+}
 
 void GameView::loadText(sf::String &s, const int x, const int y, const std::string text)
 {
@@ -249,7 +274,6 @@ void GameView::s_viePlayer()
  ************************************************************/
 void GameView::draw(Case*** matrice)
 {
-    angle = 180.0f;
     // Image background
     _background_sprite.Resize(WIDTH, HEIGHT);
     _background_sprite.SetPosition(0,0);
@@ -323,9 +347,14 @@ void GameView::draw(Case*** matrice)
             sprite.Resize(38, 38);
             sprite.SetPosition((m_model->getPlayer().get_x()*WIDTH_PIECE)+50, (m_model->getPlayer().get_y()*WIDTH_PIECE)+30);
             m_window->Draw(sprite);
-            _digger_sprite.SetPosition(((m_model->getPlayer().get_x()*WIDTH_PIECE) +50), (m_model->getPlayer().get_y()*WIDTH_PIECE)+30);
+
+                _digger_sprite.SetPosition(((m_model->getPlayer().get_x()*WIDTH_PIECE) +50), (m_model->getPlayer().get_y()*WIDTH_PIECE)+30);
                 m_window->Draw(*dig);
-            }
+
+        }
+
+
+
         s_afficheBonus();
         s_afficheScore();
         s_viePlayer();
@@ -477,6 +506,14 @@ void GameView::s_option()
     m_window->Draw(_menu_sprite);
 
     m_window->Draw(e);
+
+
+    loadText(g, WIDTH/5, 400, 40.0F, "Theme Original", _font, 210, 200, 200);
+    loadText(m, WIDTH/2, 400, 40.0F, "Theme Coloré", _font, 0, 200, 200);
+
+    m_window->Draw(m);
+    m_window->Draw(g);
+
 }
 
 void GameView::s_chargementScore()
@@ -709,6 +746,11 @@ void GameView::s_inscrireNomFichier(){
 
     m_window->Draw(text);
 }
+void GameView::s_menuDemarrage() {
+    sf::String presentation;
+    loadText(presentation, WIDTH/8, HEIGHT/6, 80, " ANNE & GUILBAUD \n\n\t\t\t   Vous presentent ... \n\n  Puru Puru Digger", _font, -a, 255, 255);
+    m_window->Draw(presentation);
+}
 bool GameView::treatEvents()
 {
     if(initSprite()){
@@ -814,6 +856,7 @@ bool GameView::treatEvents()
                                 sound.Pause();
                             }
                             if(onTheSprite(_notSon_sprite, e.MouseButton.X, e.MouseButton.Y)){
+                                cout << " ICI " << endl;
                                 sound.Play();
                             }
 
@@ -878,22 +921,40 @@ bool GameView::treatEvents()
                         break;
 
                     case 5:
+                    if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() == false)
+                    {
                         // Menu dans l'écran Option
-                        if(onTheSprite(_menu_sprite, e.MouseButton.X, e.MouseButton.Y)){
+                        if(onTheSprite(_menu_sprite, e.MouseButton.X, e.MouseButton.Y))
+                        {
                             m_model->setGoToView(0);
                         }
                         if (e.Type == sf::Event::Closed)
                             m_window->Close();
 
-                        if(onTheSprite(_anglais_sprite, e.MouseButton.X, e.MouseButton.Y)){
+                        if(onTheSprite(_anglais_sprite, e.MouseButton.X, e.MouseButton.Y))
+                        {
                             m_langue->setNom("anglais");
                             m_l = m_langue->getlangues();
                         }
 
-                        if(onTheSprite(_francais_sprite, e.MouseButton.X, e.MouseButton.Y)){
+                        if(onTheSprite(_francais_sprite, e.MouseButton.X, e.MouseButton.Y))
+                        {
                             m_langue->setNom("francais");
                             m_l = m_langue->getlangues();
                         }
+                        if(onTheText(m, e.MouseButton.X, e.MouseButton.Y))
+                        {
+                            isThemColor = true;
+                            loadNamePictureTheme();
+                            initSprite();
+                        }
+                        if(onTheText(g, e.MouseButton.X, e.MouseButton.Y))
+                        {
+                            isThemColor = false;
+                            loadNamePicture();
+                            initSprite();
+                        }
+                    }
                         break;
                     case 6:
                         if(e.Type == sf::Event::MouseButtonPressed && e.MouseButton.Button == Mouse::Left && m_model->getEcranJeu() == false){
@@ -989,7 +1050,20 @@ bool GameView::treatEvents()
             }
         }
 
-            m_window->Clear();
+        if(m_model->getGoToView() == -1)
+            m_window->Clear(sf::Color(a,a,a));
+        else if(isThemColor)
+             m_window->Clear(sf::Color(10,0,0));
+        else
+            m_window->Clear(sf::Color(0,50,100));
+
+        if(m_model->getGoToView() == -1){
+            s_menuDemarrage();
+            a -= 0.2;
+            if(a <= 0){
+              m_model->setGoToView(0);
+            }
+        }
         if(m_model->getGoToView() == 0){
             sound.Pause();
             s_Presentation();
@@ -1066,7 +1140,7 @@ bool GameView::treatEvents()
 
 
 
-
+/*
 
 // BAC À SABLE BALBLABLABLABLABLABALBALABALLLALALL
 
@@ -1329,6 +1403,6 @@ void GameView::eventOption(){
     }
 }
 
-
+*/
 
 
