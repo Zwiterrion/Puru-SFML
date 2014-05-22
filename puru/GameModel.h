@@ -33,7 +33,7 @@ private:
     int nb_cases;
     int i;
     bool fin;
-
+    
     int goToView;
     bool ecranJeu;
 
@@ -62,7 +62,7 @@ public:
 
     Case*** getMatrice() const;
     void genereMatrice();
-
+    
     void rejouerPartie();
     void tabScore();
 
@@ -80,8 +80,8 @@ public:
     bool moveBis(int x, int y);
     bool directionBis(std::string answer);
 */
-
-
+    
+    
 // BAC À SABLE DU GAMEMODEL
 private:
     bool testCase(const int x, const int y) const;
@@ -93,3 +93,4 @@ public:
 
 
 #endif /* defined(__THE_PURU__GameModel__) */
+

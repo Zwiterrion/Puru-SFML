@@ -63,7 +63,7 @@ GameModel::GameModel()
 
     m_p = new Player();                     // Appel du constructeur du player
    // delete matrice[m_p->get_x()][m_p->get_y()];
-
+    
     // Pour le début du jeu.
     goToView = 0;
 }
@@ -218,7 +218,7 @@ void GameModel::move(int pos_x, int pos_y)
         m_p->deplacement(pos_x,pos_y);
     }
     nb_cases = deplacement();
-
+    
     if(x != -1 && y != -1) {
         string obj = matrice[m_p->get_y()][m_p->get_x()]->getObj();  // Test si la case suivante, la premiere, est une bombe
         if(obj == "@@@" || obj == " "){
@@ -230,12 +230,12 @@ void GameModel::move(int pos_x, int pos_y)
         m_p->set_pos(x, y);
     }
     else if(nb_cases != -1 ){
-
+        
         m_s->setDeplacement(m_s->getDeplacement()+nb_cases);    // Incrémentation du nombre de déplacement
         m_s->setScoreTotal(m_s->getScoreTotal()+nb_cases*10);   // Incrémentation du score total
-
+        
         i = 1;                                                  // Initialisation de i à 1
-
+        
         while(i < nb_cases && deplacement() != -1)
         {
             delete matrice[m_p->get_y()][m_p->get_x()];         // On libére la case du joueur
@@ -255,12 +255,12 @@ void GameModel::move(int pos_x, int pos_y)
             perteVie();
         }
     }
-
+    
     else
     {
         perteVie();
     }
-
+    
 }
 /**************************************************************
  * Nom: objectifAtteint                                       *
@@ -291,7 +291,7 @@ void GameModel::changeLevel()
         m_n->setLevel(m_n->getLevel() + 1); // Incrémentation du level grâce à la surcharge
         m_s->setCible(m_s->getCible() + 5);
         m_n->initBonus();
-
+        
         if(m_n->getLevel()%2 == 0){
             m_n->setBomb(m_n->getNb() +1);
             m_n->setBonus(m_n->getBonus() +1);
@@ -314,7 +314,7 @@ void GameModel::changeLevel()
  *     la direction voulue.                                 *
  ************************************************************/
 bool GameModel::check_answer(std::string a){
-
+    
     if ((a == "N" || a == "NE" || a == "NO") && m_p->get_y() == 0){
         return false;
     }
@@ -511,7 +511,7 @@ void GameModel::genereMatrice(){
     }
 
     setMatrice(matrice);
-
+    
     m_p->set_position(rand()%WIDTH_GAME,rand()%HEIGHT_GAME);
 }
 
@@ -538,12 +538,12 @@ bool GameModel::getEcranJeu() const {
     return ecranJeu;
 }
 bool GameModel::plusDeTemps() {
-
+    
     if(m_n->getTemps() <= 0){
         perteVie();
         return true;
     }
-
+    
     return false;
 }
 void GameModel::calculDuTemps()
@@ -567,13 +567,13 @@ void GameModel::calculDuTemps()
         m_n->setDifference(((m_n->getMinutes() * 60) + m_n->getFin()) - m_n->getCompteur()); // Convertion du tout en secondes
         m_n->setTemps(m_n->getTemps() - m_n->getDifference()); // Puis affectation du temps - la difference
         m_n->setCompteur((m_n->getMinutes() * 60 )+  m_n->getFin()); // Récupération du temps précédent
-
+        
         if(m_n->getTemps() <= 0){
             m_n->setTemps(0);
             plusDeTemps();
         }
     }
-
+    
 }
 
 // J'etais en train de le faire tkt
@@ -589,7 +589,7 @@ bool GameModel::verification_niveau()
             directionPrecedente = tab[i];
         }
         if(directionBis(tab[i]) != true){
-
+            
         }
     }
     return false;
@@ -625,7 +625,7 @@ bool GameModel::moveBis(int pos_x, int pos_y)
         m_p->deplacement(pos_x,pos_y);
     }
     nb_cases = deplacement();
-
+    
     if(x != -1 && y != -1) {
         string obj = matrice[m_p->get_y()][m_p->get_x()]->getObj();  // Test si la case suivante, la premiere, est une bombe
         if(obj == "@@@" || obj == " "){
@@ -638,12 +638,12 @@ bool GameModel::moveBis(int pos_x, int pos_y)
         return false;
     }
     else if(nb_cases != -1 ){
-
+        
         m_s->setDeplacement(m_s->getDeplacement()+nb_cases);    // Incrémentation du nombre de déplacement
         m_s->setScoreTotal(m_s->getScoreTotal()+nb_cases*10);   // Incrémentation du score total
-
+        
         i = 1;                                                  // Initialisation de i à 1
-
+        
         while(i < nb_cases && deplacement() != -1)
         {
             delete matrice[m_p->get_y()][m_p->get_x()];         // On libére la case du joueur
@@ -664,13 +664,13 @@ bool GameModel::moveBis(int pos_x, int pos_y)
             return false;
         }
     }
-
+    
     else
     {
         perteVie();
         return false;
     }
-
+    
 }
 */
 
@@ -706,3 +706,40 @@ bool GameModel::datMove(const int x, const int y){
     else
         return false;
 }
+
+/*// BAC À SABLE DU GAME MODEL
+
+bool GameModel::testCase(const int x, const int y) const{
+        //std::cout << "x : " << x << " y : " << y << std::endl;
+        std::cout << "matrice[" << y << "][" << x << "] : " << matrice[y][x]->getMov() << std::endl;
+        if(matrice[y][x]->getMov() == -1 || matrice[y][x]->getMov()){
+                std::cout << "LA CASE SUIVANTE N'EST PAS ACCESSIBLE" << std::endl;
+                return false;
+            }
+        else
+                std::cout << "LA CASE SUIVANTE EST DISPONIBLE" << std::endl;
+            return true;
+    }
+
+bool GameModel::datMove(const int x, const int y){
+        std::cout << "x : " << x << " y : " << y << std::endl;
+        if(testCase(m_p->get_x()+x, m_p->get_y()+y)){
+                int nbCase = matrice[m_p->get_y()+y][m_p->get_x()+x]->getMov();
+                std::cout << "nbCase : " << nbCase << std::endl;
+                int dep=0;
+                while(dep < nbCase && testCase(m_p->get_x()+x, m_p->get_y()+y)){
+                        matrice[m_p->get_y()][m_p->get_x()] = new Croix();
+                        m_p->set_position(m_p->get_x() + x, m_p->get_y()+ y);
+                        ++dep;
+                    }
+                if(dep == nbCase)
+                        return true;
+            
+                return false;
+            }
+        else
+                return false;
+    }
+*/
+
+

@@ -848,7 +848,7 @@ void GameView::s_bouton_save()
     }
     else
     {
-        _enregistrer_sprite.SetPosition(WIDTH-250, 600);
+        _enregistrer_sprite.SetPosition(WIDTH-300, 600);
         m_window->Draw(_enregistrer_sprite);
     }
 }
@@ -1390,7 +1390,7 @@ bool GameView::treatEvents()
         }
         return true;
     }
-
+    return false;
 }
 // BAC À SABLE BALBLABLABLABLABLABALBALABALLLALALL
 
@@ -1496,15 +1496,7 @@ void GameView::eventGame()
     }
     if(_event.Type == sf::Event::MouseButtonPressed && _event.MouseButton.Button == Mouse::Left)
     {
-        if(diggerEvent())
-        {
-            std::cout << "in-game" << std::endl;
-        }
-        else
-        {
-            m_model->genereMatrice();
-            std::cout << "partie perdu" << std::endl;
-        }
+        diggerEvent();
     }
 }
 
@@ -1588,7 +1580,7 @@ bool GameView::diggerEvent()
     }
     else if(onTheDiggerDIAG_NORTH_EAST())
     {
-        if(m_model->datMove(-1, 1))
+        if(m_model->datMove(1, -1))
         {
             std::cout << "NORTH_EAST" << std::endl;
             return true;
