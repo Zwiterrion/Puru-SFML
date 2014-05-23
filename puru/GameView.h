@@ -92,6 +92,27 @@ private: // SFML
     std::string _namePictureNouveau;
     std::string _namePictureEnregistrer;
     std::string _namePictureCharger;
+    std::string _namedigger1;
+    std::string _namedigger2;
+    std::string _namedigger3_1;
+    std::string _namedigger3_2;
+    std::string _namedigger3_3;
+    std::string _namedigger4;
+    std::string _namedigger5;
+    std::string _namedigger6;
+    std::string _namedigger7;
+    std::string _namedigger8;
+    std::string _namedigger9;
+    std::string _namedigger10;
+    std::string _namedigger11;
+    std::string _namedigger12;
+    std::string _namedigger13;
+    std::string _namedigger14;
+    std::string _namedigger15;
+    std::string _namedigger16;
+
+
+
 
     sf::RenderWindow *m_window;
 
@@ -116,6 +137,25 @@ private: // SFML
     sf::Image _son_image;
     sf::Image _notSon_image;
     sf::Image _editer_image;
+    
+    sf::Image _digger1;
+    sf::Image _digger2;
+    sf::Image _digger3_1;
+    sf::Image _digger3_2;
+    sf::Image _digger3_3;
+    sf::Image _digger4;
+    sf::Image _digger5;
+    sf::Image _digger6;
+    sf::Image _digger7;
+    sf::Image _digger8;
+    sf::Image _digger9;
+    sf::Image _digger10;
+    sf::Image _digger11;
+    sf::Image _digger12;
+    sf::Image _digger13;
+    sf::Image _digger14;
+    sf::Image _digger15;
+    sf::Image _digger16;
 
 
     sf::Sprite _nouveau_sprite;
@@ -245,7 +285,11 @@ private:
     void initGame();
     void displayGame();
     void eventGame();
-
+    
+    bool eventTime();
+    void eventSound();
+    
+    void displaySound();
     void displayPlateau();
 
     void removeNeighbour();
